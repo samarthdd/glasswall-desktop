@@ -1,0 +1,9 @@
+
+.DS_Store
+app/node_modules/*
+app/out/electron/*
+app/out/ui/*
+app/dist/*
+static/node_modules/*
+static/build/*
+static/node_modules/*
