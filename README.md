@@ -32,7 +32,7 @@ Glasswall Desktop is a desktop application that provides multi file drag and dro
 **Setup:**
 * Clone the repo to your local directory
 * Navigate to the directory where package.json is placed
-* Run `npm install`. This will install required packages for this project
+* Run `npm install`. This will install required packages for this project which has been mentioned in the package.json
 
 **Run:**
 * To build the source code `npm run build`. Build is requried to compile typescript 
