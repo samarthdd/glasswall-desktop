@@ -20,7 +20,7 @@ Glasswall Desktop is a desktop application that provides multi file drag and dro
 2. To support different directory structures, give freedom to save the files at custom directory structure or at default location by maintaining the same directory as that of the parent folder.
 3. To support different platforms (Windows, MAC and Linux)
 
-# [glasswall-desktop](https://k8-proxy.github.io/glasswall-desktop/)
+# [Glasswall Desktop](https://k8-proxy.github.io/glasswall-desktop/)
 
 **Key Results:**
 1. Build with <a href="https://github.com/electron/electron"> Electron</a> , react, it is aimed at providing multi file drag and drop rebuild workflow.
