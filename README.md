@@ -12,13 +12,15 @@ Glasswall Desktop is a desktop application that provides multi file drag and dro
 | <img src="img/Sanchit.png" width=100 alt="@rajmbcoderx">  | Sanchit Garg [@rajmbcoderx](https://github.com/rajmbcoderx) | Member | IST |
 | <img src="img/Mudit.png" width=100 alt="@gmuditdce">  | Mudit Gupta [@gmuditdce](https://github.com/gmuditdce) | Member | IST |
 | <img src="img/Sudhish.png" width=100 alt="@kumarsudhish">  | Sudhidh Kumar [@kumarsudhish](https://github.com/kumarsudhish) | Member | IST |
-| 
+
 
 ## Current Objective and Key Results
 **Objective:**
+1. Just drag and drop the files from your local hard disk, and the Glasswall Desktop will rebuild them using the Glasswall Rebuild API (currently hosted on Azure).
+2. To support different directory structures, give freedom to save the files at custom directory structure or at default location by maintaining the same directory as that of the parent folder.
+3. To support different platforms (Windows, MAC and Linux)
 
 # [glasswall-desktop](https://k8-proxy.github.io/glasswall-desktop/)
-
 
 **Key Results:**
 1. Build with <a href="https://github.com/electron/electron"> Electron</a> , react, it is aimed at providing multi file drag and drop rebuild workflow.
@@ -40,8 +42,8 @@ Glasswall Desktop is a desktop application that provides multi file drag and dro
 
 ## Important links
 
-If you are working on this project via Upwork, see also our [Upwork Rules of Engagement](https://github.com/filetrust/Open-Source/blob/master/upwork/rules-of-engagement.md)
-If you are newcomer, then please check [Glasswall newcomers checklist ](https://github.com/filetrust/Open-Source )
+* If you are working on this project via Upwork, see also our [Upwork Rules of Engagement](https://github.com/filetrust/Open-Source/blob/master/upwork/rules-of-engagement.md)
+* If you are newcomer, then please check [Glasswall newcomers checklist ](https://github.com/filetrust/Open-Source )
 
 
 ## Installing
@@ -55,17 +57,14 @@ Download the latest [glasswall-desktop release](https://github.com/k8-proxy/glas
 Mac users will need to follow the below steps on the app when you first launch it, until we have [code signing](https://www.electron.build/code-signing) set up
 
 <p>Step 1</p>
-  
 ![glasswall-desktop Screenshot](img/permission1.png)
 
 
 <p>Step 2</p>
-
 ![glasswall-desktop Screenshot](img/permission2.png)
 
 
 <p>Step 3</p>
-
 ![glasswall-desktop Screenshot](img/permission3.png)
 
 TBD: Will automatically update when a new release is available.
@@ -158,9 +157,4 @@ Please change DEBUG variable to true and restart the app to start the electron d
 <li> Browse Output Folder button not working on MAC Desktop App</li>
 <li> Browse button not working on MAC Desktop App</li>
 <li> Rebuild App: Signed build needs to be created for rebuild desktop app</li>
-Complete list of open issue can be found there [Glasswall Desktop Open Issues](https://github.com/k8-proxy/glasswall-desktop/deployments/activity_log#workspaces/glasswall-desktop-5f8d313208783c0012d1b601/board?labels=bug&repos=304378562)
-
-
-
-
-
+Complete list of open issue can be found there [Glasswall Desktop Open Issues](https://github.com/k8-proxy/glasswall-desktop/issues#workspaces/glasswall-desktop-5f8d313208783c0012d1b601/board?labels=bug&repos=304378562)
