@@ -8,10 +8,10 @@ Glasswall Desktop is a desktop application that provides multi file drag and dro
 
 | Avatar | Name | Role | Time Zone |
 | -------------------------------------------|----------------------|----------------------------| -------- |
-| <img src="" width=100 alt="@b24repo">  | Virendra Vaishnav [@b24repo](https://github.com/b24repo) | Delivery Manager | IST |
-| <img src="" width=100 alt="@rajmbcoderx">  | Sanchit Garg [@rajmbcoderx](https://github.com/rajmbcoderx) | Member | IST |
-| <img src="" width=100 alt="@gmuditdce">  | Mudit Gupta [@gmuditdce](https://github.com/gmuditdce) | Member | IST |
-| <img src="" width=100 alt="@kumarsudhish">  | Sudhidh Kumar [@kumarsudhish](https://github.com/kumarsudhish) | Member | IST |
+| <img src="img/Virendra Vaishnav.png" width=100 alt="@b24repo">  | Virendra Vaishnav [@b24repo](https://github.com/b24repo) | Delivery Manager | IST |
+| <img src="img/Sanchit.png" width=100 alt="@rajmbcoderx">  | Sanchit Garg [@rajmbcoderx](https://github.com/rajmbcoderx) | Member | IST |
+| <img src="img/Mudit.png" width=100 alt="@gmuditdce">  | Mudit Gupta [@gmuditdce](https://github.com/gmuditdce) | Member | IST |
+| <img src="img/Sudhish.png" width=100 alt="@kumarsudhish">  | Sudhidh Kumar [@kumarsudhish](https://github.com/kumarsudhish) | Member | IST |
 | 
 
 ## Current Objective and Key Results
@@ -25,7 +25,7 @@ Glasswall Desktop is a desktop application that provides multi file drag and dro
 2. It is a standalone application for MacOS, Windows and Linux operating systems.
 
 
-![Screenshot](https://github.com/k8-proxy/glasswall-desktop/blob/main/Screen-shot-1.png)
+![Screenshot](img/Screen-shot-1.png)
 
 <h2> How to setup</h2> 
 <li> Clone the repo</li>
@@ -41,7 +41,6 @@ Glasswall Desktop is a desktop application that provides multi file drag and dro
 ## Important links
 
 If you are working on this project via Upwork, see also our [Upwork Rules of Engagement](https://github.com/filetrust/Open-Source/blob/master/upwork/rules-of-engagement.md)
-
 If you are newcomer, then please check [Glasswall newcomers checklist ](https://github.com/filetrust/Open-Source )
 
 
@@ -57,17 +56,17 @@ Mac users will need to follow the below steps on the app when you first launch i
 
 <p>Step 1</p>
   
-![glasswall-desktop Screenshot](https://github.com/k8-proxy/glasswall-desktop/blob/main/permission1.png)
+![glasswall-desktop Screenshot](img/permission1.png)
 
 
 <p>Step 2</p>
 
-![glasswall-desktop Screenshot](https://github.com/k8-proxy/glasswall-desktop/blob/main/permission2.png)
+![glasswall-desktop Screenshot](img/permission2.png)
 
 
 <p>Step 3</p>
 
-![glasswall-desktop Screenshot](https://github.com/k8-proxy/glasswall-desktop/blob/main/permission3.png)
+![glasswall-desktop Screenshot](img/permission3.png)
 
 TBD: Will automatically update when a new release is available.
 
@@ -84,19 +83,19 @@ Download the package from the above link, observe that .exe executable would be 
 <p>Step 2</p>
 Once executable has been downloaded, double click on the .exe and observe that installation starts.
 
-![glasswall-desktop Screenshot](https://github.com/k8-proxy/glasswall-desktop/blob/main/Linux_SnapPackage_Verification_Command.JPG)
+![glasswall-desktop Screenshot](img/Windows_Installation.JPG)
 
 
 <p>Step 3</p>
 Observe that once the installation is complete, app is launched successfully showcasing the Welcome page
 
-![glasswall-desktop Screenshot2](https://github.com/k8-proxy/glasswall-desktop/blob/main/Linux_DesktopApp_Install_Command.JPG)
+![glasswall-desktop Screenshot2](img/Windows_Welcome_Page.JPG)
 
 
 <p>Step 4</p>
 Click on Get Started to navigate to the Rebuild Files page.
 
-![glasswall-desktop Screenshot](https://github.com/k8-proxy/glasswall-desktop/blob/main//Linux_DesktopApp_Run_Command.JPG)
+![glasswall-desktop Screenshot](img/Windows_Rebuild_Page.JPG)
 
 
 ### Linux Snap
@@ -109,25 +108,25 @@ Linux/Ubuntu users will need to follow the below steps on the app when you first
 <p>Step 1</p>
 Install the snapd package if not present in the linux/ubuntu version you are using.
 
-![glasswall-desktop Screenshot](https://github.com/k8-proxy/glasswall-desktop/blob/main/Linux_Snap_Install_Command.JPG)
+![glasswall-desktop Screenshot](img/Linux_Snap_Install_Command.JPG)
 
 
 <p>Step 2</p>
 Once snapd package has been installed verify it has been installed successfully by running below command.
 
-![glasswall-desktop Screenshot](https://github.com/k8-proxy/glasswall-desktop/blob/main/Linux_SnapPackage_Verification_Command.JPG)
+![glasswall-desktop Screenshot](img/Linux_SnapPackage_Verification_Command.JPG)
 
 
 <p>Step 3</p>
 Unzip the downloaded desktop package and move inside the directory. And run below command to install the package
 
-![glasswall-desktop Screenshot2](https://github.com/k8-proxy/glasswall-desktop/blob/main/Linux_DesktopApp_Install_Command.JPG)
+![glasswall-desktop Screenshot2](img/Linux_DesktopApp_Install_Command.JPG)
 
 
 <p>Step 4</p>
 Run below command to launch the desktop application
 
-![glasswall-desktop Screenshot](https://github.com/k8-proxy/glasswall-desktop/blob/main//Linux_DesktopApp_Run_Command.JPG)
+![glasswall-desktop Screenshot](img/Linux_DesktopApp_Run_Command.JPG)
 
 
 ### Installing from source
@@ -151,17 +150,15 @@ To configure the codebase clone or download the codebase from the git and instal
 
 ## Debugging
 Please change DEBUG variable to true and restart the app to start the electron debugger for code debugging purposes
-[In this file](https://github.com/k8-proxy/glasswall-desktop/blob/main//Debugger.JPG)
+[In this file](img/Debugger.JPG)
 
 
 ## Open Issues Highlishts
+<li> Actual Desktop app video to be embedded in the web portal</li>
 <li> Browse Output Folder button not working on MAC Desktop App</li>
 <li> Browse button not working on MAC Desktop App</li>
-<li> Clone the repo</li>
-<li> Clone the repo</li>
-<li> Clone the repo</li>
-
-[Glasswall Desktop Open Issues](https://github.com/k8-proxy/glasswall-desktop/deployments/activity_log#workspaces/glasswall-desktop-5f8d313208783c0012d1b601/board?labels=bug&repos=304378562)
+<li> Rebuild App: Signed build needs to be created for rebuild desktop app</li>
+Complete list of open issue can be found there [Glasswall Desktop Open Issues](https://github.com/k8-proxy/glasswall-desktop/deployments/activity_log#workspaces/glasswall-desktop-5f8d313208783c0012d1b601/board?labels=bug&repos=304378562)
 
 
 
