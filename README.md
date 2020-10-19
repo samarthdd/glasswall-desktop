@@ -1,5 +1,5 @@
 
-# Glasswall desktop
+# Glasswall Desktop
 
 Glasswall Desktop is a desktop application that provides multi file drag and drop rebuild workflow.
 
@@ -57,7 +57,7 @@ Download the latest [glasswall-desktop release](https://github.com/k8-proxy/glas
 
 Mac users will need to follow the below steps on the app when you first launch it, until we have [code signing](https://www.electron.build/code-signing) set up
 
-<p>Step 1</p>
+* *Step 1*
 
 ![glasswall-desktop Screenshot](img/permission1.png)
 
