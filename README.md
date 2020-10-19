@@ -143,13 +143,16 @@ Run below command to launch the desktop application
 ## Building
 
 ### IDE 
-To configure the codebase clone or download the codebase from the git and install the [Visual Stuido Code](https://code.visualstudio.com/)
+To configure the codebase clone or download the codebase from the git and install the [Visual Studio Code](https://code.visualstudio.com/)
 
 ### Importing Project in Visual Studio Code
 1. Click on File in the Visul Studio tool bar.
 2. Select Open Folder option.
 3. Select the cloned glasswall-desktop folder.
 4. Observe that Project has been imported.
+
+![Project Structure](img/Project Structure.JPG)
+
 
 ## Debugging
 Please change DEBUG variable to true and restart the app to start the electron debugger for code debugging purposes.
@@ -159,5 +162,3 @@ Please change DEBUG variable to true and restart the app to start the electron d
 
 ## Open Issues Highlishts
 * Complete list of open issue can be found here <a href="https://github.com/k8-proxy/glasswall-desktop/issues#workspaces/glasswall-desktop-5f8d313208783c0012d1b601/board?labels=bug&repos=304378562"> Glasswall Desktop App Open Issues</a>
-
-
