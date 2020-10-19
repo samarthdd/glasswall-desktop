@@ -26,19 +26,20 @@ Glasswall Desktop is a desktop application that provides multi file drag and dro
 1. Build with <a href="https://github.com/electron/electron"> Electron</a> , react, it is aimed at providing multi file drag and drop rebuild workflow.
 2. It is a standalone application for MacOS, Windows and Linux operating systems.
 
-
 ![Screenshot](img/Screen-shot-1.png)
 
-<h2> How to setup</h2> 
-<li> Clone the repo</li>
-<li> Run<i> npm install</i>. This will install required packages for this project </li>
+## Build Setup
+**Setup:**
+* Clone the repo to your local directory
+* Navigate to the directory where package.json is placed
+* Run <i>npm install</i>. This will install required packages for this project
 
-<h2> How to run</h2> 
-<li> <i>npm run build</i> //build is requried to compile typescript</li> 
-<li> <i>npm run start </i></li>
+**Run:**
+* To build the source code <i>npm run build</i>. Build is requried to compile typescript 
+* To start the application locally <i>npm run start </i>
 
-<h2> How to create distribution packages</h2> 
-<li> <i>npm run dist</i> // build binaries/exe to Mac, Windows, Linux platforms in the dist folder. </li>
+**Distribution Package:**
+* To create distribution packages <i>npm run dist</i>. This will create the build binaries/exe to Mac, Windows, Linux platforms in the dist folder.
 
 ## Important links
 
@@ -57,14 +58,17 @@ Download the latest [glasswall-desktop release](https://github.com/k8-proxy/glas
 Mac users will need to follow the below steps on the app when you first launch it, until we have [code signing](https://www.electron.build/code-signing) set up
 
 <p>Step 1</p>
+
 ![glasswall-desktop Screenshot](img/permission1.png)
 
 
 <p>Step 2</p>
+
 ![glasswall-desktop Screenshot](img/permission2.png)
 
 
 <p>Step 3</p>
+
 ![glasswall-desktop Screenshot](img/permission3.png)
 
 TBD: Will automatically update when a new release is available.
