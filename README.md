@@ -37,23 +37,23 @@ Mac users will need to follow the below steps on the app when you first launch i
 
 <p>Step 1</p>
   
-![glasswall-desktop Screenshot](https://github.com/rajmbcoderx/glasswall-desktop/blob/main/permission1.png)
+![glasswall-desktop Screenshot](https://github.com/k8-proxy/glasswall-desktop/blob/main/permission1.png)
 
 
 <p>Step 2</p>
 
-![glasswall-desktop Screenshot](https://github.com/rajmbcoderx/glasswall-desktop/blob/main/permission2.png)
+![glasswall-desktop Screenshot](https://github.com/k8-proxy/glasswall-desktop/blob/main/permission2.png)
 
 
 <p>Step 3</p>
 
-![glasswall-desktop Screenshot](https://github.com/rajmbcoderx/glasswall-desktop/blob/main/permission3.png)
+![glasswall-desktop Screenshot](https://github.com/k8-proxy/glasswall-desktop/blob/main/permission3.png)
 
 TBD: Will automatically update when a new release is available.
 
 ### Windows
 
-Download the latest [glasswall-desktop relase](https://github.com/rajmbcoderx/glasswall-desktop/releases/download/0.1.0/glasswall-desktop.exe.zip).
+Download the latest [glasswall-desktop relase](https://github.com/k8-proxy/glasswall-desktop/releases/download/0.1.0/glasswall-desktop.exe.zip).
 
 TBD: will automatically update when a new release is available.
 
@@ -61,32 +61,32 @@ TBD: will automatically update when a new release is available.
 ### Linux Snap
 
 Glasswall desktop is only available for 64-bit Linux systems.
-Download the latest [glasswall-desktop relase](https://github.com/rajmbcoderx/k8-electron-react/releases/download/0.1.0/glasswall-desktop.snap.zip).
+Download the latest [glasswall-desktop relase](https://github.com/k8-proxy/k8-electron-react/releases/download/0.1.0/glasswall-desktop.snap.zip).
 
 Linux/Ubuntu users will need to follow the below steps on the app when you first launch it.
 
 <p>Step 1</p>
 Install the snapd package if not present in the linux/ubuntu version you are using.
 
-![glasswall-desktop Screenshot](https://github.com/rajmbcoderx/glasswall-desktop/blob/main/Linux_Snap_Install_Command.JPG)
+![glasswall-desktop Screenshot](https://github.com/k8-proxy/glasswall-desktop/blob/main/Linux_Snap_Install_Command.JPG)
 
 
 <p>Step 2</p>
 Once snapd package has been installed verify it has been installed successfully by running below command.
 
-![glasswall-desktop Screenshot](https://github.com/rajmbcoderx/glasswall-desktop/blob/main/Linux_SnapPackage_Verification_Command.JPG)
+![glasswall-desktop Screenshot](https://github.com/k8-proxy/glasswall-desktop/blob/main/Linux_SnapPackage_Verification_Command.JPG)
 
 
 <p>Step 3</p>
 Unzip the downloaded desktop package and move inside the directory. And run below command to install the package
 
-![glasswall-desktop Screenshot2](https://github.com/rajmbcoderx/glasswall-desktop/blob/main/Linux_DesktopApp_Install_Command.JPG)
+![glasswall-desktop Screenshot2](https://github.com/k8-proxy/glasswall-desktop/blob/main/Linux_DesktopApp_Install_Command.JPG)
 
 
 <p>Step 4</p>
 Run below command to launch the desktop application
 
-![glasswall-desktop Screenshot](https://github.com/rajmbcoderx/glasswall-desktop/blob/main//Linux_DesktopApp_Run_Command.JPG)
+![glasswall-desktop Screenshot](https://github.com/k8-proxy/glasswall-desktop/blob/main//Linux_DesktopApp_Run_Command.JPG)
 
 
 ### Installing from source

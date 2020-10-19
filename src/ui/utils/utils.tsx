@@ -1,6 +1,6 @@
 
 export const WEBSITE_URL                = 'https://rajmbcoderx.github.io/glasswall-desktop/';
-export const RELEASE_URL                = 'https://github.com/rajmbcoderx/glasswall-desktop/releases';
+export const RELEASE_URL                = 'https://github.com/k8-proxy/glasswall-desktop/releases';
 export const LICENSE_URL                = 'https://github.com/k8-proxy/glasswall-desktop/blob/master/LICENSE';
 export const FW_URL                     = 'https://forensic-workbench.com/';
 export const FILE_DROP_URL              = 'https://file-drop.co.uk/';
