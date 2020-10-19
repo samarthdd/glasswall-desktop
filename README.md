@@ -32,14 +32,14 @@ Glasswall Desktop is a desktop application that provides multi file drag and dro
 **Setup:**
 * Clone the repo to your local directory
 * Navigate to the directory where package.json is placed
-* Run <i>npm install</i>. This will install required packages for this project
+* Run `npm install`. This will install required packages for this project
 
 **Run:**
-* To build the source code <i>npm run build</i>. Build is requried to compile typescript 
-* To start the application locally <i>npm run start </i>
+* To build the source code `npm run build`. Build is requried to compile typescript 
+* To start the application locally `npm run start`
 
 **Distribution Package:**
-* To create distribution packages <i>npm run dist</i>. This will create the build binaries/exe to Mac, Windows, Linux platforms in the dist folder.
+* To create distribution packages `npm run dist`. This will create the build binaries/exe to Mac, Windows, Linux platforms in the dist folder.
 
 ## Important links
 
@@ -57,17 +57,17 @@ Download the latest [glasswall-desktop release](https://github.com/k8-proxy/glas
 
 Mac users will need to follow the below steps on the app when you first launch it, until we have [code signing](https://www.electron.build/code-signing) set up
 
-* *Step 1*
+* **Step 1**
 
 ![glasswall-desktop Screenshot](img/permission1.png)
 
 
-<p>Step 2</p>
+* **Step 2**
 
 ![glasswall-desktop Screenshot](img/permission2.png)
 
 
-<p>Step 3</p>
+* **Step 3**
 
 ![glasswall-desktop Screenshot](img/permission3.png)
 
@@ -77,25 +77,25 @@ TBD: Will automatically update when a new release is available.
 
 Download the latest [glasswall-desktop relase](https://github.com/k8-proxy/glasswall-desktop/releases/download/v0.1.0/glasswall-desktop-Setup-0.1.0.exe)
 
-Windows users will need to follow the below steps on the app when you first launch it.
+Windows users will need to follow the below steps to install and launch the application.
 
-<p>Step 1</p>
+* **Step 1**
 Download the package from the above link, observe that .exe executable would be downloaded, glasswall-desktop-Setup-0.1.0.exe.
 
 
-<p>Step 2</p>
+* **Step 2**
 Once executable has been downloaded, double click on the .exe and observe that installation starts.
 
 ![glasswall-desktop Screenshot](img/Windows_Installation.JPG)
 
 
-<p>Step 3</p>
+* **Step 3**
 Observe that once the installation is complete, app is launched successfully showcasing the Welcome page
 
 ![glasswall-desktop Screenshot2](img/Windows_Welcome_Page.JPG)
 
 
-<p>Step 4</p>
+* **Step 4**
 Click on Get Started to navigate to the Rebuild Files page.
 
 ![glasswall-desktop Screenshot](img/Windows_Rebuild_Page.JPG)
@@ -108,25 +108,25 @@ Download the latest [glasswall-desktop relase](https://github.com/k8-proxy/glass
 
 Linux/Ubuntu users will need to follow the below steps on the app when you first launch it.
 
-<p>Step 1</p>
+* **Step 1**
 Install the snapd package if not present in the linux/ubuntu version you are using.
 
 ![glasswall-desktop Screenshot](img/Linux_Snap_Install_Command.JPG)
 
 
-<p>Step 2</p>
+* **Step 2**
 Once snapd package has been installed verify it has been installed successfully by running below command.
 
 ![glasswall-desktop Screenshot](img/Linux_SnapPackage_Verification_Command.JPG)
 
 
-<p>Step 3</p>
+* **Step 3**
 Unzip the downloaded desktop package and move inside the directory. And run below command to install the package
 
 ![glasswall-desktop Screenshot2](img/Linux_DesktopApp_Install_Command.JPG)
 
 
-<p>Step 4</p>
+* **Step 4**
 Run below command to launch the desktop application
 
 ![glasswall-desktop Screenshot](img/Linux_DesktopApp_Run_Command.JPG)
