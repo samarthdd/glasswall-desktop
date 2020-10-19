@@ -3,10 +3,10 @@
   "version": "0.1.0",
   "tagVersion": "v0.1.0",
   "repo": "glasswall-desktop",
-  "repo_owner": "rajmbcoderx",
+  "repo_owner": "k8-proxy",
   "app_name": "glasswall-desktop",
   "private": true,
-  "homepage": "https://rajmbcoderx.github.io/glasswall-desktop",
+  "homepage": "https://k8-proxy.github.io/glasswall-desktop",
   "devDependencies": {
     "webpack": "4.42.0",
     "@testing-library/jest-dom": "^4.2.4",

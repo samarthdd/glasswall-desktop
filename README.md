@@ -1,11 +1,11 @@
 
 
 
-# [glasswall-desktop](https://rajmbcoderx.github.io/glasswall-desktop/)
+# [glasswall-desktop](https://k8-proxy.github.io/glasswall-desktop/)
 <p>Glasswall Desktop is a desktop application that provides multi file drag and drop rebuild workflow. Build with 
 <a href="https://github.com/electron/electron"> Electron</a> , react, it is aimed at providing multi file drag and drop rebuild workflow.  It is a standalone application for MacOS, Windows and Linux operating systems.</p>
 
-![Screenshot](https://github.com/rajmbcoderx/glasswall-desktop/blob/main/app/Screen-shot-1.png)
+![Screenshot](https://github.com/k8-proxy/glasswall-desktop/blob/main/Screen-shot-1.png)
 
 <h2> How to setup</h2> 
 <li>Clone the repo</li>
@@ -31,23 +31,23 @@ Warning: This software is under active development. Use at your own risk.
 
 ### macOS
 
-Download the latest [glasswall-desktop release](https://github.com/rajmbcoderx/glasswall-desktop/releases/download/0.1.0/glasswall-desktop.dmg.zip).
+Download the latest [glasswall-desktop release](https://github.com/k8-proxy/glasswall-desktop/releases/download/0.1.0/glasswall-desktop.dmg.zip).
 
 Mac users will need to follow the below steps on the app when you first launch it, until we have [code signing](https://www.electron.build/code-signing) set up
 
 <p>Step 1</p>
   
-![glasswall-desktop Screenshot](https://github.com/rajmbcoderx/glasswall-desktop/blob/main/app//permission1.png)
+![glasswall-desktop Screenshot](https://github.com/rajmbcoderx/glasswall-desktop/blob/main/permission1.png)
 
 
 <p>Step 2</p>
 
-![glasswall-desktop Screenshot](https://github.com/rajmbcoderx/glasswall-desktop/blob/main/app/permission2.png)
+![glasswall-desktop Screenshot](https://github.com/rajmbcoderx/glasswall-desktop/blob/main/permission2.png)
 
 
 <p>Step 3</p>
 
-![glasswall-desktop Screenshot](https://github.com/rajmbcoderx/glasswall-desktop/blob/main/app/permission3.png)
+![glasswall-desktop Screenshot](https://github.com/rajmbcoderx/glasswall-desktop/blob/main/permission3.png)
 
 TBD: Will automatically update when a new release is available.
 
@@ -68,25 +68,25 @@ Linux/Ubuntu users will need to follow the below steps on the app when you first
 <p>Step 1</p>
 Install the snapd package if not present in the linux/ubuntu version you are using.
 
-![glasswall-desktop Screenshot](https://github.com/rajmbcoderx/glasswall-desktop/blob/main/app/Linux_Snap_Install_Command.JPG)
+![glasswall-desktop Screenshot](https://github.com/rajmbcoderx/glasswall-desktop/blob/main/Linux_Snap_Install_Command.JPG)
 
 
 <p>Step 2</p>
 Once snapd package has been installed verify it has been installed successfully by running below command.
 
-![glasswall-desktop Screenshot](https://github.com/rajmbcoderx/glasswall-desktop/blob/main/app//Linux_SnapPackage_Verification_Command.JPG)
+![glasswall-desktop Screenshot](https://github.com/rajmbcoderx/glasswall-desktop/blob/main/Linux_SnapPackage_Verification_Command.JPG)
 
 
 <p>Step 3</p>
 Unzip the downloaded desktop package and move inside the directory. And run below command to install the package
 
-![glasswall-desktop Screenshot2](https://github.com/rajmbcoderx/glasswall-desktop/blob/main/app/Linux_DesktopApp_Install_Command.JPG)
+![glasswall-desktop Screenshot2](https://github.com/rajmbcoderx/glasswall-desktop/blob/main/Linux_DesktopApp_Install_Command.JPG)
 
 
 <p>Step 4</p>
 Run below command to launch the desktop application
 
-![glasswall-desktop Screenshot](https://github.com/rajmbcoderx/glasswall-desktop/blob/main/app//Linux_DesktopApp_Run_Command.JPG)
+![glasswall-desktop Screenshot](https://github.com/rajmbcoderx/glasswall-desktop/blob/main//Linux_DesktopApp_Run_Command.JPG)
 
 
 ### Installing from source
