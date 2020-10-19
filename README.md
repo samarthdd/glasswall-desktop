@@ -153,7 +153,7 @@ To configure the codebase clone or download the codebase from the git and instal
 
 ## Debugging
 Please change DEBUG variable to true and restart the app to start the electron debugger for code debugging purposes
-[In this file](img/Debugger.JPG)
+![In this file](img/Debugger.JPG)
 
 
 ## Open Issues Highlishts
@@ -161,4 +161,6 @@ Please change DEBUG variable to true and restart the app to start the electron d
 <li> Browse Output Folder button not working on MAC Desktop App</li>
 <li> Browse button not working on MAC Desktop App</li>
 <li> Rebuild App: Signed build needs to be created for rebuild desktop app</li>
-Complete list of open issue can be found there [Glasswall Desktop Open Issues](https://github.com/k8-proxy/glasswall-desktop/issues#workspaces/glasswall-desktop-5f8d313208783c0012d1b601/board?labels=bug&repos=304378562)
+Complete list of open issue can be found here <a href="https://github.com/k8-proxy/glasswall-desktop/issues#workspaces/glasswall-desktop-5f8d313208783c0012d1b601/board?labels=bug&repos=304378562"> Glasswall Desktop App Open Issues</a>
+
+
