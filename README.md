@@ -151,7 +151,8 @@ To configure the codebase clone or download the codebase from the git and instal
 3. Select the cloned glasswall-desktop folder.
 4. Observe that Project has been imported.
 
-![Project Structure](img/Project Structure.JPG)
+![Project Structure](img/Project%20Structure.JPG)
+
 
 
 ## Debugging
