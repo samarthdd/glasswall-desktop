@@ -84,11 +84,12 @@ function createMenu(){
                 label: 'Learn More',
                 click() { 
                     shell.openExternal(' https://github.com/k8-proxy/glasswall-desktop')
-                }
+                },
+                accelerator: 'CmdOrCtrl+H'
             }
         ]
         }
-        
+
     ]
     const menu = Menu.buildFromTemplate(template)
     Menu.setApplicationMenu(menu)
