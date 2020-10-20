@@ -161,4 +161,10 @@ Please change DEBUG variable to true and restart the app to start the electron d
 
 
 ## Open Issues Highlishts
-* Complete list of open issue can be found here <a href="https://github.com/k8-proxy/glasswall-desktop/issues#workspaces/glasswall-desktop-5f8d313208783c0012d1b601/board?labels=bug&repos=304378562"> Glasswall Desktop App Open Issues</a>
+* Linux installer on glasswall-desktop web portal is broken 
+* Links in the footer and header on glasswall-desktop web portal are pointing to wrong project
+* Happy User/Stargazers/Forks count on glasswall-desktop web portal is wrong and on clicking it point to wrong repo
+* Rebuild App: Signed build needs to be created for rebuild desktop app.
+* On selecting Hierarchy radio button, and uploading folder in single Hierarchy files are not getting saved in same Hierarchy format in target folder.
+* Upgrade installer not working on MAC OS
+* For Complete list of open issue can be found here <a href="https://github.com/k8-proxy/glasswall-desktop/issues#workspaces/glasswall-desktop-5f8d313208783c0012d1b601/board?labels=bug&repos=304378562"> Glasswall Desktop App Open Issues</a>
