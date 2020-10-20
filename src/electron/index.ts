@@ -1,3 +1,5 @@
+const DEBUG: boolean = false;
+
 const {
     app,
     BrowserWindow,
@@ -5,6 +7,7 @@ const {
     Certificate,
     Menu,
     Tray,
+    globalShortcut,
     ipcMain}                = require('electron');
 const remote                = app.remote;
 const path                  = require('path')
@@ -18,34 +21,6 @@ autoUpdater.logger = log;
 autoUpdater.logger.transports.file.level = 'debug';
 log.info('App starting...');
 
-// function makeTray(){
-//     const tray = new Tray(path.resolve(dir, `assets`, `IconTemplate.png`))
- 
-//     const contextMenu = Menu.buildFromTemplate([
-//         {
-//           label: `Show Gatsby Desktop`,
-//           click: openMainWindow,
-//         },
-//         {
-//           label: `Quit...`,
-//           click: async (): Promise<void> => {
-//             openMainWindow()
-//             const { response } = await dialog.showMessageBox({
-//               message: `Quit Gatsby Desktop?`,
-//               detail: `This will stop all running sites`,
-//               buttons: [`Cancel`, `Quit`],
-//               defaultId: 1,
-//               type: `question`,
-//             })
-    
-//             if (response === 1) {
-//               app.quit()
-//             }
-//           },
-//         },
-//       ])
-//       tray.setContextMenu(contextMenu)
-// }
 
 
 function createMenu(){
@@ -75,18 +50,7 @@ function createMenu(){
                         })
                     },
                 },
-                // {
-                //     label:'Check For Update',
-                //     click: async (): Promise<void> => {
-                //         const { response } = await dialog.showMessageBox({
-                //         message: `Check For Update`,
-                //         detail: `Soon will rollout this feature`,
-                //         buttons: [ `Ok`],
-                //         defaultId: 1,
-                //         type: `info`,
-                //         })
-                //     },
-                // },
+                
                 {
                     type:'separator'
                 },
@@ -94,12 +58,12 @@ function createMenu(){
                     type:'separator'
                 }, 
                 {
-                    label:'Quit',
+                    label:'Quit Glasswall Desktop',
                     click: async (): Promise<void> => {
                         //openMainWindow()
                         const { response } = await dialog.showMessageBox({
                         message: `Quit Glasswall Desktop?`,
-                        detail: `This will stop all running sites`,
+                        detail: `Do you really want to quit?`,
                         buttons: [`Cancel`, `Quit`],
                         defaultId: 1,
                         type: `question`,
@@ -109,6 +73,7 @@ function createMenu(){
                             app.quit()
                         }
                     },
+                    accelerator: 'CmdOrCtrl+Q'
                 }
             ]
         },
@@ -119,11 +84,12 @@ function createMenu(){
                 label: 'Learn More',
                 click() { 
                     shell.openExternal(' https://github.com/k8-proxy/glasswall-desktop')
-                } ,
-                accelerator: 'CmdOrCtrl+Shift+L'
+                },
+                accelerator: 'CmdOrCtrl+H'
             }
         ]
         }
+
     ]
     const menu = Menu.buildFromTemplate(template)
     Menu.setApplicationMenu(menu)
@@ -152,7 +118,10 @@ function makeWindow(): typeof BrowserWindow {
     })
    
     //to add chrome dev tools 
-    //window.webContents.openDevTools();
+    if(DEBUG){
+      window.webContents.openDevTools();
+    }
+   
     return window;
 }
 
@@ -204,6 +173,7 @@ app.on('activate', () => {
     makeWindow()
   }
 })
+
 
 
 ipcMain.on('app_version', (event:any) => {

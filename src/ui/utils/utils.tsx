@@ -1,5 +1,5 @@
 
-export const WEBSITE_URL                = 'https://rajmbcoderx.github.io/glasswall-desktop/';
+export const WEBSITE_URL                = 'https://glasswall-desktop.com';
 export const RELEASE_URL                = 'https://github.com/k8-proxy/glasswall-desktop/releases';
 export const LICENSE_URL                = 'https://github.com/k8-proxy/glasswall-desktop/blob/master/LICENSE';
 export const FW_URL                     = 'https://forensic-workbench.com/';

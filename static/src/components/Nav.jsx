@@ -51,21 +51,9 @@ export default function Nav() {
         </ul>
         <span className="nav-item social-icons">
           <span className="fa-stack">
-            <a href="">
+            <a  target="_blank" href="https://github.com/k8-proxy/glasswall-desktop">
               <i className="fas fa-circle fa-stack-2x"></i>
               <i className="fab fa-github fa-stack-1x"></i>
-            </a>
-          </span>
-          <span className="fa-stack">
-            <a href="">
-              <i className="fas fa-circle fa-stack-2x"></i>
-              <i className="fab fa-slack fa-stack-1x"></i>
-            </a>
-          </span>
-          <span className="fa-stack">
-            <a href="">
-              <i className="fas fa-circle fa-stack-2x"></i>
-              <i className="fab fa-twitter fa-stack-1x"></i>
             </a>
           </span>
         </span>
