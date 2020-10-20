@@ -19,7 +19,7 @@ export default function Demo() {
               <div className="video-wrapper">
                 <a
                   className   ="popup-youtube"
-                  href        ="https://www.youtube.com/watch?v=04v2ODsmtIs"
+                  href        ="https://youtu.be/Ww_Z6ErLGyg"
                   data-effect ="fadeIn"
                 >
                   <img

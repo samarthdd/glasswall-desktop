@@ -21,7 +21,7 @@ export default function Footer() {
                   <i className="fa fa-angle-double-right"></i>
                   <div className="media-body">
                     <a
-                      href="https://github.com/lensapp/lens#contributing"
+                      href="https://github.com/k8-proxy/glasswall-desktop"
                       className="primary"
                     >
                       How to Contribute?
@@ -32,7 +32,7 @@ export default function Footer() {
                   <i className="fa fa-angle-double-right"></i>
                   <div className="media-body">
                     <a
-                      href="https://github.com/lensapp/lens"
+                      href="https://github.com/k8-proxy/glasswall-desktop"
                       className="primary"
                     >
                       Source Code
@@ -42,16 +42,8 @@ export default function Footer() {
                 <li className="media">
                   <i className="fa fa-angle-double-right"></i>
                   <div className="media-body">
-                    <a href="http://k8slens.slack.com/" className="primary">
-                      Community Slack
-                    </a>
-                  </div>
-                </li>
-                <li className="media">
-                  <i className="fa fa-angle-double-right"></i>
-                  <div className="media-body">
                     <a
-                      href="https://github.com/lensapp/lensapp.github.io/blob/master/licenses/eula.md"
+                      href="https://github.com/k8-proxy/glasswall-desktop/blob/main/LICENSE"
                       className="primary"
                     >
                       EULA
@@ -62,7 +54,7 @@ export default function Footer() {
                   <i className="fa fa-angle-double-right"></i>
                   <div className="media-body">
                     <a
-                      href="https://www.mirantis.com/company/privacy-policy/"
+                      href="https://github.com/k8-proxy/glasswall-desktop/blob/main/LICENSE"
                       className="primary"
                     >
                       Privacy Policy
@@ -76,21 +68,9 @@ export default function Footer() {
             <div className="footer-col last">
               <h4>Community</h4>
               <span className="fa-stack">
-                <a href="https://github.com/lensapp/lens">
+                <a target="_blank" href="https://github.com/k8-proxy/glasswall-desktop">
                   <i className="fas fa-circle fa-stack-2x"></i>
                   <i className="fab fa-github fa-stack-1x"></i>
-                </a>
-              </span>
-              <span className="fa-stack">
-                <a href="http://k8slens.slack.com/">
-                  <i className="fas fa-circle fa-stack-2x"></i>
-                  <i className="fab fa-slack fa-stack-1x"></i>
-                </a>
-              </span>
-              <span className="fa-stack">
-                <a href="https://twitter.com/k8slens">
-                  <i className="fas fa-circle fa-stack-2x"></i>
-                  <i className="fab fa-twitter fa-stack-1x"></i>
                 </a>
               </span>
             </div>
