@@ -161,7 +161,7 @@ Please change DEBUG variable to true and restart the app to start the electron d
 ![In this file](img/Debugger.JPG)
 
 
-## Open Issues Highlishts
+## Open Issues Highlihts
 * Rebuild App: Signed build needs to be created for rebuild desktop app.
 * On selecting Hierarchy radio button, and uploading folder in single Hierarchy files are not getting saved in same Hierarchy format in target folder.
 * Upgrade installer not working on MAC OS
