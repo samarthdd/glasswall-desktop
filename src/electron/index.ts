@@ -7,6 +7,7 @@ const {
     Certificate,
     Menu,
     Tray,
+    globalShortcut,
     ipcMain}                = require('electron');
 const remote                = app.remote;
 const path                  = require('path')
@@ -57,12 +58,12 @@ function createMenu(){
                     type:'separator'
                 }, 
                 {
-                    label:'Quit',
+                    label:'Quit Glasswall Desktop',
                     click: async (): Promise<void> => {
                         //openMainWindow()
                         const { response } = await dialog.showMessageBox({
                         message: `Quit Glasswall Desktop?`,
-                        detail: `This will stop all running sites`,
+                        detail: `Do you really want to quit?`,
                         buttons: [`Cancel`, `Quit`],
                         defaultId: 1,
                         type: `question`,
@@ -72,6 +73,7 @@ function createMenu(){
                             app.quit()
                         }
                     },
+                    accelerator: 'CmdOrCtrl+Q'
                 }
             ]
         },
@@ -82,11 +84,12 @@ function createMenu(){
                 label: 'Learn More',
                 click() { 
                     shell.openExternal(' https://github.com/k8-proxy/glasswall-desktop')
-                } ,
-                accelerator: 'CmdOrCtrl+Shift+L'
+                },
+                accelerator: 'CmdOrCtrl+H'
             }
         ]
         }
+
     ]
     const menu = Menu.buildFromTemplate(template)
     Menu.setApplicationMenu(menu)
@@ -170,6 +173,7 @@ app.on('activate', () => {
     makeWindow()
   }
 })
+
 
 
 ipcMain.on('app_version', (event:any) => {

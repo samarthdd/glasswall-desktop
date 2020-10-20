@@ -53,7 +53,7 @@ Warning: This software is under active development. Use at your own risk.
 
 ### macOS
 
-Download the latest [glasswall-desktop release](https://github.com/k8-proxy/glasswall-desktop/releases/download/v0.1.0/glasswall-desktop-0.1.0.dmg).
+Download the latest [glasswall-desktop release](https://github.com/k8-proxy/glasswall-desktop/releases/download/v0.1.1/glasswall-desktop-0.1.1.dmg).
 
 Mac users will need to follow the below steps on the app when you first launch it, until we have [code signing](https://www.electron.build/code-signing) set up
 
@@ -75,12 +75,12 @@ TBD: Will automatically update when a new release is available.
 
 ### Windows
 
-Download the latest [glasswall-desktop release](https://github.com/k8-proxy/glasswall-desktop/releases/download/v0.1.0/glasswall-desktop-Setup-0.1.0.exe)
+Download the latest [glasswall-desktop release](https://github.com/k8-proxy/glasswall-desktop/releases/download/v0.1.1/glasswall-desktop-Setup-0.1.1.exe)
 
 Windows users will need to follow the below steps to install and launch the application.
 
 * **Step 1**
-Download the package from the above link, observe that .exe executable would be downloaded, glasswall-desktop-Setup-0.1.0.exe.
+Download the package from the above link, observe that .exe executable would be downloaded, glasswall-desktop-Setup-0.1.1.exe.
 
 
 * **Step 2**
@@ -104,7 +104,7 @@ Click on Get Started to navigate to the Rebuild Files page.
 ### Linux Snap
 
 Glasswall desktop is only available for 64-bit Linux systems.
-Download the latest [glasswall-desktop release](https://github.com/k8-proxy/glasswall-desktop/releases/download/v0.1.0/glasswall-desktop-Setup-0.1.0.snap)
+Download the latest [glasswall-desktop release](https://github.com/k8-proxy/glasswall-desktop/releases/download/v0.1.1/glasswall-desktop-Setup-0.1.1.snap)
 
 Linux/Ubuntu users will need to follow the below steps on the app when you first launch it.
 
@@ -155,13 +155,14 @@ To configure the codebase clone or download the codebase from the git and instal
 
 
 
+
 ## Debugging
 Please change DEBUG variable to true and restart the app to start the electron debugger for code debugging purposes.
 
 ![In this file](img/Debugger.JPG)
 
 
-## Open Issues Highlihts
+## Open Issues Highlishts
 * Rebuild App: Signed build needs to be created for rebuild desktop app.
 * On selecting Hierarchy radio button, and uploading folder in single Hierarchy files are not getting saved in same Hierarchy format in target folder.
 * Upgrade installer not working on MAC OS
