@@ -12,9 +12,9 @@ export default function Statistics() {
                 <div
                   id          ="happy-users-count_2"
                   className   ="counter-value number-count"
-                  data-count  ="5"
+                  data-count  ="10"
                 >
-                  1dsfdsfsd
+                  1.1
                 </div>
                 <p className="counter-info">Happy Users</p>
               </div>
@@ -22,24 +22,24 @@ export default function Statistics() {
                 <div
                   id          ="stargazers-count_"
                   className   ="counter-value number-count"
-                  data-count  ="30"
+                  data-count  ="5"
                 >
                   1
                 </div>
                 <p className="counter-info">
-                  <a href="https://github.com/lensapp/lens">Stargazers</a>
+                  <a href="https://github.com/k8-proxy/glasswall-desktop">Stargazers</a>
                 </p>
               </div>
               <div className="cell">
                 <div
                   id          ="forks-count_2"
                   className   ="counter-value number-count"
-                  data-count  ="10"
+                  data-count  ="2"
                 >
-                  1
+                  2
                 </div>
                 <p className="counter-info">
-                  <a href="https://github.com/lensapp/lens">Forks</a>
+                  <a href="https://github.com/k8-proxy/glasswall-desktop">Forks</a>
                 </p>
               </div>
             </div>
