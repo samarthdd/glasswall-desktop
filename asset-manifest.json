@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/glasswall-desktop/static/css/main.e9c05e4b.chunk.css",
-    "main.js": "/glasswall-desktop/static/js/main.434c827c.chunk.js",
-    "main.js.map": "/glasswall-desktop/static/js/main.434c827c.chunk.js.map",
+    "main.js": "/glasswall-desktop/static/js/main.cb176edd.chunk.js",
+    "main.js.map": "/glasswall-desktop/static/js/main.cb176edd.chunk.js.map",
     "runtime-main.js": "/glasswall-desktop/static/js/runtime-main.ca8a5410.js",
     "runtime-main.js.map": "/glasswall-desktop/static/js/runtime-main.ca8a5410.js.map",
     "static/js/2.c09c94ce.chunk.js": "/glasswall-desktop/static/js/2.c09c94ce.chunk.js",
     "static/js/2.c09c94ce.chunk.js.map": "/glasswall-desktop/static/js/2.c09c94ce.chunk.js.map",
     "index.html": "/glasswall-desktop/index.html",
-    "precache-manifest.92ae171e8a5b22f1d5ea1ec44edf4a35.js": "/glasswall-desktop/precache-manifest.92ae171e8a5b22f1d5ea1ec44edf4a35.js",
+    "precache-manifest.67f297962d563c2315071a7d38ff457f.js": "/glasswall-desktop/precache-manifest.67f297962d563c2315071a7d38ff457f.js",
     "service-worker.js": "/glasswall-desktop/service-worker.js",
     "static/css/main.e9c05e4b.chunk.css.map": "/glasswall-desktop/static/css/main.e9c05e4b.chunk.css.map",
     "static/js/2.c09c94ce.chunk.js.LICENSE.txt": "/glasswall-desktop/static/js/2.c09c94ce.chunk.js.LICENSE.txt",
@@ -25,6 +25,6 @@
     "static/js/runtime-main.ca8a5410.js",
     "static/js/2.c09c94ce.chunk.js",
     "static/css/main.e9c05e4b.chunk.css",
-    "static/js/main.434c827c.chunk.js"
+    "static/js/main.cb176edd.chunk.js"
   ]
 }
