@@ -104,7 +104,7 @@ Click on Get Started to navigate to the Rebuild Files page.
 ### Linux Snap
 
 Glasswall desktop is only available for 64-bit Linux systems.
-Download the latest [glasswall-desktop release](https://github.com/k8-proxy/glasswall-desktop/releases/download/v0.1.2/glasswall-desktop-Setup-0.1.2.snap)
+Download the latest [glasswall-desktop release](https://github.com/k8-proxy/glasswall-desktop/releases/download/v0.1.2/glasswall-desktop-0.1.2.snap)
 
 Linux/Ubuntu users will need to follow the below steps on the app when you first launch it.
 
