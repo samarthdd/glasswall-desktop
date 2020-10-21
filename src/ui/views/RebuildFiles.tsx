@@ -570,6 +570,7 @@ function RebuildFiles(){
             setshowAlertBox(true);
         }
         else {
+            
             setCounter((state: any)=>state + acceptedFiles.length)
             setRebuildFileNames([]);
             masterMetaFile.length =0;
@@ -584,7 +585,7 @@ function RebuildFiles(){
                     let guid: string;
                     guid =  Utils.guid();
                     setShowLoader(true);
-                    Utils.sleep(800);
+                    Utils.sleep(600);
                     await FileUploadUtils.makeRequest(data, url, guid, outputDirId, downloadResult);
                 })
             })
@@ -642,6 +643,9 @@ function RebuildFiles(){
     }
 
    
+    let files = (rowsPerPage > 0
+        ? rebuildFileNames && rebuildFileNames.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+        : rebuildFileNames)
 
     return(
         <div>   
@@ -730,7 +734,7 @@ function RebuildFiles(){
                                     </TableRow>
                                     </TableHead>
                                     <TableBody>
-                                    {rebuildFileNames.map((row) => (
+                                    {files.map((row) => (
                                         <TableRow key={row.name}>
                                         <TableCell align="left" className={classes.status}>{row.isError == true? <span>Failed</span>:<p>Success</p>}</TableCell>
                                         <TableCell align="left"><a id="download_link" href={row.sourceFileUrl} download={row.name} className={classes.downloadLink} title={row.name}><FileCopyIcon className={classes.fileIcon}/> {row.name}</a></TableCell>
@@ -749,14 +753,14 @@ function RebuildFiles(){
                                     ))}
                                     </TableBody>
                                 </Table>
-                                <button onClick={clearAll} className={rebuildFileNames.length>0?classes.deleteBtn:classes.deleteBtnDisabled}><DeleteIcon className={classes.btnIcon}/> Clear All</button>
+                                <button onClick={clearAll} className={files.length>0?classes.deleteBtn:classes.deleteBtnDisabled}><DeleteIcon className={classes.btnIcon}/> Clear All</button>
                                 </div>
                                 }
                             </div>
                             </div>
                        
                         {
-                        rebuildFileNames.length>0 &&
+                        files.length>0 &&
                          <CardActions className={classes.actions}>
                              <TablePagination
                                   onChangePage        ={handleChangePage }
