@@ -83,7 +83,7 @@ function createMenu(){
             {
                 label: 'Learn More',
                 click() { 
-                    shell.openExternal(' https://github.com/k8-proxy/glasswall-desktop')
+                    shell.openExternal(' https://github.com/k8-proxy/glasswall-desktop/blob/main/README.md')
                 },
                 accelerator: 'CmdOrCtrl+H'
             }

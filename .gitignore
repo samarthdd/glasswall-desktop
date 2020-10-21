@@ -10,3 +10,5 @@ static/build/*
 static/node_modules/*
 out/ui/*
 out/electron/*
+processed/*
+dist/*
