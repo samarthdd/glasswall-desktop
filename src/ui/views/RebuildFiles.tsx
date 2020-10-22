@@ -371,6 +371,7 @@ function RebuildFiles(){
     const [masterMetaFile, setMasterMetaFile]       = useState<Array<Metadata>>([]);
     const [outputDirType, setOutputDirType]         = useState(Utils.OUTPUT_DIR_FLAT)
     const [showAlertBox, setshowAlertBox]           = useState(false);  
+    const [files, setFiles]                         = useState<Array<RebuildResult>>([]);
 
     interface RebuildResult {
         id              : string,
@@ -437,6 +438,12 @@ function RebuildFiles(){
             setXml(rebuildFile.xmlResult);
           }
          }, [id, xml, open]);
+
+    React.useEffect(() => {
+     let rebuildResultsPerPage = rebuildFileNames && rebuildFileNames.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+       
+        setFiles(rebuildResultsPerPage)
+        }, [rowsPerPage, page, rebuildFileNames]);
 
 
 
@@ -573,6 +580,7 @@ function RebuildFiles(){
             
             setCounter((state: any)=>state + acceptedFiles.length)
             setRebuildFileNames([]);
+            setPage(0);
             masterMetaFile.length =0;
             outputDirId = Utils.guid()
             setFolderId(outputDirId);
@@ -641,11 +649,6 @@ function RebuildFiles(){
         promise = dialog.showOpenDialog(options)
         promise.then(successCallback, failureCallback);
     }
-
-   
-    let files = (rowsPerPage > 0
-        ? rebuildFileNames && rebuildFileNames.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-        : rebuildFileNames)
 
     return(
         <div>   
@@ -735,7 +738,7 @@ function RebuildFiles(){
                                     </TableHead>
                                     <TableBody>
                                     {files.map((row) => (
-                                        <TableRow key={row.name}>
+                                        <TableRow key={row.id}>
                                         <TableCell align="left" className={classes.status}>{row.isError == true? <span>Failed</span>:<p>Success</p>}</TableCell>
                                         <TableCell align="left"><a id="download_link" href={row.sourceFileUrl} download={row.name} className={classes.downloadLink} title={row.name}><FileCopyIcon className={classes.fileIcon}/> {row.name}</a></TableCell>
                                         {
