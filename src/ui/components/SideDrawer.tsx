@@ -20,6 +20,8 @@ import Logo                     from '../assets/images/logo.png'
 import Navbar                   from '../components/Navbar'
 import RebuildIcon              from '../assets/images/rebuild.png'
 import HomeIcon                 from '../assets/images/homeIcon.png';
+import Tooltip                  from '@material-ui/core/Tooltip';
+import dockerIcon               from '../assets/images/docker.png'
 
 const drawerWidth = 280;
 
@@ -117,8 +119,13 @@ const useStyles = makeStyles((theme) => ({
             paddingTop:          '10px',
             paddingBottom:       '10px',
             borderBottom:        '1px solid #ccc',
+            position:            'relative',
             '&:hover':{
-                background:      '#ddd',                
+                background:      '#ddd',        
+
+                '& div':{
+                    display:          'block'
+                }
             }
         }
     },
@@ -127,6 +134,25 @@ const useStyles = makeStyles((theme) => ({
             fontSize:             '15px',
             fontWeight:           'bold'
         }        
+    },
+    tooltipBox:{
+        display:                 'none',
+        position:                'fixed',
+        background:              '#0c3451',
+        color:                   '#fff',
+        margin:                  '10px',
+        padding:                 '20px',
+        borderRadius:            '5px',
+        left:                    '45px',
+        '&::before':{
+            content:             '" "',
+            height:              '10px',
+            width:               '10px',
+            position:            'absolute',
+            background:          '#0c3451',
+            left:                '-5px',
+            transform:           'rotate(45deg)',
+        }
     }
 }));
 type headerOptions = {
@@ -136,6 +162,15 @@ function SideDrawer({ showBack }: headerOptions) {
     const classes = useStyles();
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
+    // const [openTooltip, setopenTooltip] = React.useState(false);    
+
+    // const handleClose = () => {
+    //     setopenTooltip(false);
+    // };
+
+    // const handleOpen = () => {
+    //     setopenTooltip(true);
+    // };
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -155,6 +190,11 @@ function SideDrawer({ showBack }: headerOptions) {
         navName:    'Rebuild Files',
         navIcon:    RebuildIcon,
         anchLink:   '/rebuildFiles'    
+    },
+    {
+        navName:    'Local Rebuild Files',
+        navIcon:    dockerIcon,
+        anchLink:   '/localRebuildFiles'    
     }
 ]
 
@@ -208,14 +248,16 @@ function SideDrawer({ showBack }: headerOptions) {
                     </IconButton>
                 </div>
                 <Divider />
+                
                 <List className={classes.navList}>
                 {navData.map((nav, index) => (
-                        <ListItem key={index} button component={NavLink} to={nav.anchLink} activeClassName={classes.active}>
+                        <ListItem key={index} button component={NavLink} to={nav.anchLink} activeClassName={classes.active}>                             
                             <ListItemIcon><img src={nav.navIcon}  className={classes.icons}></img></ListItemIcon>
-                            <ListItemText primary={nav.navName} className={classes.navText}/>
+                            <div className={classes.tooltipBox}>{nav.navName}</div>
+                                <ListItemText primary={nav.navName} className={classes.navText}/>
                         </ListItem>
                     ))}
-                </List>               
+                </List>           
             </Drawer>
         </div>
     );

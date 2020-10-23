@@ -13,7 +13,7 @@ import { CardActions,
         TablePagination,
         Switch,
         FormControlLabel,
-        Tooltip,         
+        Tooltip,
     }                           from '@material-ui/core';
 import InfoOutlinedIcon         from '@material-ui/icons/InfoOutlined';
 import Footer                   from '../components/Footer';
@@ -421,7 +421,7 @@ const useStyles = makeStyles((theme) => ({
 
 
 
-function RebuildFiles(){
+function LocalRebuildFiles(){
     
     const classes = useStyles(); 
     const [fileNames, setFileNames]                 = useState<Array<string>>([]);
@@ -728,8 +728,8 @@ function RebuildFiles(){
                 <main className={classes.content}>
                     <div className={classes.toolbar} />  
                     <div className={classes.contentArea}>             
-                    <h3>Rebuild Files                   
-                    <div className={classes.toggleContainer}>
+                    <h3>Local Rebuild Files
+                   <div className={classes.toggleContainer}>
                     <FormControlLabel className={classes.toggleToolTip}
                         //title={flat ? "Flat" : "Hierarchy"}
                         value={flat ? "Flat" : "Hierarchy"}
@@ -768,14 +768,14 @@ function RebuildFiles(){
                             <div className={classes.tableField}>
                                 <div className={classes.settings}>  
                                     {/* <h2>Settings</h2> */}
-                                    <div className={classes.btnHeading}>                                                                           
-                                        {/* <div className={classes.headingGroup}>                                                                         
-                                            <h4>Select Directory Path </h4>
-                                            <span>*</span> 
+                                    <div className={classes.btnHeading}> 
+                                        <div className={classes.headingGroup}>                                                                         
+                                        <h4>Select Directory Path </h4>
+                                        <span>*</span> 
                                             <Tooltip title="Add" aria-label="add" className={classes.infoIcon}>                                            
                                                 <InfoOutlinedIcon className={classes.infobBtn}/>
                                             </Tooltip>
-                                        </div>   */}
+                                        </div>  
                                         <div className={classes.saveFileBtn}>
                                             <input 
                                                 readOnly        = {true} 
@@ -877,4 +877,4 @@ function RebuildFiles(){
     )
 }
 
-export default RebuildFiles;
+export default LocalRebuildFiles;
