@@ -90,7 +90,7 @@ export const makeRequest = async (request: any, sourceFileUrl: string, requestId
     var fileSize = payload.fileSize;
 
     
-    if(fileSize < 50){
+    if(fileSize < 6){
         const rebuiltBase64 = docker_exec_rebuild(payload,request.filename);
         if(rebuiltBase64 == null){
             resultCallback({'source':sourceFileUrl, 'url':'TBD', 'filename':request.filename, isError:true,
@@ -115,7 +115,7 @@ export const makeRequest = async (request: any, sourceFileUrl: string, requestId
     }
     else{
         resultCallback({'source':sourceFileUrl, 'url':'TBD', 'filename':request.filename, isError:true,
-             msg:'File too big. 4 bytes to 50 MB file size bracket', id:requestId, targetDir:folderId, original:request.content})
+             msg:'File too big. 4 bytes to 6 MB file size bracket', id:requestId, targetDir:folderId, original:request.content})
     }
 }
 
