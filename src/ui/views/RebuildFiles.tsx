@@ -408,7 +408,7 @@ const useStyles = makeStyles((theme) => ({
         '&::before':{
             content:                '" "',
             height:                 '10px',
-            width:                  '10px',
+            width:                  '16px',
             position:               'absolute',
             background:             '#0c3451',            
             left:                   '14px',
@@ -438,7 +438,8 @@ function RebuildFiles(){
     const [userTargetDir, setUserTargetDir]         = useState("");  
     const [masterMetaFile, setMasterMetaFile]       = useState<Array<Metadata>>([]);
     const [outputDirType, setOutputDirType]         = useState(Utils.OUTPUT_DIR_FLAT)
-    const [showAlertBox, setshowAlertBox]           = useState(false);  
+    const [showAlertBox, setshowAlertBox]           = useState(false);
+    const [flat, setFlat]                           = React.useState(true);  
 
     interface RebuildResult {
         id              : string,
@@ -481,7 +482,8 @@ function RebuildFiles(){
             setShowLoader(false);
             saveTextFile(JSON.stringify(masterMetaFile),  targetDir +"/", 'metadata.json');
 
-            if(userTargetDir !="" && outputDirType === Utils.OUTPUT_DIR_HIERARCY){
+            //if(userTargetDir !="" && outputDirType === Utils.OUTPUT_DIR_HIERARCY){
+            if(userTargetDir !="" && !flat){
                 let PATHS: string[];
                 PATHS=[]
                 rebuildFileNames.map(rebuild=>{
@@ -557,7 +559,8 @@ function RebuildFiles(){
             masterMetaFile.push(content);
             if(userTargetDir !=""){
                 var filepath = userTargetDir+"/";
-                if(outputDirType === Utils.OUTPUT_DIR_FLAT){
+                //if(outputDirType === Utils.OUTPUT_DIR_FLAT){
+                if(flat){
                     saveBase64File(result.cleanFile, filepath, result.filename );
                 }
             }
@@ -683,9 +686,9 @@ function RebuildFiles(){
         setMasterMetaFile([]);
     }
 
-    const handleChange= (e:any) =>{
-        setOutputDirType(e.currentTarget.value)
-    }
+    // const handleChange= (e:any) =>{
+    //     setOutputDirType(e.currentTarget.value)
+    // }
 
     const closeAlertBox = () => {
         setshowAlertBox(false);
@@ -716,9 +719,9 @@ function RebuildFiles(){
         : rebuildFileNames)
   
     
-    const [flat, SetFlat] = React.useState(true);
+   
     const changeDownloadmode = (event:any) => {
-        SetFlat((prev) => !prev);
+        setFlat((prev) => !prev);
     };   
     return(
         <div>   
@@ -728,7 +731,7 @@ function RebuildFiles(){
                 <main className={classes.content}>
                     <div className={classes.toolbar} />  
                     <div className={classes.contentArea}>             
-                    <h3>Rebuild Files                   
+                    <h3>Cloud Rebuild Files                   
                     <div className={classes.toggleContainer}>
                     <FormControlLabel className={classes.toggleToolTip}
                         //title={flat ? "Flat" : "Hierarchy"}
@@ -736,7 +739,8 @@ function RebuildFiles(){
                         control={<Switch color="primary" checked={flat} onChange={changeDownloadmode}/>} 
                         label={flat ? "Flat" : "Hierarchy"} />
                         <div className={classes.toggleToolTipTitle}>
-                                Flat
+                        The hierarchical filesystems to save processed files in a tree structure of directories,
+flat filesystem to saves in a ouput/single directory that contains all files with no subdirectories
                         </div>
                     </div>
                     </h3>
@@ -769,13 +773,13 @@ function RebuildFiles(){
                                 <div className={classes.settings}>  
                                     {/* <h2>Settings</h2> */}
                                     <div className={classes.btnHeading}>                                                                           
-                                        {/* <div className={classes.headingGroup}>                                                                         
+                                        <div className={classes.headingGroup}>                                                                         
                                             <h4>Select Directory Path </h4>
                                             <span>*</span> 
-                                            <Tooltip title="Add" aria-label="add" className={classes.infoIcon}>                                            
+                                            {/* <Tooltip title="Add" aria-label="add" className={classes.infoIcon}>                                            
                                                 <InfoOutlinedIcon className={classes.infobBtn}/>
-                                            </Tooltip>
-                                        </div>   */}
+                                            </Tooltip> */}
+                                        </div>  
                                         <div className={classes.saveFileBtn}>
                                             <input 
                                                 readOnly        = {true} 
@@ -811,7 +815,7 @@ function RebuildFiles(){
                                  </div>
                                  {rebuildFileNames.length>0 && 
                                 <div> 
-                                <h3>Rebuild Files
+                                <h3>Cloud Rebuild Files
                                     <button onClick={()=>open_file_exp(targetDir)} className={rebuildFileNames.length>0? classes.outFolderBtn:classes.outFolderBtnDissabled}><FolderIcon className={classes.btnIcon}/> Browse Output Folder</button>
                                 </h3>
                                 <Table className={classes.table} size="small" aria-label="a dense table">

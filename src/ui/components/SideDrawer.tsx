@@ -187,7 +187,7 @@ function SideDrawer({ showBack }: headerOptions) {
         anchLink:   '/home'    
     },
     {
-        navName:    'Rebuild Files',
+        navName:    'Cloud Rebuild Files',
         navIcon:    RebuildIcon,
         anchLink:   '/rebuildFiles'    
     },

@@ -633,31 +633,7 @@ function LocalRebuildFiles(){
 
     //Multi file drop callback 
     const handleDrop = async (acceptedFiles:any) =>{
-        let outputDirId: string;
-        if(userTargetDir ==""){
-            setshowAlertBox(true);
-        }
-        else {
-            
-            setCounter((state: any)=>state + acceptedFiles.length)
-            setRebuildFileNames([]);
-            masterMetaFile.length =0;
-            outputDirId = Utils.guid()
-            setFolderId(outputDirId);
-
-            //console.log(acceptedFiles[0].path)
-            acceptedFiles.map(async (file: File) => {
-                await FileUploadUtils.getFile(file).then(async (data: any) => {
-                    setFileNames((fileNames: any) =>[...fileNames, file.name]);
-                    var url = window.webkitURL.createObjectURL(file);
-                    let guid: string;
-                    guid =  Utils.guid();
-                    setShowLoader(true);
-                    Utils.sleep(600);
-                    await FileUploadUtils.makeRequest(data, url, guid, outputDirId, downloadResult);
-                })
-            })
-        }
+      alert("Local rebuild feature is under development")
     }  
 
     //view XML
@@ -736,7 +712,8 @@ function LocalRebuildFiles(){
                         control={<Switch color="primary" checked={flat} onChange={changeDownloadmode}/>} 
                         label={flat ? "Flat" : "Hierarchy"} />
                         <div className={classes.toggleToolTipTitle}>
-                                Flat
+                        The hierarchical filesystems to save processed files in a tree structure of directories,
+flat filesystem to saves in a ouput/single directory that contains all files with no subdirectories
                         </div>
                     </div>
                     </h3>
@@ -772,7 +749,7 @@ function LocalRebuildFiles(){
                                         <div className={classes.headingGroup}>                                                                         
                                         <h4>Select Directory Path </h4>
                                         <span>*</span> 
-                                            <Tooltip title="Add" aria-label="add" className={classes.infoIcon}>                                            
+                                            <Tooltip title="Select the output directory for processed files" aria-label="add" className={classes.infoIcon}>                                            
                                                 <InfoOutlinedIcon className={classes.infobBtn}/>
                                             </Tooltip>
                                         </div>  
