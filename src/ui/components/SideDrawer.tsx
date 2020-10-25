@@ -19,6 +19,7 @@ import { NavLink, Link }        from 'react-router-dom'
 import Logo                     from '../assets/images/logo.png'
 import Navbar                   from '../components/Navbar'
 import RebuildIcon              from '../assets/images/rebuild.png'
+import DockerIcon               from '../assets/images/docker.png'
 import HomeIcon                 from '../assets/images/homeIcon.png';
 
 const drawerWidth = 280;
@@ -155,6 +156,11 @@ function SideDrawer({ showBack }: headerOptions) {
         navName:    'Rebuild Files',
         navIcon:    RebuildIcon,
         anchLink:   '/rebuildFiles'    
+    },
+    {
+        navName:    'Rebuild Files With Docker',
+        navIcon:    DockerIcon,
+        anchLink:   '/dockerrebuildFiles'
     }
 ]
 

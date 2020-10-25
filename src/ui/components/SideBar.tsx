@@ -160,6 +160,18 @@ function MainLayout (){
                 </div>
                 </NavLink>
             </MenuItem>
+            <MenuItem className={classes.menuItem}>
+                <NavLink to="/dockerrebuildFiles" activeClassName={classes.active} className={classes.navLink}>
+                <div className={classes.menuName}>
+                    <div className={classes.leftImg}>
+                        <img src={RebuildIcon} className={classes.icons}></img>
+                    </div>
+                    <div className={classes.rightGrid}>
+                        <h3 className={classes.heading}>Rebuild Files With Docker</h3>
+                    </div>
+                </div>
+                </NavLink>
+            </MenuItem>
         </Paper >
     )
 }

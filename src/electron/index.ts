@@ -1,4 +1,4 @@
-const DEBUG: boolean = false;
+const DEBUG: boolean = true;
 
 const {
     app,
