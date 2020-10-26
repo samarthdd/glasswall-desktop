@@ -584,15 +584,14 @@ function DockerRebuildFiles(){
             masterMetaFile.length =0;
             outputDirId = Utils.guid()
             setFolderId(outputDirId);
-
+            setShowLoader(true);
             //console.log(acceptedFiles[0].path)
             acceptedFiles.map(async (file: File) => {
                 await DockerUtils.getFile(file).then(async (data: any) => {
                     setFileNames((fileNames: any) =>[...fileNames, file.name]);
                     var url = window.webkitURL.createObjectURL(file);
                     let guid: string;
-                    guid =  Utils.guid();
-                    setShowLoader(true);
+                    guid =  Utils.guid();                    
                     Utils.sleep(600);
                     await DockerUtils.makeRequest(data, url, guid, outputDirId, downloadResult);
                 })
