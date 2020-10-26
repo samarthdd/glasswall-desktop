@@ -6,6 +6,7 @@ import      WelcomePage           from './views/WelcomePage'
 import      RebuildFiles          from './views/RebuildFiles'
 import      DockerRebuildFiles    from './views/DockerRebuildFiles'
 import      HomePage              from './views/HomePage'
+import      LocalRebuildFiles     from './views/LocalRebuildFiles'
 
 import   * as Utils               from './utils/utils'
 

@@ -200,6 +200,15 @@ To configure the codebase clone or download the codebase from the git and instal
 ![Project Structure](img/Project%20Structure.JPG)
 
 
+## Release with git actions
+
+To release the linux version following steps are required
+
+1. Create Ubuntu One account on https://login.ubuntu.com/
+2. After creating Ubuntu One account login to https://snapcraft.io/ using account created in step 1
+3. Follow the instruction to register your app https://snapcraft.io/docs/registering-your-app-name app name will be "glasswall-desktop"
+4. After app name registration export the login credential using "snapcraft export-login --snaps SNAP_NAME --channels edge -" command.
+5. Copy the output of the command and add it as a github secret with name "snapcraft_token". Link on how to add secrets in github account https://docs.github.com/en/free-pro-team@latest/actions/reference/encrypted-secrets#creating-encrypted-secrets-for-a-repository
 
 
 ## Debugging

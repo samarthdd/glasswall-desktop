@@ -155,7 +155,7 @@ function MainLayout (){
                         <img src={RebuildIcon} className={classes.icons}></img>
                     </div>
                     <div className={classes.rightGrid}>
-                        <h3 className={classes.heading}>Rebuild Files</h3>
+                        <h3 className={classes.heading}>Local Rebuild Files</h3>
                     </div>
                 </div>
                 </NavLink>
