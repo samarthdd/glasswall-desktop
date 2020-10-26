@@ -1,4 +1,5 @@
-
+export const GW_DOCKER_IMG_NAME         = 'glasswallsolutions/evaluationsdk:1';
+export const GW_DOCKER_IMG_TAG          = '72216de678ab';
 export const WEBSITE_URL                = 'https://glasswall-desktop.com';
 export const RELEASE_URL                = 'https://github.com/k8-proxy/glasswall-desktop/releases';
 export const LICENSE_URL                = 'https://github.com/k8-proxy/glasswall-desktop/blob/master/LICENSE';
@@ -87,3 +88,65 @@ export const getFileHash=(content: string)=> {
   var sha1sum = hash.read();
   return sha1sum;
 }
+
+export const CONFIG_INI   = 
+"[GWConfig]\n\
+processMode=0\n\
+reportMode=0\n\
+fileStorageMode=2\n\
+fileType=*\n\
+inputLocation=/input\n\
+useSubfolders=1\n\
+outputLocation=/output\n\
+createOutputFolders=1\n\
+nonConformingDirName= NonConforming\n\
+managedDirName= Managed\n\
+quarantineNonconforming= 1\n\
+writeOutput= 1\n";
+
+export const CONFIG_XML   = 
+"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\
+<config>\n\
+<pdfConfig>\n\
+<metadata>sanitise</metadata>\n\
+<javascript>sanitise</javascript>\n\
+<acroform>sanitise</acroform>\n\
+<actions_all>sanitise</actions_all>\n\
+<embedded_files>sanitise</embedded_files>\n\
+<external_hyperlinks>sanitise</external_hyperlinks>\n\
+<internal_hyperlinks>sanitise</internal_hyperlinks>\n\
+<embedded_images>sanitise</embedded_images>\n\
+</pdfConfig>\n\
+<wordConfig>\n\
+<metadata>sanitise</metadata>\n\
+<macros>sanitise</macros>\n\
+<embedded_files>sanitise</embedded_files>\n\
+<review_comments>sanitise</review_comments>\n\
+<internal_hyperlinks>sanitise</internal_hyperlinks>\n\
+<external_hyperlinks>sanitise</external_hyperlinks>\n\
+<dynamic_data_exchange>sanitise</dynamic_data_exchange>\n\
+<embedded_images>sanitise</embedded_images>\n\
+</wordConfig>\n\
+<pptConfig>\n\
+<metadata>sanitise</metadata>\n\
+<macros>sanitise</macros>\n\
+<embedded_files>sanitise</embedded_files>\n\
+<review_comments>sanitise</review_comments>\n\
+<internal_hyperlinks>sanitise</internal_hyperlinks>\n\
+<external_hyperlinks>sanitise</external_hyperlinks>\n\
+<embedded_images>sanitise</embedded_images>\n\
+</pptConfig>\n\
+<xlsConfig>\n\
+<metadata>sanitise</metadata>\n\
+<macros>sanitise</macros>\n\
+<embedded_files>sanitise</embedded_files>\n\
+<internal_hyperlinks>sanitise</internal_hyperlinks>\n\
+<external_hyperlinks>sanitise</external_hyperlinks>\n\
+<review_comments>sanitise</review_comments>\n\
+<dynamic_data_exchange>sanitise</dynamic_data_exchange>\n\
+<embedded_images>sanitise</embedded_images>\n\
+</xlsConfig>	\n\
+<tiffConfig>\n\
+<geotiff>sanitise</geotiff>\n\
+</tiffConfig>\n\
+</config>"; 

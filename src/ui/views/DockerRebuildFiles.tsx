@@ -357,7 +357,7 @@ function DockerRebuildFiles(){
     
     const classes = useStyles(); 
     const [fileNames, setFileNames]                 = useState<Array<string>>([]);
-    const [rebuildFileNames, setRebuildFileNames]   = useState<Array<RebuildResult>>([]);
+    const [rebuildFileNames, setRebuildFileNames]   = useState<Array<DockerRebuildResult>>([]);
     const [counter, setCounter]                     = useState(0);
     const [loader, setShowLoader]                   = useState(false);  
     const [id, setId]                               = useState("");  
@@ -371,16 +371,16 @@ function DockerRebuildFiles(){
     const [masterMetaFile, setMasterMetaFile]       = useState<Array<Metadata>>([]);
     const [outputDirType, setOutputDirType]         = useState(Utils.OUTPUT_DIR_FLAT)
     const [showAlertBox, setshowAlertBox]           = useState(false);  
-    const [files, setFiles]                         = useState<Array<RebuildResult>>([]);
+    const [files, setFiles]                         = useState<Array<DockerRebuildResult>>([]);
 
-    interface RebuildResult {
+    interface DockerRebuildResult {
         id              : string,
         sourceFileUrl   : string;
         url             : string;
         name?           : string;
         msg?            : string;
         isError?        : boolean;
-        xmlResult       : string;
+        xmlResultDocker       : string;
         path?           : string;
         cleanFile?      : any;
       }
@@ -432,10 +432,10 @@ function DockerRebuildFiles(){
     
     
     React.useEffect(() => {
-        let rebuildFile: RebuildResult| undefined;
+        let rebuildFile: DockerRebuildResult| undefined;
         rebuildFile = rebuildFileNames.find((rebuildFile) => rebuildFile.id ==id);
-        if(rebuildFile){
-            setXml(rebuildFile.xmlResult);
+        if(rebuildFile){            
+            setXml(rebuildFile.xmlResultDocker);
           }
          }, [id, xml, open]);
 
@@ -457,7 +457,7 @@ function DockerRebuildFiles(){
                 sourceFileUrl: result.source,
                 isError: result.isError,
                 msg: result.msg,
-                xmlResult:result.xmlResult,
+                xmlResultDocker:result.xmlResult,
                 path: result.path,
                 cleanFile: result.cleanFile
                 }]);
@@ -471,8 +471,7 @@ function DockerRebuildFiles(){
             saveBase64File(result.cleanFile, cleanFilePath, result.filename );
 
             var OriginalFilePath = Utils._PROCESSED_FOLDER + result.targetDir + "/" + fileHash +  "/" + Utils._ORIGINAL_FOLDER;
-            saveBase64File(result.original, OriginalFilePath, result.filename);
-
+            saveBase64File(result.original, OriginalFilePath, result.filename);            
             var reportFilePath = Utils._PROCESSED_FOLDER + result.targetDir + "/" + fileHash +  "/" + Utils._REPORT_FOLDER;
             saveTextFile(result.xmlResult,reportFilePath, Utils.stipFileExt(result.filename)+'.xml');
 
@@ -592,7 +591,7 @@ function DockerRebuildFiles(){
                     var url = window.webkitURL.createObjectURL(file);
                     let guid: string;
                     guid =  Utils.guid();                    
-                    Utils.sleep(600);
+                    //Utils.sleep(600);
                     await DockerUtils.makeRequest(data, url, guid, outputDirId, downloadResult);
                 })
             })
