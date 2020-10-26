@@ -13,7 +13,7 @@ import { CardActions,
         TablePagination,
         Switch,
         FormControlLabel,
-        Tooltip,         
+        Tooltip,
     }                           from '@material-ui/core';
 import InfoOutlinedIcon         from '@material-ui/icons/InfoOutlined';
 import Footer                   from '../components/Footer';
@@ -408,7 +408,7 @@ const useStyles = makeStyles((theme) => ({
         '&::before':{
             content:                '" "',
             height:                 '10px',
-            width:                  '16px',
+            width:                  '10px',
             position:               'absolute',
             background:             '#0c3451',            
             left:                   '14px',
@@ -421,7 +421,7 @@ const useStyles = makeStyles((theme) => ({
 
 
 
-function RebuildFiles(){
+function LocalRebuildFiles(){
     
     const classes = useStyles(); 
     const [fileNames, setFileNames]                 = useState<Array<string>>([]);
@@ -438,9 +438,7 @@ function RebuildFiles(){
     const [userTargetDir, setUserTargetDir]         = useState("");  
     const [masterMetaFile, setMasterMetaFile]       = useState<Array<Metadata>>([]);
     const [outputDirType, setOutputDirType]         = useState(Utils.OUTPUT_DIR_FLAT)
-    const [showAlertBox, setshowAlertBox]           = useState(false);
-    const [flat, setFlat]                           = React.useState(true);
-    const [files, setFiles]                         = useState<Array<RebuildResult>>([]);  
+    const [showAlertBox, setshowAlertBox]           = useState(false);  
 
     interface RebuildResult {
         id              : string,
@@ -483,8 +481,7 @@ function RebuildFiles(){
             setShowLoader(false);
             saveTextFile(JSON.stringify(masterMetaFile),  targetDir +"/", 'metadata.json');
 
-            //if(userTargetDir !="" && outputDirType === Utils.OUTPUT_DIR_HIERARCY){
-            if(userTargetDir !="" && !flat){
+            if(userTargetDir !="" && outputDirType === Utils.OUTPUT_DIR_HIERARCY){
                 let PATHS: string[];
                 PATHS=[]
                 rebuildFileNames.map(rebuild=>{
@@ -508,12 +505,6 @@ function RebuildFiles(){
             setXml(rebuildFile.xmlResult);
           }
          }, [id, xml, open]);
-
-    React.useEffect(() => {
-     let rebuildResultsPerPage = rebuildFileNames && rebuildFileNames.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
-       
-        setFiles(rebuildResultsPerPage)
-        }, [rowsPerPage, page, rebuildFileNames]);
 
 
 
@@ -566,8 +557,7 @@ function RebuildFiles(){
             masterMetaFile.push(content);
             if(userTargetDir !=""){
                 var filepath = userTargetDir+"/";
-                //if(outputDirType === Utils.OUTPUT_DIR_FLAT){
-                if(flat){
+                if(outputDirType === Utils.OUTPUT_DIR_FLAT){
                     saveBase64File(result.cleanFile, filepath, result.filename );
                 }
             }
@@ -643,32 +633,7 @@ function RebuildFiles(){
 
     //Multi file drop callback 
     const handleDrop = async (acceptedFiles:any) =>{
-        let outputDirId: string;
-        if(userTargetDir ==""){
-            setshowAlertBox(true);
-        }
-        else {
-            
-            setCounter((state: any)=>state + acceptedFiles.length)
-            setRebuildFileNames([]);
-            setPage(0);
-            masterMetaFile.length =0;
-            outputDirId = Utils.guid()
-            setFolderId(outputDirId);
-
-            //console.log(acceptedFiles[0].path)
-            acceptedFiles.map(async (file: File) => {
-                await FileUploadUtils.getFile(file).then(async (data: any) => {
-                    setFileNames((fileNames: any) =>[...fileNames, file.name]);
-                    var url = window.webkitURL.createObjectURL(file);
-                    let guid: string;
-                    guid =  Utils.guid();
-                    setShowLoader(true);
-                    Utils.sleep(600);
-                    await FileUploadUtils.makeRequest(data, url, guid, outputDirId, downloadResult);
-                })
-            })
-        }
+      alert("Local rebuild feature is under development")
     }  
 
     //view XML
@@ -694,9 +659,9 @@ function RebuildFiles(){
         setMasterMetaFile([]);
     }
 
-    // const handleChange= (e:any) =>{
-    //     setOutputDirType(e.currentTarget.value)
-    // }
+    const handleChange= (e:any) =>{
+        setOutputDirType(e.currentTarget.value)
+    }
 
     const closeAlertBox = () => {
         setshowAlertBox(false);
@@ -721,10 +686,16 @@ function RebuildFiles(){
         promise.then(successCallback, failureCallback);
     }
 
+   
+    let files = (rowsPerPage > 0
+        ? rebuildFileNames && rebuildFileNames.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+        : rebuildFileNames)
+  
+    
+    const [flat, SetFlat] = React.useState(true);
     const changeDownloadmode = (event:any) => {
-        setFlat((prev) => !prev);
-    } 
-
+        SetFlat((prev) => !prev);
+    };   
     return(
         <div>   
             {open && <RawXml content={xml} isOpen={open} handleOpen={openXml}/>   }                
@@ -733,8 +704,8 @@ function RebuildFiles(){
                 <main className={classes.content}>
                     <div className={classes.toolbar} />  
                     <div className={classes.contentArea}>             
-                    <h3>Cloud Rebuild Files                   
-                    <div className={classes.toggleContainer}>
+                    <h3>Local Rebuild Files
+                   <div className={classes.toggleContainer}>
                     <FormControlLabel className={classes.toggleToolTip}
                         //title={flat ? "Flat" : "Hierarchy"}
                         value={flat ? "Flat" : "Hierarchy"}
@@ -774,13 +745,13 @@ flat filesystem to saves in a ouput/single directory that contains all files wit
                             <div className={classes.tableField}>
                                 <div className={classes.settings}>  
                                     {/* <h2>Settings</h2> */}
-                                    <div className={classes.btnHeading}>                                                                           
+                                    <div className={classes.btnHeading}> 
                                         <div className={classes.headingGroup}>                                                                         
-                                            <h4>Select Directory Path </h4>
-                                            <span>*</span> 
-                                            {/* <Tooltip title="Add" aria-label="add" className={classes.infoIcon}>                                            
+                                        <h4>Select Directory Path </h4>
+                                        <span>*</span> 
+                                            <Tooltip title="Select the output directory for processed files" aria-label="add" className={classes.infoIcon}>                                            
                                                 <InfoOutlinedIcon className={classes.infobBtn}/>
-                                            </Tooltip> */}
+                                            </Tooltip>
                                         </div>  
                                         <div className={classes.saveFileBtn}>
                                             <input 
@@ -817,7 +788,7 @@ flat filesystem to saves in a ouput/single directory that contains all files wit
                                  </div>
                                  {rebuildFileNames.length>0 && 
                                 <div> 
-                                <h3>Cloud Rebuild Files
+                                <h3>Rebuild Files
                                     <button onClick={()=>open_file_exp(targetDir)} className={rebuildFileNames.length>0? classes.outFolderBtn:classes.outFolderBtnDissabled}><FolderIcon className={classes.btnIcon}/> Browse Output Folder</button>
                                 </h3>
                                 <Table className={classes.table} size="small" aria-label="a dense table">
@@ -831,7 +802,7 @@ flat filesystem to saves in a ouput/single directory that contains all files wit
                                     </TableHead>
                                     <TableBody>
                                     {files.map((row) => (
-                                        <TableRow key={row.id}>
+                                        <TableRow key={row.name}>
                                         <TableCell align="left" className={classes.status}>{row.isError == true? <span>Failed</span>:<p>Success</p>}</TableCell>
                                         <TableCell align="left"><a id="download_link" href={row.sourceFileUrl} download={row.name} className={classes.downloadLink} title={row.name}><FileCopyIcon className={classes.fileIcon}/> {row.name}</a></TableCell>
                                         {
@@ -883,4 +854,4 @@ flat filesystem to saves in a ouput/single directory that contains all files wit
     )
 }
 
-export default RebuildFiles;
+export default LocalRebuildFiles;

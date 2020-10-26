@@ -5,6 +5,7 @@ import      {HashRouter, Route }  from 'react-router-dom'
 import      WelcomePage           from './views/WelcomePage'
 import      RebuildFiles          from './views/RebuildFiles'
 import      HomePage              from './views/HomePage'
+import      LocalRebuildFiles     from './views/LocalRebuildFiles'
 
 import   * as Utils               from './utils/utils'
 
@@ -15,6 +16,7 @@ const App = () => (
         <Route path="/"                       exact component=  { localStorage.getItem(Utils.WELCOME_PAGE_VISTIED_KEY) != Utils.WELCOME_PAGE_VISTIED_VAL ? WelcomePage:RebuildFiles} />
         <Route path="/home"                   exact component=  { HomePage            } />
         <Route path="/rebuildFiles"           exact component=  { RebuildFiles        } />
+        <Route path="/localRebuildFiles"      exact component=  { LocalRebuildFiles   } />
       </div>
     </HashRouter>
 );
