@@ -19,6 +19,7 @@ import { NavLink, Link }        from 'react-router-dom'
 import Logo                     from '../assets/images/logo.png'
 import Navbar                   from '../components/Navbar'
 import RebuildIcon              from '../assets/images/rebuild.png'
+import DockerIcon               from '../assets/images/docker.png'
 import HomeIcon                 from '../assets/images/homeIcon.png';
 import Tooltip                  from '@material-ui/core/Tooltip';
 import dockerIcon               from '../assets/images/docker.png'
@@ -192,9 +193,9 @@ function SideDrawer({ showBack }: headerOptions) {
         anchLink:   '/rebuildFiles'    
     },
     {
-        navName:    'Local Rebuild Files',
-        navIcon:    dockerIcon,
-        anchLink:   '/localRebuildFiles'    
+        navName:    'Rebuild Files With Docker',
+        navIcon:    DockerIcon,
+        anchLink:   '/dockerrebuildFiles'
     }
 ]
 

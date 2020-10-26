@@ -19,6 +19,7 @@ Glasswall Desktop is a desktop application that provides multi file drag and dro
 1. Just drag and drop the files from your local hard disk, and the Glasswall Desktop will rebuild them using the Glasswall Rebuild API (currently hosted on Azure).
 2. To support different directory structures, give freedom to save the files at custom directory structure or at default location by maintaining the same directory as that of the parent folder.
 3. To support different platforms (Windows, MAC and Linux)
+4. To provide online and offline file-rebuild support. The online version to use glasswall-rebuild cloud hosting of rebuild engine to rebuild files. The offline version to use glasswall docker image to provide the ame functions offline.
 
 # [Glasswall Desktop](https://k8-proxy.github.io/glasswall-desktop/)
 
@@ -99,6 +100,51 @@ Observe that once the installation is complete, app is launched successfully sho
 Click on Get Started to navigate to the Rebuild Files page.
 
 ![glasswall-desktop Screenshot](img/Windows_Rebuild_Page.JPG)
+
+
+* **Step 5**
+
+**Rebuild offline with glasswall docker**
+
+* Prerequisite - Ensure docker is installed on the machine running the rebuild with docker.
+Platform specific installation guides are avalaible at https://docs.docker.com/engine/install/
+
+
+* Click on the "Docker" icon in the sidebar menu.
+
+![glasswall-docker Screenshot](img/docker-rebuild.png)
+
+* Choose the files to rebuild and the target directory.
+
+* For first time installations, the application will pull the glasswallsolutions/evaluationsdk:1 docker image from docker-hub registry.
+
+![glasswall-docker Screenshot](img/gw_docker_image.png)
+
+* For first time rebuild, the application will ask for user permission to share file systems with docker
+
+![glasswall-docker Screenshot](img/docker_share_notification.png)
+
+
+Allow by clicking "Share It".
+
+* To avoid this notification in future, note the "temp" directory that the application asks to allow access to. Follow below steps to add this directory permanently in docker file sharing settings to avoid these notifications in the future
+
+* Open "Docker-Settings" from systemtray
+
+
+![glasswall-docker Screenshot](img/open_docker_setting.png)
+
+* Open "File-Sharing" tab and click on the "+" icon
+
+
+![glasswall-docker Screenshot](img/docker_file_share_add_dir.png)
+
+* Add the diectory noted above, for which the notification appears
+
+
+![glasswall-docker Screenshot](img/allow_docker_share.png)
+
+Once added, further rebuilds will not prompt to allow sharing the directory each time when using docker to rebuild files.
 
 
 ### Linux Snap
