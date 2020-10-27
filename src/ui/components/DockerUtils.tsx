@@ -92,6 +92,16 @@ export const makeRequest = async (request: any, sourceFileUrl: string, requestId
     
     if(fileSize < 6){
         const rebuiltBase64 = docker_exec_rebuild(payload,request.filename);
+        if(rebuiltBase64 == -1 ){
+            resultCallback({'source':sourceFileUrl, 'url':'TBD', 'filename':request.filename, isError:true,
+                msg:'Docker Daemon is not started', id:requestId, targetDir:folderId, original:request.content});
+                return;
+        }
+        if(rebuiltBase64 == -2 ){
+            resultCallback({'source':sourceFileUrl, 'url':'TBD', 'filename':request.filename, isError:true,
+                msg:'Docker not installed', id:requestId, targetDir:folderId, original:request.content});
+                return;
+        }
         if(rebuiltBase64 == null){
             resultCallback({'source':sourceFileUrl, 'url':'TBD', 'filename':request.filename, isError:true,
                 msg:'File could not be rebuilt', id:requestId, targetDir:folderId, original:request.content});
@@ -184,7 +194,18 @@ export const docker_exec_rebuild = (payload: any,fileName:string) => {
     var options={"timeout":5000};
     var totalOutput : any;
     // Check if image there
-    var checkResponse = spawnSync('docker', ['images'],options);    
+    var checkResponse = spawnSync('docker', ['images'],options); 
+    console.log(JSON.stringify(checkResponse));  
+    if(checkResponse.hasOwnProperty("error")){
+        let error =  checkResponse["error"];
+        if(error.hasOwnProperty("errno")){
+            let errno =  error["errno"];
+            if(errno.indexOf("ENOENT") > -1 ){
+                return -2;
+            }
+        }
+        
+    } 
     if(checkResponse.hasOwnProperty("output")){        
         for(var i=0;i<checkResponse["output"].length;i++){
             var output = checkResponse["output"][i];            
@@ -226,6 +247,9 @@ export const docker_exec_rebuild = (payload: any,fileName:string) => {
             }            
         }
         console.log("Rebuild output = "+totalOutput);
+        if(totalOutput.indexOf("error during connect") > -1){
+            return -1;
+        }
         if (fs.existsSync(path.join(outputDir,'Managed'))) {
             const outFile = path.join(outputDir,'Managed',fileName);
             if(fs.existsSync(outFile)){
