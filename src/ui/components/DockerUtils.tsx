@@ -48,7 +48,7 @@ const writeDecodedBase64File = (baseBase64Response: string, xmlReport:string, re
        ba[i] = bs.charCodeAt(i);
    }
    var file = new Blob([ba], { type: request.type });
-   var url = window.webkitURL.createObjectURL(file);
+   var url = window.webkitURL.createObjectURL(file);   
    resultCallback({'source':sourceFileUrl, 'url':url, 'filename':request.filename, isError:false, msg:'',
        cleanFile:decodedBase64, xmlResult: xmlReport, id:requestId, targetDir:targetFolder, original:request.content, path:request.path})
    
@@ -129,36 +129,25 @@ export const getAnalysisResult= async (isBinaryFile: boolean, reBuildResponse: a
     payload = getAnalysisPayload(request)
     var fileSize = payload.fileSize;
     // Files smaller than 6MB - Normal
-    payload = JSON.stringify(payload)
-    Utils.sleep(500);
+    //payload = JSON.stringify(payload)
+    //Utils.sleep(500);
 
     if(fileSize < 6){
-        return await axios.post(url, payload, {
-                headers: {
-                    "x-api-key": Utils.REBUILD_API_KEY,
-                    "Content-Type": "application/json"
-                }
-            })
-        .then((response: { status: string | number; data: string; }) => {
-            console.log("response.status" + response.status)
-            if(response.status === 200){
-               if(isBinaryFile){
-                    writeBinaryFile(reBuildResponse, response.data, request, sourceFile, requestId, targetFolder, resultCallback)
-               }else{
-                    writeDecodedBase64File(reBuildResponse, response.data, request, sourceFile, requestId,
-                         targetFolder, resultCallback)
-               }
+        try{
+               var xml = docker_exec_analysis(payload,request.filename);                              
+               writeDecodedBase64File(reBuildResponse, xml, request, sourceFile, requestId,
+                         targetFolder, resultCallback)               
             }
-        })
-        .catch((err: { message: string; }) => {
+        catch(err: any){
             console.log("11" + err.message);
+            console.log("11" + err.stack);
             resultCallback({'source':sourceFile, 'url':'TBD', 'filename':request.filename, isError:true,
                  msg:err.message, id:requestId, targetDir:targetFolder, original:request.content})
-        })
+        }
     }
     else{
         resultCallback({'source':sourceFile, 'url':'TBD', 'filename':request.filename, isError:true,
-             msg:'File too big. 4 bytes to 30 MB file size bracket', id:requestId, targetDir:targetFolder, original:request.content})
+             msg:'File too big. 4 bytes to 6 MB file size bracket', id:requestId, targetDir:targetFolder, original:request.content})
     }
 }
 
@@ -182,8 +171,7 @@ export const docker_exec_rebuild = (payload: any,fileName:string) => {
     const directory = path.join('.', 'temp', id);
     const inputDir = path.join(directory,'input');
     const outputDir = path.join(directory,'output');
-    shell.mkdir('-p', directory);
-    //fs.mkdirSync(directory);
+    shell.mkdir('-p', directory);    
     fs.mkdirSync(inputDir);
     fs.mkdirSync(outputDir);
     console.log('payload '+JSON.stringify(payload));    
@@ -207,9 +195,9 @@ export const docker_exec_rebuild = (payload: any,fileName:string) => {
     }
     console.log("Image check output = "+totalOutput);    
     // Pull if not
-    if (totalOutput.indexOf("72216de678ab") == -1){
+    if (totalOutput.indexOf(Utils.GW_DOCKER_IMG_TAG) == -1){
         totalOutput = "";
-        var pullResponse = spawnSync('docker', [ 'pull','glasswallsolutions/evaluationsdk:1']);
+        var pullResponse = spawnSync('docker', [ 'pull',Utils.GW_DOCKER_IMG_NAME]);
         if(pullResponse.hasOwnProperty("output")){            
             for(var i=0;i<pullResponse["output"].length;i++){
                 var output = pullResponse["output"][i];        
@@ -226,7 +214,7 @@ export const docker_exec_rebuild = (payload: any,fileName:string) => {
                                         '--rm',
                                         '-v', resolve(inputDir)+':/input',
                                         '-v', resolve(outputDir)+':/output',
-                                        'glasswallsolutions/evaluationsdk:1']);
+                                        Utils.GW_DOCKER_IMG_NAME]);
     console.log("Got response "+String(spawned))             
      if(spawned.hasOwnProperty("output")){
         console.log("Spawned length "+spawned["output"].length);
@@ -260,6 +248,101 @@ export const docker_exec_rebuild = (payload: any,fileName:string) => {
      // TODO : Cleanup temp
      return null;
 }
+
+export const docker_exec_analysis = (payload: any,fileName:string) => {
+    const id = new UUID(4).format();
+    const directory = path.join('.', 'temp', id);
+    const inputDir = path.join(directory,'input');
+    const outputDir = path.join(directory,'output');
+    shell.mkdir('-p', directory);    
+    fs.mkdirSync(inputDir);
+    fs.mkdirSync(outputDir);
+    console.log('<docker_exec_analysis> payload '+JSON.stringify(payload));    
+    console.log('<docker_exec_analysis> fileName '+fileName);
+    console.log('<docker_exec_analysis> inputDir '+inputDir);
+    console.log('<docker_exec_analysis> outputDir '+outputDir);
+    var base64Data = payload.Base64.replace(/^data:image\/png;base64,/, "");
+    fs.writeFileSync(path.join(inputDir,fileName),base64Data,{encoding:"base64"});
+    console.log("<docker_exec_analysis> Created analysis dirs in "+directory+", inputDir "+inputDir+", outputDir"+outputDir);
+    var options={"timeout":5000};
+    var totalOutput : any;
+    // Check if image there
+    var checkResponse = spawnSync('docker', ['images'],options);    
+    if(checkResponse.hasOwnProperty("output")){        
+        for(var i=0;i<checkResponse["output"].length;i++){
+            var output = checkResponse["output"][i];            
+            if(output != null && output != ""){
+                totalOutput = totalOutput+output;
+            }            
+        }
+    }
+    console.log("<docker_exec_analysis> Image check output = "+totalOutput);    
+    // Pull if not
+    if (totalOutput.indexOf(Utils.GW_DOCKER_IMG_TAG) == -1){
+        totalOutput = "";
+        var pullResponse = spawnSync('docker', [ 'pull',Utils.GW_DOCKER_IMG_NAME]);
+        if(pullResponse.hasOwnProperty("output")){            
+            for(var i=0;i<pullResponse["output"].length;i++){
+                var output = pullResponse["output"][i];        
+                if(output != null && output != ""){
+                    totalOutput = totalOutput+output;
+                }            
+            }
+        console.log("<docker_exec_analysis> PullResponse output = "+totalOutput);        
+        }
+    }
+    totalOutput = "";
+    // Run container        
+    let configDir = resolve('./config');
+    if (!fs.existsSync(configDir)){
+        fs.mkdirSync(configDir);
+    }
+    fs.openSync(path.join(configDir,"config.ini"),'w');
+    fs.openSync(path.join(configDir,"config.xml"),'w');
+    fs.writeFileSync(path.join(configDir,"config.ini"),Utils.CONFIG_INI);
+    fs.writeFileSync(path.join(configDir,"config.xml"),Utils.CONFIG_XML);    
+    console.log('Config dir - '+(configDir));
+    var spawned = spawnSync('docker', [ 'run',
+                                        '--rm',
+                                        '-v', configDir+':/home/glasswall',
+                                        '-v', resolve(inputDir)+':/input',
+                                        '-v', resolve(outputDir)+':/output',
+                                        Utils.GW_DOCKER_IMG_NAME]);
+    console.log("<docker_exec_analysis> Got response "+String(spawned))             
+     if(spawned.hasOwnProperty("output")){
+        console.log("<docker_exec_analysis> Spawned length "+spawned["output"].length);
+        for(var i=0;i<spawned["output"].length;i++){
+            var output = spawned["output"][i];
+            console.log("<docker_exec_analysis> Spawned output"+output);
+            if(output != null && output != ""){
+                totalOutput = totalOutput+output;
+            }            
+        }
+        console.log("<docker_exec_analysis> Analysis output = "+totalOutput);
+        if (fs.existsSync(path.join(outputDir,'Managed'))) {
+            const outFile = path.join(outputDir,'Managed',fileName+'.xml');
+            if(fs.existsSync(outFile)){
+                const contents = fs.readFileSync(outFile);    
+                console.log('XML content - '+contents); 
+                return contents;
+            }
+            else{
+                console.log('<docker_exec_analysis> File failed analysis, Managed dir was there but not the rebuilt file');
+                return null;
+            }
+        }
+        else{
+            console.log('<docker_exec_analysis> File failed analysis');
+            return null;
+        }
+     }
+     else{
+        console.log("<docker_exec_analysis> Does not have output property");
+     }
+     // TODO : Cleanup temp
+     return null;
+}
+
 
 const new_guid = () => {
         return new UUID(4).format()

@@ -279,6 +279,19 @@ const useStyles = makeStyles((theme) => ({
     btnHeading:{
         float:                      'left',
         width:                      '100%',
+        '& h4':{
+            position:               'relative',
+            float:                  'left',            
+        },
+        '& span':{
+            color:                  'red',
+            float:                  'left',
+            margin:                 '14px 5px 0 0px',
+        },
+    },
+    headingGroup:{
+        float:                      'left',
+        width:                      '100%'
     },
     fileType:{
         float:                      'left',
@@ -410,7 +423,7 @@ function DockerRebuildFiles(){
     
     const classes = useStyles(); 
     const [fileNames, setFileNames]                 = useState<Array<string>>([]);
-    const [rebuildFileNames, setRebuildFileNames]   = useState<Array<RebuildResult>>([]);
+    const [rebuildFileNames, setRebuildFileNames]   = useState<Array<DockerRebuildResult>>([]);
     const [counter, setCounter]                     = useState(0);
     const [loader, setShowLoader]                   = useState(false);  
     const [id, setId]                               = useState("");  
@@ -423,17 +436,17 @@ function DockerRebuildFiles(){
     const [userTargetDir, setUserTargetDir]         = useState("");  
     const [masterMetaFile, setMasterMetaFile]       = useState<Array<Metadata>>([]);
     const [showAlertBox, setshowAlertBox]           = useState(false);  
-    const [files, setFiles]                         = useState<Array<RebuildResult>>([]);
+    const [files, setFiles]                         = useState<Array<DockerRebuildResult>>([]);
     const [flat, setFlat]                           = React.useState(true);
 
-    interface RebuildResult {
+    interface DockerRebuildResult {
         id              : string,
         sourceFileUrl   : string;
         url             : string;
         name?           : string;
         msg?            : string;
         isError?        : boolean;
-        xmlResult       : string;
+        xmlResultDocker       : string;
         path?           : string;
         cleanFile?      : any;
       }
@@ -485,10 +498,10 @@ function DockerRebuildFiles(){
     
     
     React.useEffect(() => {
-        let rebuildFile: RebuildResult| undefined;
+        let rebuildFile: DockerRebuildResult| undefined;
         rebuildFile = rebuildFileNames.find((rebuildFile) => rebuildFile.id ==id);
-        if(rebuildFile){
-            setXml(rebuildFile.xmlResult);
+        if(rebuildFile){            
+            setXml(rebuildFile.xmlResultDocker);
           }
          }, [id, xml, open]);
 
@@ -510,7 +523,7 @@ function DockerRebuildFiles(){
                 sourceFileUrl: result.source,
                 isError: result.isError,
                 msg: result.msg,
-                xmlResult:result.xmlResult,
+                xmlResultDocker:result.xmlResult,
                 path: result.path,
                 cleanFile: result.cleanFile
                 }]);
@@ -524,8 +537,7 @@ function DockerRebuildFiles(){
             saveBase64File(result.cleanFile, cleanFilePath, result.filename );
 
             var OriginalFilePath = Utils._PROCESSED_FOLDER + result.targetDir + "/" + fileHash +  "/" + Utils._ORIGINAL_FOLDER;
-            saveBase64File(result.original, OriginalFilePath, result.filename);
-
+            saveBase64File(result.original, OriginalFilePath, result.filename);            
             var reportFilePath = Utils._PROCESSED_FOLDER + result.targetDir + "/" + fileHash +  "/" + Utils._REPORT_FOLDER;
             saveTextFile(result.xmlResult,reportFilePath, Utils.stipFileExt(result.filename)+'.xml');
 
@@ -645,7 +657,7 @@ function DockerRebuildFiles(){
                     var url = window.webkitURL.createObjectURL(file);
                     let guid: string;
                     guid =  Utils.guid();                    
-                    Utils.sleep(600);
+                    //Utils.sleep(600);
                     await DockerUtils.makeRequest(data, url, guid, outputDirId, downloadResult);
                 })
             })
@@ -705,7 +717,7 @@ function DockerRebuildFiles(){
 
     return(
         <div>   
-            {open && <RawXml content={xml} isOpen={open} handleOpen={openXml}/>   }                
+            {open && <RawXml content={'\'' + xml + '\''} isOpen={open} handleOpen={openXml}/>   }                
             <div className={classes.root}> 
                 <SideDrawer showBack={false}/>
                 <main className={classes.content}>
@@ -753,7 +765,13 @@ flat filesystem to saves in a ouput/single directory that contains all files wit
                                 <div className={classes.settings}>  
                                     {/* <h2>Settings</h2> */}
                                     <div className={classes.btnHeading}>                                                                           
-                                        <h4>Select Directory Path</h4>
+                                    <div className={classes.headingGroup}>                                                                         
+                                            <h4>Select Directory Path </h4>
+                                            <span>*</span> 
+                                            {/* <Tooltip title="Add" aria-label="add" className={classes.infoIcon}>                                            
+                                                <InfoOutlinedIcon className={classes.infobBtn}/>
+                                            </Tooltip> */}
+                                        </div>   
                                         <div className={classes.saveFileBtn}>
                                             <input 
                                                 readOnly        = {true} 
