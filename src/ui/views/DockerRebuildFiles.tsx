@@ -4,13 +4,15 @@ import { makeStyles }           from '@material-ui/core/styles';
 import Table                    from '@material-ui/core/Table';
 import TableBody                from '@material-ui/core/TableBody';
 import TableCell                from '@material-ui/core/TableCell';
-import TableContainer           from '@material-ui/core/TableContainer';
 import TableHead                from '@material-ui/core/TableHead';
 import TableRow                 from '@material-ui/core/TableRow';
 import DeleteIcon               from '@material-ui/icons/Delete';
 import FolderIcon               from '@material-ui/icons/Folder';
 import { CardActions,
-        TablePagination 
+        TablePagination,
+        Switch,
+        FormControlLabel,
+        Tooltip 
     }                           from '@material-ui/core';
 import Footer                   from '../components/Footer';
 import Dropzone                 from "react-dropzone";
@@ -348,7 +350,58 @@ const useStyles = makeStyles((theme) => ({
         padding:                    '10px 20px',
         borderRadius:               '3px',
         cursor:                     'pointer'
-    }
+    },
+    toggleContainer:{
+        float:                      'right',
+        position:                   'relative',
+        '& span':{
+            fontWeight:             'bold',
+            
+        },
+        '&:hover':{
+            '& div':{
+                display:            'block'
+            }
+        }
+    },
+    fab: {
+        margin:                     theme.spacing(2),
+    },
+    absolute: {
+        position:                   'absolute',
+        bottom:                     theme.spacing(2),
+        right:                      theme.spacing(3),
+    },
+    infoIcon:{
+        margin:                     '13px 5px 0 0px',
+        float:                      'left',
+        color:                      'gray'
+    },
+    toggleToolTip:{
+        position:                   'relative'
+    },
+    toggleToolTipTitle:{
+        display:                    'none',
+        position:                   'absolute',
+        background:                 '#0c3451',
+        color:                      '#fff',
+        margin:                     '10px',
+        padding:                    '10px',
+        fontSize:                   '12px',
+        borderRadius:               '5px',
+        left:                       '0px',
+        '&::before':{
+            content:                '" "',
+            height:                 '10px',
+            width:                  '10px',
+            position:               'absolute',
+            background:             '#0c3451',            
+            left:                   '14px',
+            top:                    '-6px',
+            transform:              'rotate(45deg)',
+        }
+    },
+    infobBtn:{}
  }));
 
 
@@ -369,9 +422,9 @@ function DockerRebuildFiles(){
     const [targetDir, setTargetDir]                 = useState("");  
     const [userTargetDir, setUserTargetDir]         = useState("");  
     const [masterMetaFile, setMasterMetaFile]       = useState<Array<Metadata>>([]);
-    const [outputDirType, setOutputDirType]         = useState(Utils.OUTPUT_DIR_FLAT)
     const [showAlertBox, setshowAlertBox]           = useState(false);  
-    const [files, setFiles]                         = useState<Array<DockerRebuildResult>>([]);
+    const [files, setFiles]                         = useState<Array<RebuildResult>>([]);
+    const [flat, setFlat]                           = React.useState(true);
 
     interface DockerRebuildResult {
         id              : string,
@@ -414,7 +467,7 @@ function DockerRebuildFiles(){
             setShowLoader(false);
             saveTextFile(JSON.stringify(masterMetaFile),  targetDir +"/", 'metadata.json');
 
-            if(userTargetDir !="" && outputDirType === Utils.OUTPUT_DIR_HIERARCY){
+            if(userTargetDir !="" && !flat){
                 let PATHS: string[];
                 PATHS=[]
                 rebuildFileNames.map(rebuild=>{
@@ -495,7 +548,7 @@ function DockerRebuildFiles(){
             masterMetaFile.push(content);
             if(userTargetDir !=""){
                 var filepath = userTargetDir+"/";
-                if(outputDirType === Utils.OUTPUT_DIR_FLAT){
+                if(flat){
                     saveBase64File(result.cleanFile, filepath, result.filename );
                 }
             }
@@ -621,10 +674,6 @@ function DockerRebuildFiles(){
         setMasterMetaFile([]);
     }
 
-    const handleChange= (e:any) =>{
-        setOutputDirType(e.currentTarget.value)
-    }
-
     const closeAlertBox = () => {
         setshowAlertBox(false);
     }
@@ -648,6 +697,11 @@ function DockerRebuildFiles(){
         promise.then(successCallback, failureCallback);
     }
 
+   
+    const changeDownloadmode = (event:any) => {
+        setFlat((prev) => !prev);
+    };   
+
     return(
         <div>   
             {open && <RawXml content={xml} isOpen={open} handleOpen={openXml}/>   }                
@@ -656,7 +710,19 @@ function DockerRebuildFiles(){
                 <main className={classes.content}>
                     <div className={classes.toolbar} />  
                     <div className={classes.contentArea}>             
-                    <h3>Rebuild Files With Docker</h3>
+                    <h3>Rebuild Files With Docker
+                    <div className={classes.toggleContainer}>
+                    <FormControlLabel className={classes.toggleToolTip}
+                        //title={flat ? "Flat" : "Hierarchy"}
+                        value={flat ? "Flat" : "Hierarchy"}
+                        control={<Switch color="primary" checked={flat} onChange={changeDownloadmode}/>} 
+                        label={flat ? "Flat" : "Hierarchy"} />
+                        <div className={classes.toggleToolTipTitle}>
+                        The hierarchical filesystems to save processed files in a tree structure of directories,
+flat filesystem to saves in a ouput/single directory that contains all files with no subdirectories
+                        </div>
+                    </div>
+                    </h3>
                         <Dropzone onDrop={handleDrop} >
                             {({ getRootProps, getInputProps }) => (
                             <div {...getRootProps()} className={classes.dropzone}>
@@ -700,7 +766,7 @@ function DockerRebuildFiles(){
                                              </button>
                                         </div>
                                     </div>
-                                    <div className={classes.fileType}>
+                                    {/* <div className={classes.fileType}>
                                         <h4>Output Type</h4>
                                         <div className={classes.fileOption}>
                                             <input  type        = "radio" 
@@ -718,7 +784,7 @@ function DockerRebuildFiles(){
                                                     name        = "fileoption"/>
                                             <span>Hierarchy</span>
                                         </div>
-                                    </div>
+                                    </div> */}
                                  </div>
                                  {rebuildFileNames.length>0 && 
                                 <div> 
