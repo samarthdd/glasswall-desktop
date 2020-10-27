@@ -12,3 +12,4 @@ out/ui/*
 out/electron/*
 processed/*
 dist/*
+temp/*

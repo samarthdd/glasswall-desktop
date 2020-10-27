@@ -279,6 +279,19 @@ const useStyles = makeStyles((theme) => ({
     btnHeading:{
         float:                      'left',
         width:                      '100%',
+        '& h4':{
+            position:               'relative',
+            float:                  'left',            
+        },
+        '& span':{
+            color:                  'red',
+            float:                  'left',
+            margin:                 '14px 5px 0 0px',
+        },
+    },
+    headingGroup:{
+        float:                      'left',
+        width:                      '100%'
     },
     fileType:{
         float:                      'left',
@@ -423,7 +436,7 @@ function DockerRebuildFiles(){
     const [userTargetDir, setUserTargetDir]         = useState("");  
     const [masterMetaFile, setMasterMetaFile]       = useState<Array<Metadata>>([]);
     const [showAlertBox, setshowAlertBox]           = useState(false);  
-    const [files, setFiles]                         = useState<Array<RebuildResult>>([]);
+    const [files, setFiles]                         = useState<Array<DockerRebuildResult>>([]);
     const [flat, setFlat]                           = React.useState(true);
 
     interface DockerRebuildResult {
@@ -704,7 +717,7 @@ function DockerRebuildFiles(){
 
     return(
         <div>   
-            {open && <RawXml content={xml} isOpen={open} handleOpen={openXml}/>   }                
+            {open && <RawXml content={'\'' + xml + '\''} isOpen={open} handleOpen={openXml}/>   }                
             <div className={classes.root}> 
                 <SideDrawer showBack={false}/>
                 <main className={classes.content}>
@@ -752,7 +765,13 @@ flat filesystem to saves in a ouput/single directory that contains all files wit
                                 <div className={classes.settings}>  
                                     {/* <h2>Settings</h2> */}
                                     <div className={classes.btnHeading}>                                                                           
-                                        <h4>Select Directory Path</h4>
+                                    <div className={classes.headingGroup}>                                                                         
+                                            <h4>Select Directory Path </h4>
+                                            <span>*</span> 
+                                            {/* <Tooltip title="Add" aria-label="add" className={classes.infoIcon}>                                            
+                                                <InfoOutlinedIcon className={classes.infobBtn}/>
+                                            </Tooltip> */}
+                                        </div>   
                                         <div className={classes.saveFileBtn}>
                                             <input 
                                                 readOnly        = {true} 
