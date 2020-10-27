@@ -23,13 +23,13 @@ export default function Download() {
                 </i> Download
               </a>
 
-              <a  href = {Utils.MAC_BUILD}>
+              <a  href = {Utils.MAC_BUILD} onClick = {()=>{ Utils.handleDownloadClick('Mac');}}>
                     <i className  ="supported-os-icon fab fa-apple"></i>
               </a>
-              <a  href = {Utils.WINDOWS_BUILD}>
+              <a  href = {Utils.WINDOWS_BUILD} onClick = {()=>{ Utils.handleDownloadClick('Windows');}}>
                     <i className ="supported-os-icon fab fa-windows"> </i>
                </a>
-               <a  href = {Utils.LINUX_BUILD}>
+               <a  href = {Utils.LINUX_BUILD} onClick = {()=>{ Utils.handleDownloadClick('Linux');}}>
                     <i className ="supported-os-icon fab fa-linux"></i>
               </a>
             </div>

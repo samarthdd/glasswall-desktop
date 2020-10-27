@@ -1,6 +1,9 @@
 import packageJson from '../../package.json';
+import ReactGA     from 'react-ga'
+
 console.log("package" + packageJson.owner); // 
 
+export const  GA_TRACKINGID = "G-5B0DKKTM6X"; 
 export const  MAC_BUILD     =  "https://github.com/" + packageJson.repo_owner + "/" + packageJson.repo + 
                                "/releases/download/"+ packageJson.tagVersion + "/" + packageJson.app_name + "-" 
                                + packageJson.version +".dmg"
@@ -52,4 +55,17 @@ export let downloadUrl =() =>{
         return MAC_BUILD
     }
 
+}
+
+export let sendGACustomEvent = (category, action, label) => {
+  ReactGA.event({
+    category: category,
+    action: action,
+    label: label
+  })
+}
+
+export function handleDownloadClick(platform) {
+  var msg = 'Download clicked for platform ' + platform
+  sendGACustomEvent('download', 'platform type:' + platform, msg)
 }
