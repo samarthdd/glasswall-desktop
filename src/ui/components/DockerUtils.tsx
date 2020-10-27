@@ -80,7 +80,7 @@ const getBase64 = (file: File) => {
    return res;
 }
 
-export const makeRequest = async (request: any, sourceFileUrl: string, requestId: string, folderId: string,
+export const makeRequest = (request: any, sourceFileUrl: string, requestId: string, folderId: string,
       resultCallback: Function) => {
     let payload: string | any;
     let url : string;
@@ -109,7 +109,7 @@ export const makeRequest = async (request: any, sourceFileUrl: string, requestId
         }
         
         try{
-            await getAnalysisResult(false, rebuiltBase64, request, sourceFileUrl, requestId, folderId, resultCallback);
+            getAnalysisResult(false, rebuiltBase64, request, sourceFileUrl, requestId, folderId, resultCallback);
         }
         catch(err:any){
             console.log("3:" + JSON.stringify(err));
@@ -129,7 +129,7 @@ export const makeRequest = async (request: any, sourceFileUrl: string, requestId
     }
 }
 
-export const getAnalysisResult= async (isBinaryFile: boolean, reBuildResponse: any, request: any, sourceFile: string,
+export const getAnalysisResult = (isBinaryFile: boolean, reBuildResponse: any, request: any, sourceFile: string,
      requestId: string, targetFolder: string, resultCallback: Function)=>{
 
     let payload: string | any;
@@ -138,10 +138,7 @@ export const getAnalysisResult= async (isBinaryFile: boolean, reBuildResponse: a
 
     payload = getAnalysisPayload(request)
     var fileSize = payload.fileSize;
-    // Files smaller than 6MB - Normal
-    //payload = JSON.stringify(payload)
-    //Utils.sleep(500);
-
+    
     if(fileSize < 6){
         try{
                var xml = docker_exec_analysis(payload,request.filename);                              

@@ -582,8 +582,7 @@ function DockerRebuildFiles(){
                 message             : result.msg
             }
             masterMetaFile.push(content);
-        }
-        
+        }        
     }
 
     //save base64 file 
@@ -641,24 +640,21 @@ function DockerRebuildFiles(){
         if(userTargetDir ==""){
             setshowAlertBox(true);
         }
-        else {
-            
+        else {            
             setCounter((state: any)=>state + acceptedFiles.length)
             setRebuildFileNames([]);
             setPage(0);
             masterMetaFile.length =0;
             outputDirId = Utils.guid()
             setFolderId(outputDirId);
-            setShowLoader(true);
-            //console.log(acceptedFiles[0].path)
-            acceptedFiles.map(async (file: File) => {
-                await DockerUtils.getFile(file).then(async (data: any) => {
+            setShowLoader(true);            
+            acceptedFiles.map((file: File) => {
+                DockerUtils.getFile(file).then(async (data: any) => {
                     setFileNames((fileNames: any) =>[...fileNames, file.name]);
                     var url = window.webkitURL.createObjectURL(file);
                     let guid: string;
-                    guid =  Utils.guid();                    
-                    //Utils.sleep(600);
-                    await DockerUtils.makeRequest(data, url, guid, outputDirId, downloadResult);
+                    guid =  Utils.guid();                                    
+                    DockerUtils.makeRequest(data, url, guid, outputDirId, downloadResult);
                 })
             })
         }
