@@ -13,3 +13,5 @@ out/electron/*
 processed/*
 dist/*
 temp/*
+config/config.ini
+config/config.xml
