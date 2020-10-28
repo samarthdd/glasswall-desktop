@@ -743,8 +743,8 @@ function RebuildFiles(){
                         control={<Switch color="primary" checked={flat} onChange={changeDownloadmode}/>} 
                         label={flat ? "Flat" : "Hierarchy"} />
                         <div className={classes.toggleToolTipTitle}>
-                        The hierarchical filesystems to save processed files in a tree structure of directories,
-flat filesystem to saves in a ouput/single directory that contains all files with no subdirectories
+                        The hierarchical filesystems option to save processed files in a tree structure of directories,
+flat filesystem option to saves in a single directory that contains all files with no subdirectories
                         </div>
                     </div>
                     </h3>
