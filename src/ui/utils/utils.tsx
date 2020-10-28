@@ -1,5 +1,6 @@
+var child_process               = require("child_process");
 const path                      = require('path');
-
+var fs                          = require('fs');
 
 export const GW_DOCKER_IMG_NAME         = 'glasswallsolutions/evaluationsdk:1';
 export const GW_DOCKER_IMG_TAG          = '72216de678ab';
@@ -14,10 +15,10 @@ export const REPO_GIT_ISSUE_URL         = "https://github.com/k8-proxy/glasswall
 
 export const REBUILD_API_KEY            = 'dp2Ug1jtEh4xxFHpJBfWn9V7fKB3yVcv60lhwOAG';
 export const VERSION                    = '0.5.0'
-export const _PROCESSED_FOLDER          = "/processed/"
-export const _CLEAN_FOLDER              = "clean"
-export const _ORIGINAL_FOLDER           = "original"
-export const _REPORT_FOLDER             = "report"
+export const _PROCESSED_FOLDER                 = "processed"
+export const _CLEAN_FOLDER                     = "clean"
+export const _ORIGINAL_FOLDER                  = "original"
+export const _REPORT_FOLDER                    = "report"
 
 export const OUTPUT_DIR_FLAT            = "flat";
 export const OUTPUT_DIR_HIERARCY        = "hierarcy";
@@ -65,7 +66,8 @@ export const sleepDelay = (milliseconds:number) => {
  export const guid=()=> {
    
     //return _p8(false) + _p8(true) + _p8(true) + _p8(false);
-    return _p8(false) + _p8(true);
+    //return _p8(false) + _p8(true);
+    return _p8(false);
     
 }
 
@@ -155,6 +157,25 @@ export const CONFIG_XML   =
 </config>"; 
 
 
+export const getPathSep=()=>{
+  return path.sep;
+}
+export const getReportPath =()=>{
+  return getAppDataPath() + getPathSep() + _REPORT_FOLDER;
+}
+export const getCleanPath =()=>{
+  return getAppDataPath() + getPathSep() + _CLEAN_FOLDER
+  
+}
+export const getOriginalPath =()=>{
+  return getAppDataPath() + getPathSep() + _ORIGINAL_FOLDER
+  
+}
+
+export const getProcessedPath =()=>{
+  return getAppDataPath() + getPathSep() + _PROCESSED_FOLDER
+}
+
 export const getAppDataPath =() =>{
   switch (process.platform) {
     case "darwin": {
@@ -171,4 +192,48 @@ export const getAppDataPath =() =>{
       // process.exit(1);
     }
   }
+}
+
+ //save base64 file 
+ export const saveBase64File = async(content: string, filePath: string, filename: string)=>{
+  //console.log("filePath 1" + filePath)
+  !fs.existsSync(filePath) && fs.mkdirSync(filePath, { recursive: true })
+  fs.writeFile(filePath +  getPathSep() + filename, content, {encoding: 'base64'}, function(err: any) { if (err) {
+          console.log('err', err);
+      }
+  });
+}
+
+//save any text file 
+export const saveTextFile = async (xmlContent: string, filePath: string, filename: string) =>{
+  //console.log("filePath 2" + filePath)
+  !fs.existsSync(filePath) && fs.mkdirSync(filePath, { recursive: true })
+  fs.writeFile(filePath + getPathSep() + filename, xmlContent, function(err: any) {if (err) {
+              console.log('err', err);
+      }
+  });
+}
+
+export const open_file_exp=(fpath: string)=> {
+  console.log("open_file_exp" + fpath )
+  var command = '';
+  switch (process.platform) {
+    case 'darwin':
+      command = 'open -R ' + "\'" + fpath +"\'";
+      break;
+    case 'win32':
+      if (process.env.SystemRoot) {
+        command = path.join(process.env.SystemRoot, 'explorer.exe');
+      } else {
+        command = 'explorer.exe';
+      }
+      fpath = fpath.replace(/\//g, '\\');
+      command += ' /select, ' + fpath;
+      break;
+    default:
+      fpath = path.dirname(fpath)
+      command = 'xdg-open ' + fpath;
+  }
+  child_process.exec(command, function(stdout:any) {
+  });
 }

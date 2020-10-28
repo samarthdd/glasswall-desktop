@@ -470,7 +470,7 @@ function RebuildFiles(){
    
     React.useEffect(() => {
         if(folderId!=''){
-            var rootFolder = Utils.getAppDataPath() + Utils._PROCESSED_FOLDER +folderId
+            var rootFolder = Utils.getProcessedPath() + Utils.getPathSep() +folderId
             if (!fs.existsSync(rootFolder)){
                 fs.promises.mkdir(rootFolder, { recursive: true });
             }
@@ -483,7 +483,7 @@ function RebuildFiles(){
     React.useEffect(() => {
         if (counter == 0 && loader == true) {
             setShowLoader(false);
-            saveTextFile(JSON.stringify(masterMetaFile),  targetDir +"/", 'metadata.json');
+            Utils.saveTextFile(JSON.stringify(masterMetaFile),  targetDir, 'metadata.json');
 
             //if(userTargetDir !="" && outputDirType === Utils.OUTPUT_DIR_HIERARCY){
             if(userTargetDir !="" && !flat){
@@ -495,7 +495,7 @@ function RebuildFiles(){
                 });
                 const common = commonPath(PATHS);
                 common.parsedPaths.map((cPath:any)=>{
-                    saveBase64File( getRebuildFileContent(cPath.original), userTargetDir + "/" + cPath.subdir + "/", cPath.basePart );
+                    Utils.saveBase64File( getRebuildFileContent(cPath.original), userTargetDir + Utils.getPathSep() + cPath.subdir, cPath.basePart );
             });
         }
         }
@@ -518,99 +518,90 @@ function RebuildFiles(){
         }, [rowsPerPage, page, rebuildFileNames]);
 
 
-
-    //callback for rebuild and analysis
-    const downloadResult =(result: any)=>{
+//callback for rebuild and analysis
+const downloadResult =(result: any)=>{
     
-        setRebuildFileNames(rebuildFileNames =>[...rebuildFileNames,  {
-                id:result.id,
-                url: result.url,
-                name: result.filename,
-                sourceFileUrl: result.source,
-                isError: result.isError,
-                msg: result.msg,
-                xmlResult:result.xmlResult,
-                path: result.path,
-                cleanFile: result.cleanFile
-                }]);
+    setRebuildFileNames(rebuildFileNames =>[...rebuildFileNames,  {
+        id:result.id,
+        url: result.url,
+        name: result.filename,
+        sourceFileUrl: result.source,
+        isError: result.isError,
+        msg: result.msg,
+        xmlResult:result.xmlResult,
+        path: result.path,
+        cleanFile: result.cleanFile
+        }]);
 
-        setCounter(state=>state-1);
-        let fileHash: string;
-        fileHash = Utils.getFileHash(result.original)
-          
-        if(!result.isError){
-            var cleanFilePath = Utils._PROCESSED_FOLDER + result.targetDir + "/" + fileHash +  "/" + Utils._CLEAN_FOLDER;
-            saveBase64File(result.cleanFile, cleanFilePath, result.filename );
+    setCounter(state=>state-1);
+    let fileHash: string;
+    fileHash = Utils.getFileHash(result.original)
+      
+    if(!result.isError){
+        var cleanFilePath = Utils.getProcessedPath() + Utils.getPathSep()
+                             + result.targetDir + Utils.getPathSep() + fileHash
+                              + Utils.getPathSep() + Utils._CLEAN_FOLDER;
+        Utils.saveBase64File(result.cleanFile, cleanFilePath, result.filename );
 
-            var OriginalFilePath = Utils._PROCESSED_FOLDER + result.targetDir + "/" + fileHash +  "/" + Utils._ORIGINAL_FOLDER;
-            saveBase64File(result.original, OriginalFilePath, result.filename);
+        var OriginalFilePath = Utils.getProcessedPath()  +  Utils.getPathSep()
+                                + result.targetDir +  Utils.getPathSep()
+                                 + fileHash +  Utils.getPathSep() + Utils._ORIGINAL_FOLDER;
+        Utils.saveBase64File(result.original, OriginalFilePath, result.filename);  
 
-            var reportFilePath = Utils._PROCESSED_FOLDER + result.targetDir + "/" + fileHash +  "/" + Utils._REPORT_FOLDER;
-            saveTextFile(result.xmlResult,reportFilePath, Utils.stipFileExt(result.filename)+'.xml');
+        var reportFilePath =  Utils.getProcessedPath() +  Utils.getPathSep()
+                             + result.targetDir +  Utils.getPathSep()
+                              + fileHash +   Utils.getPathSep() + Utils._REPORT_FOLDER;
+        Utils.saveTextFile(result.xmlResult, reportFilePath, Utils.stipFileExt(result.filename)+'.xml');
 
-            var metadataFilePath = Utils._PROCESSED_FOLDER + result.targetDir + "/" + fileHash +  "/";
-            let content: Metadata;
-            content ={
-                original_file       : Utils._ORIGINAL_FOLDER + result.filename,
-                clean_file          : Utils._CLEAN_FOLDER + result.filename,
-                report              : Utils._REPORT_FOLDER + Utils.stipFileExt(result.filename)+'.xml',
-                status              : "Success",
-                time                : new Date().toLocaleDateString(),
-                userTargetFolder    : userTargetDir,
-            }
-            saveTextFile(JSON.stringify(content), metadataFilePath, 'metadata.json');
-        
-            content.original_file = fileHash + "/" + Utils._ORIGINAL_FOLDER + result.filename
-            content.clean_file = fileHash + "/" + Utils._CLEAN_FOLDER + result.filename
-            content.report = fileHash + "/" + Utils._REPORT_FOLDER + Utils.stipFileExt(result.filename)+'.xml'
-            content.userTargetFolder = userTargetDir;
-            
-            masterMetaFile.push(content);
-            if(userTargetDir !=""){
-                var filepath = userTargetDir+"/";
-                //if(outputDirType === Utils.OUTPUT_DIR_FLAT){
-                if(flat){
-                    saveBase64File(result.cleanFile, filepath, result.filename );
-                }
-            }
- 
-        }else{
-            var OriginalFilePath = Utils._PROCESSED_FOLDER + result.targetDir + "/" + fileHash +  "/" + 
-                Utils._ORIGINAL_FOLDER;
-            console.log("Error case:" +OriginalFilePath + ", result.targetDir:" + result.targetDir)
-            saveBase64File(result.original, OriginalFilePath, result.filename);
-            let content: Metadata;
-            content ={
-                original_file       : fileHash + "/" + Utils._ORIGINAL_FOLDER + result.filename,
-                clean_file          : '',
-                report              : '',
-                status              : "Failure",
-                time                : new Date().toLocaleDateString(),
-                userTargetFolder    : userTargetDir,
-                message             : result.msg
-            }
-            masterMetaFile.push(content);
+        var metadataFilePath =  Utils.getProcessedPath() + Utils.getPathSep()  + 
+                                result.targetDir + Utils.getPathSep() + fileHash;
+        let content: Metadata;
+        content ={
+            original_file       : Utils._ORIGINAL_FOLDER + Utils.getPathSep() + result.filename,
+            clean_file          : Utils._CLEAN_FOLDER + Utils.getPathSep()+ result.filename,
+            report              : Utils._REPORT_FOLDER + Utils.getPathSep() + Utils.stipFileExt(result.filename)+'.xml',
+            status              : "Success",
+            time                : new Date().toLocaleDateString(),
+            userTargetFolder    : userTargetDir,
         }
+        Utils.saveTextFile(JSON.stringify(content), metadataFilePath, 'metadata.json');
+    
+        content.original_file = fileHash + Utils.getPathSep() + Utils._ORIGINAL_FOLDER + Utils.getPathSep() + result.filename
+        content.clean_file = fileHash +Utils.getPathSep() + Utils._CLEAN_FOLDER + Utils.getPathSep() + result.filename
+        content.report = fileHash + Utils.getPathSep() + Utils._REPORT_FOLDER + Utils.getPathSep() + Utils.stipFileExt(result.filename)+'.xml'
+        content.userTargetFolder = userTargetDir;
         
-    }
+        masterMetaFile.push(content);
+        if(userTargetDir !=""){
+            var filepath = userTargetDir;
+            if(flat){
+                Utils.saveBase64File(result.cleanFile, filepath, result.filename );
+            }
+        }
 
-    //save base64 file 
-    const saveBase64File = async(content: string, filePath: string, filename: string)=>{
-        !fs.existsSync(filePath) && fs.mkdirSync(filePath, { recursive: true })
-        fs.writeFile(filePath + filename, content, {encoding: 'base64'}, function(err: any) { if (err) {
-                console.log('err', err);
-            }
-        });
-    }
+    }else{
+        var OriginalFilePath =Utils.getProcessedPath() +  Utils.getPathSep()
+                            + result.targetDir + Utils.getPathSep() + fileHash +  Utils.getPathSep() + 
+                                Utils._ORIGINAL_FOLDER;
+        console.log("Error case:" +OriginalFilePath + ", result.targetDir:" + result.targetDir)
+        Utils.saveBase64File(result.original, OriginalFilePath, result.filename);
+        let content: Metadata;
+        content ={
+            original_file       : fileHash + Utils.getPathSep() + Utils._ORIGINAL_FOLDER + Utils.getPathSep() + result.filename,
+            clean_file          : '',
+            report              : '',
+            status              : "Failure",
+            time                : new Date().toLocaleDateString(),
+            userTargetFolder    : userTargetDir,
+            message             : result.msg
+        }
+        masterMetaFile.push(content);
+    }        
+}
+
    
-    //save any text file 
-    const saveTextFile = async (xmlContent: string, filePath: string, filename: string) =>{
-        !fs.existsSync(filePath) && fs.mkdirSync(filePath, { recursive: true })
-        fs.writeFile(filePath+ filename, xmlContent, function(err: any) {if (err) {
-                    console.log('err', err);
-            }
-        });
-    }
+
+   
 
     const getRebuildFileContent =(filePath: string)=>{
         var rebuild = rebuildFileNames.find(rebuild=>rebuild.path === filePath);
@@ -620,29 +611,7 @@ function RebuildFiles(){
             return null;
     }
 
-     const open_file_exp=(fpath: string)=> {
-        var command = '';
-        switch (process.platform) {
-          case 'darwin':
-            command = 'open -R ' + fpath;
-            break;
-          case 'win32':
-            if (process.env.SystemRoot) {
-              command = path.join(process.env.SystemRoot, 'explorer.exe');
-            } else {
-              command = 'explorer.exe';
-            }
-            fpath = fpath.replace(/\//g, '\\');
-            command += ' /select, ' + fpath;
-            break;
-          default:
-            fpath = path.dirname(fpath)
-            command = 'xdg-open ' + fpath;
-        }
-        child_process.exec(command, function(stdout:any) {
-        });
-    }
-
+     
     //Multi file drop callback 
     const handleDrop = async (acceptedFiles:any) =>{
         let outputDirId: string;
@@ -820,7 +789,7 @@ flat filesystem option to saves in a single directory that contains all files wi
                                  {rebuildFileNames.length>0 && 
                                 <div> 
                                 <h3>Cloud Rebuild Files
-                                    <button onClick={()=>open_file_exp(targetDir)} className={rebuildFileNames.length>0? classes.outFolderBtn:classes.outFolderBtnDissabled}><FolderIcon className={classes.btnIcon}/> Browse Output Folder</button>
+                                    <button onClick={()=>Utils.open_file_exp(targetDir)} className={rebuildFileNames.length>0? classes.outFolderBtn:classes.outFolderBtnDissabled}><FolderIcon className={classes.btnIcon}/> Browse Output Folder</button>
                                 </h3>
                                 <Table className={classes.table} size="small" aria-label="a dense table">
                                     <TableHead>
