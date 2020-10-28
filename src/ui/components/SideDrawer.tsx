@@ -20,6 +20,7 @@ import Logo                     from '../assets/images/logo.png'
 import Navbar                   from '../components/Navbar'
 import RebuildIcon              from '../assets/images/rebuild.png'
 import DockerIcon               from '../assets/images/docker.png'
+import SettingIcon              from '../assets/images/setting.png'
 import HomeIcon                 from '../assets/images/homeIcon.png';
 import Tooltip                  from '@material-ui/core/Tooltip';
 import dockerIcon               from '../assets/images/docker.png'
@@ -196,6 +197,11 @@ function SideDrawer({ showBack }: headerOptions) {
         navName:    'Rebuild Files With Docker',
         navIcon:    DockerIcon,
         anchLink:   '/dockerrebuildFiles'
+    },
+    {
+        navName:    'Setting',
+        navIcon:    SettingIcon,
+        anchLink:   '/settings'
     }
 ]
 
@@ -252,7 +258,8 @@ function SideDrawer({ showBack }: headerOptions) {
                 
                 <List className={classes.navList}>
                 {navData.map((nav, index) => (
-                        <ListItem key={index} button component={NavLink} to={nav.anchLink} activeClassName={classes.active}>                             
+                        // <ListItem key={index} button component={NavLink} to={nav.anchLink} activeClassName={classes.active} selected ={index ==1}>
+                        <ListItem key={index} button component={NavLink} to={nav.anchLink} activeClassName={classes.active}>                               
                             <ListItemIcon><img src={nav.navIcon}  className={classes.icons}></img></ListItemIcon>
                             <div className={classes.tooltipBox}>{nav.navName}</div>
                                 <ListItemText primary={nav.navName} className={classes.navText}/>
