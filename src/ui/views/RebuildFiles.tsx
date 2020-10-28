@@ -512,8 +512,8 @@ function RebuildFiles(){
          }, [id, xml, open]);
 
     React.useEffect(() => {
-     let rebuildResultsPerPage = rebuildFileNames && rebuildFileNames.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
-       
+        let rebuildFileReverse = rebuildFileNames.slice().reverse()
+        let rebuildResultsPerPage = rebuildFileReverse && rebuildFileReverse.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
         setFiles(rebuildResultsPerPage)
         }, [rowsPerPage, page, rebuildFileNames]);
 
