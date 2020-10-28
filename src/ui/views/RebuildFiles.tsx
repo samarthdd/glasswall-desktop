@@ -397,21 +397,23 @@ const useStyles = makeStyles((theme) => ({
     },
     toggleToolTipTitle:{
         display:                    'none',
-        position:                   'absolute',
+        position:                   'fixed',
         background:                 '#0c3451',
         color:                      '#fff',
         margin:                     '10px',
         padding:                    '10px',
         fontSize:                   '12px',
-        borderRadius:               '5px',
-        left:                       '0px',
+        borderRadius:               '5px',      
+        right:                      '30px',
+        maxWidth:                   '300px',
+        fontWeight:                 'normal',
         '&::before':{
             content:                '" "',
             height:                 '10px',
-            width:                  '16px',
+            width:                  '10px',
             position:               'absolute',
             background:             '#0c3451',            
-            left:                   '14px',
+            right:                   '14px',
             top:                    '-6px',
             transform:              'rotate(45deg)',
         }
@@ -741,8 +743,8 @@ function RebuildFiles(){
                         control={<Switch color="primary" checked={flat} onChange={changeDownloadmode}/>} 
                         label={flat ? "Flat" : "Hierarchy"} />
                         <div className={classes.toggleToolTipTitle}>
-                        The hierarchical filesystems to save processed files in a tree structure of directories,
-flat filesystem to saves in a ouput/single directory that contains all files with no subdirectories
+                        The hierarchical filesystems option to save processed files in a tree structure of directories,
+flat filesystem option to saves in a single directory that contains all files with no subdirectories
                         </div>
                     </div>
                     </h3>
