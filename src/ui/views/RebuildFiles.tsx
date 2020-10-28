@@ -470,7 +470,7 @@ function RebuildFiles(){
    
     React.useEffect(() => {
         if(folderId!=''){
-            var rootFolder = Utils._PROCESSED_FOLDER +folderId
+            var rootFolder = Utils.getAppDataPath() + Utils._PROCESSED_FOLDER +folderId
             if (!fs.existsSync(rootFolder)){
                 fs.promises.mkdir(rootFolder, { recursive: true });
             }

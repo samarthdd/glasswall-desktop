@@ -175,7 +175,7 @@ export const getFile = (file: any) => {
 
 export const docker_exec_rebuild = (payload: any,fileName:string) => {
     const id = new UUID(4).format();
-    const directory = path.join('.', 'temp', id);
+    const directory = path.join('.', Utils.getAppDataPath() +'/temp', id);
     const inputDir = path.join(directory,'input');
     const outputDir = path.join(directory,'output');
     shell.mkdir('-p', directory);    
@@ -272,7 +272,7 @@ export const docker_exec_rebuild = (payload: any,fileName:string) => {
 
 export const docker_exec_analysis = (payload: any,fileName:string) => {
     const id = new UUID(4).format();
-    const directory = path.join('.', 'temp', id);
+    const directory = path.join('.',  Utils.getAppDataPath() + '/temp', id);
     const inputDir = path.join(directory,'input');
     const outputDir = path.join(directory,'output');
     shell.mkdir('-p', directory);    

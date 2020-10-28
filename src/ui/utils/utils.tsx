@@ -1,3 +1,6 @@
+const path                      = require('path');
+
+
 export const GW_DOCKER_IMG_NAME         = 'glasswallsolutions/evaluationsdk:1';
 export const GW_DOCKER_IMG_TAG          = '72216de678ab';
 export const WEBSITE_URL                = 'https://glasswall-desktop.com';
@@ -11,10 +14,10 @@ export const REPO_GIT_ISSUE_URL         = "https://github.com/k8-proxy/glasswall
 
 export const REBUILD_API_KEY            = 'dp2Ug1jtEh4xxFHpJBfWn9V7fKB3yVcv60lhwOAG';
 export const VERSION                    = '0.5.0'
-export const _PROCESSED_FOLDER          = "./processed/"
-export const _CLEAN_FOLDER              = "clean/"
-export const _ORIGINAL_FOLDER           = "original/"
-export const _REPORT_FOLDER             = "report/"
+export const _PROCESSED_FOLDER          = "/processed/"
+export const _CLEAN_FOLDER              = "clean"
+export const _ORIGINAL_FOLDER           = "original"
+export const _REPORT_FOLDER             = "report"
 
 export const OUTPUT_DIR_FLAT            = "flat";
 export const OUTPUT_DIR_HIERARCY        = "hierarcy";
@@ -150,3 +153,22 @@ export const CONFIG_XML   =
 <geotiff>sanitise</geotiff>\n\
 </tiffConfig>\n\
 </config>"; 
+
+
+export const getAppDataPath =() =>{
+  switch (process.platform) {
+    case "darwin": {
+      return path.join(process.env.HOME, "Library", "Application Support", "glasswall-desktop");
+    }
+    case "win32": {
+      return path.join(process.env.APPDATA, "glasswall-desktop");
+    }
+    case "linux": {
+      return path.join(process.env.HOME, ".glasswall-desktop");
+    }
+    default: {
+      console.log("Unsupported platform!");
+      // process.exit(1);
+    }
+  }
+}

@@ -467,7 +467,7 @@ function DockerRebuildFiles(){
    
     React.useEffect(() => {
         if(folderId!=''){
-            var rootFolder = Utils._PROCESSED_FOLDER +folderId
+            var rootFolder = Utils.getAppDataPath() + Utils._PROCESSED_FOLDER +folderId
             if (!fs.existsSync(rootFolder)){
                 fs.promises.mkdir(rootFolder, { recursive: true });
             }
@@ -546,18 +546,18 @@ function DockerRebuildFiles(){
             var metadataFilePath = Utils._PROCESSED_FOLDER + result.targetDir + "/" + fileHash +  "/";
             let content: Metadata;
             content ={
-                original_file       : Utils._ORIGINAL_FOLDER + result.filename,
-                clean_file          : Utils._CLEAN_FOLDER + result.filename,
-                report              : Utils._REPORT_FOLDER + Utils.stipFileExt(result.filename)+'.xml',
+                original_file       : Utils._ORIGINAL_FOLDER + "/" + result.filename,
+                clean_file          : Utils._CLEAN_FOLDER + "/" + result.filename,
+                report              : Utils._REPORT_FOLDER + "/" + Utils.stipFileExt(result.filename)+'.xml',
                 status              : "Success",
                 time                : new Date().toLocaleDateString(),
                 userTargetFolder    : userTargetDir,
             }
             saveTextFile(JSON.stringify(content), metadataFilePath, 'metadata.json');
         
-            content.original_file = fileHash + "/" + Utils._ORIGINAL_FOLDER + result.filename
-            content.clean_file = fileHash + "/" + Utils._CLEAN_FOLDER + result.filename
-            content.report = fileHash + "/" + Utils._REPORT_FOLDER + Utils.stipFileExt(result.filename)+'.xml'
+            content.original_file = fileHash + "/" + Utils._ORIGINAL_FOLDER + "/" + result.filename
+            content.clean_file = fileHash + "/" + Utils._CLEAN_FOLDER + "/" + result.filename
+            content.report = fileHash + "/" + Utils._REPORT_FOLDER + "/" + Utils.stipFileExt(result.filename)+'.xml'
             content.userTargetFolder = userTargetDir;
             
             masterMetaFile.push(content);
@@ -575,7 +575,7 @@ function DockerRebuildFiles(){
             saveBase64File(result.original, OriginalFilePath, result.filename);
             let content: Metadata;
             content ={
-                original_file       : fileHash + "/" + Utils._ORIGINAL_FOLDER + result.filename,
+                original_file       : fileHash + "/" + Utils._ORIGINAL_FOLDER + "/" + result.filename,
                 clean_file          : '',
                 report              : '',
                 status              : "Failure",
@@ -589,8 +589,9 @@ function DockerRebuildFiles(){
 
     //save base64 file 
     const saveBase64File = async(content: string, filePath: string, filename: string)=>{
+        console.log("filePath 1" + filePath)
         !fs.existsSync(filePath) && fs.mkdirSync(filePath, { recursive: true })
-        fs.writeFile(filePath + filename, content, {encoding: 'base64'}, function(err: any) { if (err) {
+        fs.writeFile(filePath + "/" + filename, content, {encoding: 'base64'}, function(err: any) { if (err) {
                 console.log('err', err);
             }
         });
@@ -598,8 +599,9 @@ function DockerRebuildFiles(){
    
     //save any text file 
     const saveTextFile = async (xmlContent: string, filePath: string, filename: string) =>{
+        console.log("filePath 2" + filePath)
         !fs.existsSync(filePath) && fs.mkdirSync(filePath, { recursive: true })
-        fs.writeFile(filePath+ filename, xmlContent, function(err: any) {if (err) {
+        fs.writeFile(filePath + "/" + filename, xmlContent, function(err: any) {if (err) {
                     console.log('err', err);
             }
         });
@@ -710,6 +712,7 @@ function DockerRebuildFiles(){
     }
 
    
+    console.log("getAppDataPath" + Utils.getAppDataPath())
     const changeDownloadmode = (event:any) => {
         setFlat((prev) => !prev);
     };   
