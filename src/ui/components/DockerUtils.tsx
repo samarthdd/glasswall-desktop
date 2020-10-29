@@ -6,6 +6,9 @@ const path                              = require('path');
 import axios                            from "axios";
 const shell                             = require('shelljs');
 const resolve                           = require('path').resolve
+const fixPath                           = require('fix-path');
+
+fixPath();
 
 const getPayload = (data: any) => {
     let buffer = Buffer.from(data.content, 'base64');
