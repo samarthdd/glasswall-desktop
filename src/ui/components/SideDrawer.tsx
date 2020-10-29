@@ -24,6 +24,7 @@ import SettingIcon              from '../assets/images/setting.png'
 import HomeIcon                 from '../assets/images/homeIcon.png';
 import Tooltip                  from '@material-ui/core/Tooltip';
 import dockerIcon               from '../assets/images/docker.png'
+import { useLocation }          from 'react-router-dom'
 
 const drawerWidth = 280;
 
@@ -55,7 +56,7 @@ const useStyles = makeStyles((theme) => ({
         maxWidth:               '100%',
     },
     active: {
-        background:             '#ddd',
+        background:             '#bdb8b8 !important',
         width:                  '100%'
     },
     navLink: {
@@ -161,6 +162,9 @@ type headerOptions = {
     showBack: boolean
 }
 function SideDrawer({ showBack }: headerOptions) {
+    const location = useLocation();
+    //console.log(location.pathname);
+
     const classes = useStyles();
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
@@ -186,7 +190,7 @@ function SideDrawer({ showBack }: headerOptions) {
     {
         navName:    'Home',
         navIcon:    HomeIcon,
-        anchLink:   '/home'    
+        anchLink:   '/home',    
     },
     {
         navName:    'Cloud Rebuild Files',
@@ -198,11 +202,11 @@ function SideDrawer({ showBack }: headerOptions) {
         navIcon:    DockerIcon,
         anchLink:   '/dockerrebuildFiles'
     },
-    {
-        navName:    'Setting',
-        navIcon:    SettingIcon,
-        anchLink:   '/settings'
-    }
+    // {
+    //     navName:    'Setting',
+    //     navIcon:    SettingIcon,
+    //     anchLink:   '/settings'
+    // }
 ]
 
     return (
@@ -259,7 +263,7 @@ function SideDrawer({ showBack }: headerOptions) {
                 <List className={classes.navList}>
                 {navData.map((nav, index) => (
                         // <ListItem key={index} button component={NavLink} to={nav.anchLink} activeClassName={classes.active} selected ={index ==1}>
-                        <ListItem key={index} button component={NavLink} to={nav.anchLink} activeClassName={classes.active}>                               
+                        <ListItem key={index} button component={NavLink} to={nav.anchLink} activeClassName={classes.active} selected = {location.pathname == nav.anchLink} >                               
                             <ListItemIcon><img src={nav.navIcon}  className={classes.icons}></img></ListItemIcon>
                             <div className={classes.tooltipBox}>{nav.navName}</div>
                                 <ListItemText primary={nav.navName} className={classes.navText}/>
