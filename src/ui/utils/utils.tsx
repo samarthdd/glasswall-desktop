@@ -14,7 +14,7 @@ export const REBUILD_ANALYSIS_URL       = 'https://o7ymnow6vf.execute-api.us-wes
 export const REPO_GIT_ISSUE_URL         = "https://github.com/k8-proxy/glasswall-desktop/issues/new";
 
 export const REBUILD_API_KEY            = 'dp2Ug1jtEh4xxFHpJBfWn9V7fKB3yVcv60lhwOAG';
-export const VERSION                    = '0.5.0'
+export const VERSION                    = '0.1.4'
 export const _PROCESSED_FOLDER                 = "processed"
 export const _CLEAN_FOLDER                     = "clean"
 export const _ORIGINAL_FOLDER                  = "original"
@@ -28,24 +28,28 @@ export const WELCOME_PAGE_VISTIED_VAL   = "yes"
 
 export const RELEAE_NOTES           =[
                                         {
-                                          "date":"October 15th 2020",
-                                          "desc":"On uploading multiple files in the app at once, the rebuild api give 429 (TooManyRequests)."
+                                          "date":"October 29th 2020",
+                                          "desc":"Processing rebuild locally through Docker after pulling the docker image"
                                         }, 
                                         {
-                                          "date":"October 14th 2020",
-                                          "desc":"Solution to install upgrades #30"
+                                          "date":"October 28th 2020",
+                                          "desc":"Creating analysis report for rebuilt files locally through Docker."
                                         },
                                         {
-                                          "date":"October 13th  2020",
-                                          "desc":"Publish a build to Github Release #75"
+                                          "date":"October 27th  2020",
+                                          "desc":"Added option for User to rebuild app either locally or through cloud."
                                         }, 
                                         {
-                                          "date":"October 12th  2020 ",
-                                          "desc":" Notification for the updated version. #139"
+                                          "date":"October 26th  2020 ",
+                                          "desc":"Fixed MAC Builder: Browse button on Desktop app Browse Output Folder is not working "
                                         },
                                          {
-                                          "date":"October 12th  2020 ",
-                                          "desc":"Change default landing page from Welcome page to the direct File drop option. #137"
+                                          "date":"October 25th  2020 ",
+                                          "desc":"Fixed Readonly path issue on MAC"
+                                        },
+                                        {
+                                          "date":"October 25th  2020 ",
+                                          "desc":"Other minor issues "
                                         }
                                       ]
 
