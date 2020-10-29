@@ -175,7 +175,7 @@ export const getFile = (file: any) => {
 
 export const docker_exec_rebuild = (payload: any,fileName:string) => {
     const id = new UUID(4).format();
-    const directory = path.join('.', 'temp', id);
+    const directory = path.join(Utils.getAppDataPath() +  Utils.getPathSep() + 'temp', id);
     const inputDir = path.join(directory,'input');
     const outputDir = path.join(directory,'output');
     shell.mkdir('-p', directory);    
@@ -188,7 +188,7 @@ export const docker_exec_rebuild = (payload: any,fileName:string) => {
     var base64Data = payload.Base64.replace(/^data:image\/png;base64,/, "");
     fs.writeFileSync(path.join(inputDir,fileName),base64Data,{encoding:"base64"});
     console.log("Created rebuild dirs in "+directory+", inputDir "+inputDir+", outputDir"+outputDir);
-    var options={"timeout":5000};
+    var options={"timeout":5000, "shell":false};
     var totalOutput : any;
     // Check if image there
     var checkResponse = spawnSync('docker', ['images'],options); 
@@ -215,7 +215,8 @@ export const docker_exec_rebuild = (payload: any,fileName:string) => {
     // Pull if not
     if (totalOutput.indexOf(Utils.GW_DOCKER_IMG_TAG) == -1){
         totalOutput = "";
-        var pullResponse = spawnSync('docker', [ 'pull',Utils.GW_DOCKER_IMG_NAME]);
+        var options={"timeout":120000, "shell":false};
+        var pullResponse = spawnSync('docker', [ 'pull',Utils.GW_DOCKER_IMG_NAME], options);
         if(pullResponse.hasOwnProperty("output")){            
             for(var i=0;i<pullResponse["output"].length;i++){
                 var output = pullResponse["output"][i];        
@@ -227,12 +228,13 @@ export const docker_exec_rebuild = (payload: any,fileName:string) => {
         }
     }
     totalOutput = "";
-    // Run container    
+    // Run container 
+    options={"timeout":10000, "shell":false};   
     var spawned = spawnSync('docker', [ 'run',
                                         '--rm',
                                         '-v', resolve(inputDir)+':/input',
                                         '-v', resolve(outputDir)+':/output',
-                                        Utils.GW_DOCKER_IMG_NAME]);
+                                        Utils.GW_DOCKER_IMG_NAME], options);
     console.log("Got response "+String(spawned))             
      if(spawned.hasOwnProperty("output")){
         console.log("Spawned length "+spawned["output"].length);
@@ -272,7 +274,7 @@ export const docker_exec_rebuild = (payload: any,fileName:string) => {
 
 export const docker_exec_analysis = (payload: any,fileName:string) => {
     const id = new UUID(4).format();
-    const directory = path.join('.', 'temp', id);
+    const directory = path.join(Utils.getAppDataPath() + Utils.getPathSep() +  'temp', id);
     const inputDir = path.join(directory,'input');
     const outputDir = path.join(directory,'output');
     shell.mkdir('-p', directory);    
@@ -285,7 +287,7 @@ export const docker_exec_analysis = (payload: any,fileName:string) => {
     var base64Data = payload.Base64.replace(/^data:image\/png;base64,/, "");
     fs.writeFileSync(path.join(inputDir,fileName),base64Data,{encoding:"base64"});
     console.log("<docker_exec_analysis> Created analysis dirs in "+directory+", inputDir "+inputDir+", outputDir"+outputDir);
-    var options={"timeout":5000};
+    var options={"timeout":5000, "shell":false};
     var totalOutput : any;
     // Check if image there
     var checkResponse = spawnSync('docker', ['images'],options);    
@@ -301,7 +303,8 @@ export const docker_exec_analysis = (payload: any,fileName:string) => {
     // Pull if not
     if (totalOutput.indexOf(Utils.GW_DOCKER_IMG_TAG) == -1){
         totalOutput = "";
-        var pullResponse = spawnSync('docker', [ 'pull',Utils.GW_DOCKER_IMG_NAME]);
+        var options={"timeout":120000, "shell":false};
+        var pullResponse = spawnSync('docker', [ 'pull',Utils.GW_DOCKER_IMG_NAME], options);
         if(pullResponse.hasOwnProperty("output")){            
             for(var i=0;i<pullResponse["output"].length;i++){
                 var output = pullResponse["output"][i];        
@@ -314,7 +317,7 @@ export const docker_exec_analysis = (payload: any,fileName:string) => {
     }
     totalOutput = "";
     // Run container        
-    let configDir = resolve('./config');
+    let configDir = resolve(Utils.getAppDataPath() + Utils.getPathSep() + 'config');
     if (!fs.existsSync(configDir)){
         fs.mkdirSync(configDir);
     }
@@ -323,12 +326,13 @@ export const docker_exec_analysis = (payload: any,fileName:string) => {
     fs.writeFileSync(path.join(configDir,"config.ini"),Utils.CONFIG_INI);
     fs.writeFileSync(path.join(configDir,"config.xml"),Utils.CONFIG_XML);    
     console.log('Config dir - '+(configDir));
+    options={"timeout":10000, "shell":false};
     var spawned = spawnSync('docker', [ 'run',
                                         '--rm',
                                         '-v', configDir+':/home/glasswall',
                                         '-v', resolve(inputDir)+':/input',
                                         '-v', resolve(outputDir)+':/output',
-                                        Utils.GW_DOCKER_IMG_NAME]);
+                                        Utils.GW_DOCKER_IMG_NAME], options);
     console.log("<docker_exec_analysis> Got response "+String(spawned))             
      if(spawned.hasOwnProperty("output")){
         console.log("<docker_exec_analysis> Spawned length "+spawned["output"].length);
