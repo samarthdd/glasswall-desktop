@@ -163,10 +163,12 @@ app.on('certificate-error', (event: Event, contents: typeof WebContents, url: St
 })
 
 app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
-    app.quit()
-  }
+  
+  app.quit();
 })
+
+
+
 
 app.on('activate', () => {
   if (BrowserWindow.getAllWindows().length === 0) {
