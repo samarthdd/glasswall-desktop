@@ -43,15 +43,16 @@ const decodeBase64Image=(dataString: string) =>{
 
 const writeDecodedBase64File = (baseBase64Response: string, xmlReport:string, request: any, sourceFileUrl: string,
     requestId:string, targetFolder: string, resultCallback: Function) => {
-   var decodedBase64 = decodeBase64Image(baseBase64Response);
-   var bs = atob(baseBase64Response);
+   var decodedBase64 = decodeBase64Image(baseBase64Response);   
+   //var bs = atob(decodedBase64);
+   var bs = new Buffer(decodedBase64, 'base64').toString('utf8')   
    var buffer = new ArrayBuffer(bs.length);
    var ba = new Uint8Array(buffer);
    for (var i = 0; i < bs.length; i++) {
        ba[i] = bs.charCodeAt(i);
    }
    var file = new Blob([ba], { type: request.type });
-   var url = window.webkitURL.createObjectURL(file);   
+   var url = window.webkitURL.createObjectURL(file);      
    resultCallback({'source':sourceFileUrl, 'url':url, 'filename':request.filename, isError:false, msg:'',
        cleanFile:decodedBase64, xmlResult: xmlReport, id:requestId, targetDir:targetFolder, original:request.content, path:request.path})
    
@@ -375,3 +376,121 @@ export const docker_exec_analysis = (payload: any,fileName:string) => {
 const new_guid = () => {
         return new UUID(4).format()
 }
+
+/****
+ * Returns
+ * 0 - All ok
+ * 1 - Docker not installed
+ * 2 - Docker not running
+ * 3 - Image not present
+ * 4 - License invalid
+ * 5,6,7 - Unknown Error
+ */
+export const health_chk = () => {    
+    const id = new UUID(4).format();
+    const directory = path.join(Utils.getAppDataPath() +  Utils.getPathSep() + 'temp', id);
+    const inputDir = path.join(directory,'input');
+    const outputDir = path.join(directory,'output');
+    shell.mkdir('-p', directory);    
+    fs.mkdirSync(inputDir);
+    fs.mkdirSync(outputDir);    
+    console.log('inputDir '+inputDir);
+    console.log('outputDir '+outputDir);
+    var base64Data = Utils.HEALTH_CHK_PNG_BASE64;
+    var fileName = Utils.HEALTH_CHK_PNG_NAME;
+    fs.writeFileSync(path.join(inputDir,fileName),base64Data,{encoding:"base64"});
+    console.log("Created rebuild dirs in "+directory+", inputDir "+inputDir+", outputDir"+outputDir);
+    var options={"timeout":5000, "shell":false};
+    var totalOutput : any;
+    // Check if image there
+    var checkResponse = spawnSync('docker', ['images'],options); 
+    console.log(JSON.stringify(checkResponse));  
+    if(checkResponse.hasOwnProperty("error")){
+        let error =  checkResponse["error"];
+        if(error.hasOwnProperty("errno")){
+            let errno =  error["errno"];
+            if(errno.indexOf("ENOENT") > -1 ){
+                // Docker not installed
+                return 1;
+            }
+        }
+        
+    } 
+    if(checkResponse.hasOwnProperty("output")){        
+        for(var i=0;i<checkResponse["output"].length;i++){
+            var output = checkResponse["output"][i];            
+            if(output != null && output != ""){
+                totalOutput = totalOutput+output;
+            }            
+        }
+    }
+    console.log("Image check output = "+totalOutput);        
+    if (totalOutput.indexOf(Utils.GW_DOCKER_IMG_TAG) == -1){
+        // Image not present
+        return 3;
+    }
+    totalOutput = "";
+    // Run container 
+    options={"timeout":10000, "shell":false};   
+    var spawned = spawnSync('docker', [ 'run',
+                                        '--rm',
+                                        '-v', resolve(inputDir)+':/input',
+                                        '-v', resolve(outputDir)+':/output',
+                                        Utils.GW_DOCKER_IMG_NAME], options);
+    console.log("Got response "+String(spawned))             
+     if(spawned.hasOwnProperty("output")){
+        console.log("Spawned length "+spawned["output"].length);
+        for(var i=0;i<spawned["output"].length;i++){
+            var output = spawned["output"][i];
+            console.log("Spawned output"+output);
+            if(output != null && output != ""){
+                totalOutput = totalOutput+output;
+            }            
+        }
+        console.log("Rebuild output = "+totalOutput);
+        if(totalOutput.indexOf("error during connect") > -1){
+            // Docker not started
+            return 2;
+        }
+        if (fs.existsSync(path.join(outputDir,'Managed'))) {
+            const outFile = path.join(outputDir,'Managed',fileName);
+            if(fs.existsSync(outFile)){
+                return 0;
+            }
+            else{
+                console.log('File failed rebuild, Managed dir was there but not the rebuilt file');
+                // License not valid
+                return 4;
+            }
+        }
+        else{
+            console.log('File failed rebuild');
+            return 5;
+        }
+     }
+     else{
+        console.log("Does not have output property");
+        return 6;
+     }     
+     return 7;
+}
+
+
+export const pull_image = () =>{
+    var options={"timeout":5000, "shell":false};
+    var totalOutput : any;    
+    // Pull    
+    totalOutput = "";
+    var options={"timeout":120000, "shell":false};
+    var pullResponse = spawnSync('docker', [ 'pull',Utils.GW_DOCKER_IMG_NAME], options);
+    if(pullResponse.hasOwnProperty("output")){            
+        for(var i=0;i<pullResponse["output"].length;i++){
+            var output = pullResponse["output"][i];        
+            if(output != null && output != ""){
+                totalOutput = totalOutput+output;
+            }            
+        }
+    console.log("<docker_exec_analysis> PullResponse output = "+totalOutput);        
+    }
+    return totalOutput; 
+} 
