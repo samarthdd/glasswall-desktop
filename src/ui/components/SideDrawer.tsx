@@ -56,7 +56,7 @@ const useStyles = makeStyles((theme) => ({
         maxWidth:               '100%',
     },
     active: {
-        background:             '#bdb8b8 !important',
+        background:             '#144e78 !important',
         width:                  '100%'
     },
     navLink: {
@@ -65,6 +65,7 @@ const useStyles = makeStyles((theme) => ({
         paddingLeft:            '10px'
     },
     appBar: {
+        color:                  '#fff',   
         background:             '#0c3451',
         zIndex:                 theme.zIndex.drawer + 1,
         transition:             theme.transitions.create(['width', 'margin'], {
@@ -73,6 +74,7 @@ const useStyles = makeStyles((theme) => ({
         }),
     },
     appBarShift: {
+        background:             '#0c3451',
         marginLeft:             drawerWidth,
         width:                  `calc(100% - ${drawerWidth}px)`,
         transition:             theme.transitions.create(['width', 'margin'], {
@@ -87,11 +89,13 @@ const useStyles = makeStyles((theme) => ({
         display:                'none',
     },
     drawer: {
+        background:             '#0c3451',
         width:                  drawerWidth,
         flexShrink:             0,
         whiteSpace:             'nowrap',
     },
     drawerOpen: {
+        background:             '#0c3451',
         width:                  drawerWidth,
         transition:             theme.transitions.create('width', {
             easing:             theme.transitions.easing.sharp,
@@ -99,6 +103,7 @@ const useStyles = makeStyles((theme) => ({
         }),
     },
     drawerClose: {
+        background:             '#0c3451',
         transition:             theme.transitions.create('width', {
             easing:             theme.transitions.easing.sharp,
             duration:           theme.transitions.duration.leavingScreen,
@@ -111,6 +116,7 @@ const useStyles = makeStyles((theme) => ({
         },
     },
     toolbar: {
+        color:                  '#fff',
         display:                'flex',
         alignItems:             'center',
         justifyContent:         'flex-end',
@@ -124,7 +130,7 @@ const useStyles = makeStyles((theme) => ({
             borderBottom:        '1px solid #ccc',
             position:            'relative',
             '&:hover':{
-                background:      '#ddd',        
+                background:      '#144e78',        
 
                 '& div':{
                     display:          'block'
@@ -135,13 +141,13 @@ const useStyles = makeStyles((theme) => ({
     navText:{
         '& span':{
             fontSize:             '15px',
-            fontWeight:           'bold'
+            color:                '#fff'
         }        
     },
     tooltipBox:{
         display:                 'none',
         position:                'fixed',
-        background:              '#0c3451',
+        background:              '#5ea1e7',
         color:                   '#fff',
         margin:                  '10px',
         padding:                 '20px',
@@ -152,7 +158,7 @@ const useStyles = makeStyles((theme) => ({
             height:              '10px',
             width:               '10px',
             position:            'absolute',
-            background:          '#0c3451',
+            background:          '#5ea1e7',
             left:                '-5px',
             transform:           'rotate(45deg)',
         }
@@ -202,11 +208,11 @@ function SideDrawer({ showBack }: headerOptions) {
         navIcon:    DockerIcon,
         anchLink:   '/dockerrebuildFiles'
     },
-    // {
-    //     navName:    'Setting',
-    //     navIcon:    SettingIcon,
-    //     anchLink:   '/settings'
-    // }
+    {
+        navName:    'Configure',
+        navIcon:    SettingIcon,
+        anchLink:   '/configureDocker'
+    }
 ]
 
     return (
