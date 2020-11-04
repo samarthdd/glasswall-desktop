@@ -95,12 +95,16 @@ const useStyles = makeStyles((theme) => ({
         whiteSpace:             'nowrap',
     },
     drawerOpen: {
+        color:                  '#fff',
         background:             '#0c3451',
         width:                  drawerWidth,
         transition:             theme.transitions.create('width', {
             easing:             theme.transitions.easing.sharp,
-            duration:           theme.transitions.duration.enteringScreen,
+            duration:           theme.transitions.duration.enteringScreen,            
         }),
+        '& button':{
+            color:          '#fff'
+        }
     },
     drawerClose: {
         background:             '#0c3451',

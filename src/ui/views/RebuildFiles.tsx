@@ -400,7 +400,7 @@ const useStyles = makeStyles((theme) => ({
     toggleToolTipTitle:{
         display:                    'none',
         position:                   'fixed',
-        background:                 '#5ea1e7',
+        background:                 '#0c3451',
         color:                      '#fff',
         margin:                     '10px',
         padding:                    '10px',
@@ -414,7 +414,7 @@ const useStyles = makeStyles((theme) => ({
             height:                 '10px',
             width:                  '10px',
             position:               'absolute',
-            background:             '#5ea1e7',            
+            background:             '#0c3451',            
             right:                   '14px',
             top:                    '-6px',
             transform:              'rotate(45deg)',

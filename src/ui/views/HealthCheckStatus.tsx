@@ -10,7 +10,14 @@ const useStyles = makeStyles((theme) => ({
             listStyle:              'none',
             float:                  'right',
             '& li':{
-                float:              'left'
+                float:              'left',
+                '& p':{
+                    float:          'left',
+                    padding:        '8px 10px 0 0',
+                    margin:         '0',
+                    fontSize:      '12px',
+                    fontWeight:     'bold',
+                }
             }
         },
         '& h3':{
@@ -74,12 +81,12 @@ function HealthCheckStatus({status}:CurrentStatus){
         var uiDOM=null;
         switch(status){
             case 0:{
-                uiDOM = <li><span className={classes.grenBtn}> Docker is running</span></li>
+                uiDOM = <li><span className={classes.grenBtn}> </span> <p>Docker is running</p></li>
             }break;
             case 1:{
                 uiDOM = 
                 <div>
-                <li><span className={classes.redBtn}>Docker not installed</span></li>
+                <li><span className={classes.redBtn}></span><p>Docker not installed</p></li>
                 <li><button className={classes.configureBtn}>Configure</button></li>
                 </div>
                 
@@ -87,19 +94,19 @@ function HealthCheckStatus({status}:CurrentStatus){
             case 2:{
                 uiDOM = 
                     <div>
-                    <li><span className={classes.redBtn}>Docker not started</span></li>
+                    <li><span className={classes.redBtn}></span><p>Docker not started</p></li>
                     <li><button className={classes.configureBtn}>Configure</button></li>
                     </div>
             }break;
             case 3:{
                 uiDOM =  <div> 
-                            <li><span className={classes.orangeBtn}> GW Rebuild Image not present. Click configure</span></li>
+                            <li><span className={classes.orangeBtn}></span><p>GW Rebuild Image not present. Click configure</p></li>
                             <li><button className={classes.configureBtn}>Configure</button></li>
                         </div>
             }break;
             case 4:{
                 uiDOM =  <div> 
-                            <li><span className={classes.orangeBtn}> GW Rebuild License key not valid. Click configure</span></li>
+                            <li><span className={classes.orangeBtn}> </span><p>GW Rebuild License key not valid. Click configure</p></li>
                             <li><button className={classes.configureBtn}>Configure</button></li>
                         </div>
 
