@@ -451,11 +451,12 @@ function DockerRebuildFiles(){
     const [rowsPerPage, setRowsPerPage]             = useState(10);  
     const [folderId, setFolderId]                   = useState("");  
     const [targetDir, setTargetDir]                 = useState("");  
-    const [userTargetDir, setUserTargetDir]         = useState("");  
+    const [userTargetDir, setUserTargetDir]         = useState(sessionStorage.getItem(Utils.DOCKER_OUPUT_DIR_KEY)||"");  
     const [masterMetaFile, setMasterMetaFile]       = useState<Array<Metadata>>([]);
     const [showAlertBox, setshowAlertBox]           = useState(false);  
     const [files, setFiles]                         = useState<Array<DockerRebuildResult>>([]);
     const [flat, setFlat]                           = React.useState(true);
+    const [healthCheckStatus, setHealthCheckStatus] = React.useState(0);
 
     interface DockerRebuildResult {
         id              : string,
@@ -479,6 +480,14 @@ function DockerRebuildFiles(){
         userTargetFolder?   : string;
     }
    
+    
+
+    React.useEffect(() => {
+       
+        console.log("health_chk" + DockerUtils.health_chk())
+        setHealthCheckStatus(DockerUtils.health_chk())
+    }, []);
+
     React.useEffect(() => {
         if(folderId!=''){
             var rootFolder = Utils.getProcessedPath() + Utils.getPathSep() +folderId
@@ -669,6 +678,7 @@ function DockerRebuildFiles(){
     const successCallback =(result: any)=>{
      
         setUserTargetDir(result.filePaths[0])
+        sessionStorage.setItem(Utils.DOCKER_OUPUT_DIR_KEY, result.filePaths[0]);
     }
     const failureCallback =(error: any)=>{
         alert(`An error ocurred selecting the directory :${error.message}`) 
@@ -697,7 +707,7 @@ function DockerRebuildFiles(){
                 <main className={classes.content}>
                     <div className={classes.toolbar} />  
                     <div className={classes.contentArea}>             
-                          <HealthCheckStatus/>       
+                          <HealthCheckStatus status={healthCheckStatus}/>       
                         <Dropzone onDrop={handleDrop} >
                             {({ getRootProps, getInputProps }) => (
                             <div {...getRootProps()} className={classes.dropzone}>

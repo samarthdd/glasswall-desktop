@@ -53,18 +53,74 @@ const useStyles = makeStyles((theme) => ({
  }));
 
 
+ type CurrentStatus = {
+    status: number;
+}
 
-function HealthCheckStatus(){
+// export const DOCKER_NOT_INSTALLED       =  1; // Docker not installed;
+// export const DOCKER_NOT_STARTED         =  2; // Docker not started;
+// export const DOCKER_GW_IMAGE_NOT_PRESENT=  3; // Image not present;
+// export const LICENSE_NOT_VALID          =  4; // License not valid
+// export const REBUILD_FAILED             =  5; // File failed rebuild
+// export const MISSING_OUTPUT_PROPERTY    =  6; //Does not have output property
+
+function HealthCheckStatus({status}:CurrentStatus){
     const classes = useStyles(); 
+    console.log("heatlh status:" + status)
+
+
+    const getStatusUI =(status: number)=>{
+
+        var uiDOM=null;
+        switch(status){
+            case 0:{
+                uiDOM = <li><span className={classes.grenBtn}> Docker is running</span></li>
+            }break;
+            case 1:{
+                uiDOM = 
+                <div>
+                <li><span className={classes.redBtn}>Docker not installed</span></li>
+                <li><button className={classes.configureBtn}>Configure</button></li>
+                </div>
+                
+            }break;
+            case 2:{
+                uiDOM = 
+                    <div>
+                    <li><span className={classes.redBtn}>Docker not started</span></li>
+                    <li><button className={classes.configureBtn}>Configure</button></li>
+                    </div>
+            }break;
+            case 3:{
+                uiDOM =  <div> 
+                            <li><span className={classes.orangeBtn}> GW Rebuild Image not present. Click configure</span></li>
+                            <li><button className={classes.configureBtn}>Configure</button></li>
+                        </div>
+            }break;
+            case 4:{
+                uiDOM =  <div> 
+                            <li><span className={classes.orangeBtn}> GW Rebuild License key not valid. Click configure</span></li>
+                            <li><button className={classes.configureBtn}>Configure</button></li>
+                        </div>
+
+            }break;
+            case 5:{
+
+            }break;
+            case 6:{
+
+            }break;
+        }
+      return(
+        uiDOM
+      )
+    }
 
     return(
         <div className={classes.docerIconGroup}>
         <h3>Rebuild Files With Docker</h3>
             <ul>
-                <li><span className={classes.grenBtn} title="Docker is running"></span></li>
-                <li><span className={classes.redBtn} title="Docker stops"></span></li>
-                <li><span className={classes.orangeBtn} title="Docker is in progress"></span></li>
-                <li><button className={classes.configureBtn}>Configure</button></li>
+                {getStatusUI(status)}
             </ul>
         </div> 
        

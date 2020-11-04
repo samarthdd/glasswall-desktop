@@ -448,7 +448,7 @@ function RebuildFiles(){
     const [rowsPerPage, setRowsPerPage]             = useState(10);  
     const [folderId, setFolderId]                   = useState("");  
     const [targetDir, setTargetDir]                 = useState("");  
-    const [userTargetDir, setUserTargetDir]         = useState("");  
+    const [userTargetDir, setUserTargetDir]         = useState(sessionStorage.getItem(Utils.CLOUD_OUPUT_DIR_KEY)||"");  
     const [masterMetaFile, setMasterMetaFile]       = useState<Array<Metadata>>([]);
     const [outputDirType, setOutputDirType]         = useState(Utils.OUTPUT_DIR_FLAT)
     const [showAlertBox, setshowAlertBox]           = useState(false);
@@ -687,6 +687,7 @@ const downloadResult =(result: any)=>{
     const successCallback =(result: any)=>{
      
         setUserTargetDir(result.filePaths[0])
+        sessionStorage.setItem(Utils.CLOUD_OUPUT_DIR_KEY, result.filePaths[0]);
     }
     const failureCallback =(error: any)=>{
         alert(`An error ocurred selecting the directory :${error.message}`) 
