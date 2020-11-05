@@ -380,7 +380,7 @@ export const health_chk = () => {
         }
     }
     console.log("Image check output = "+totalOutput);     
-    if(totalOutput.indexOf("error during connect") > -1){
+    if(totalOutput.indexOf("error during connect") > -1 || totalOutput.indexOf("Error response from daemon") > -1){
         oldLogs += "\n"+Utils.getLogTime()+" - ERROR \n DOCKER NOT RUNNING - "+totalOutput        
         localStorage.setItem("healthLogs",oldLogs);       
         return 2;

@@ -8,6 +8,7 @@ import TableHead                from '@material-ui/core/TableHead';
 import TableRow                 from '@material-ui/core/TableRow';
 import DeleteIcon               from '@material-ui/icons/Delete';
 import FolderIcon               from '@material-ui/icons/Folder';
+import {Redirect}                 from 'react-router-dom'
 import { CardActions,
         TablePagination,
         Switch,
@@ -155,7 +156,11 @@ const useStyles = makeStyles((theme) => ({
     },
     contentArea:{
          minHeight:                 '85.7vh',
-         padding:                   theme.spacing(3),
+         padding:                   theme.spacing(3)
+        
+    },
+    dropzoneArea:{
+        pointerEvents:             'none'
     },
      downloadLink:{
         maxWidth:                   '245px',
@@ -494,12 +499,14 @@ function DockerRebuildFiles(){
                 sessionStorage.setItem(Utils.DOCKER_HEALTH_STATUS_KEY, "" + status )
                 setHealthCheckStatus(status)
                 setShowLoader(false)
+               
               }, 10);
             
         } else{
             status = Number(sessionStorage.getItem(Utils.DOCKER_HEALTH_STATUS_KEY));
             setHealthCheckStatus(status)
             setShowLoader(false)
+            
         }
         
     }, []);
@@ -637,6 +644,11 @@ function DockerRebuildFiles(){
             return null;
     }
      
+     const renderRedirect = () => {
+        if (healthCheckStatus) {
+          return <Redirect to='/configure' />
+        }
+      }
     //Multi file drop callback 
     const handleDrop = async (acceptedFiles:any) =>{
         Utils.initLogger();
@@ -729,22 +741,23 @@ function DockerRebuildFiles(){
             {logView && <Logs content={ localStorage.getItem("logs") || ""} isOpen={logView} handleOpen={openLogView}/>   }                
             <div className={classes.root}> 
                 <SideDrawer showBack={false}/>
+                {healthCheckStatus !=0 && renderRedirect()}
                 <main className={classes.content}>
                     <div className={classes.toolbar} />  
                     <div className={classes.contentArea}>             
-                          <HealthCheckStatus handleOpen={openLogView} status={healthCheckStatus}/>       
-                        <Dropzone onDrop={handleDrop} >
-                            {({ getRootProps, getInputProps }) => (
-                            <div {...getRootProps()} className={classes.dropzone}>
-                                <input {...getInputProps()} />
-                                    <div className={classes.dropField}>
-                                    <p>Drag and drop files</p>
-                                    <img src={DropIcon} className={classes.icons}/> 
-                                    <button className={classes.selectFileBtn}>Select files</button>
+                        <HealthCheckStatus handleOpen={openLogView} status={healthCheckStatus}/> 
+                            <Dropzone onDrop={handleDrop} >
+                                {({ getRootProps, getInputProps }) => (
+                                <div {...getRootProps()} className={classes.dropzone}>
+                                    <input {...getInputProps()} />
+                                        <div className={classes.dropField}>
+                                        <p>Drag and drop files</p>
+                                        <img src={DropIcon} className={classes.icons}/> 
+                                        <button className={classes.selectFileBtn}>Select files</button>
+                                    </div>
                                 </div>
-                            </div>
-                        )}
-                    </Dropzone>
+                            )}
+                            </Dropzone>
                     <div className={classes.errMsg}> Failed to upload </div>
                     <div className={classes.successMsg}>File uploaded successuly </div>
                     <div className={classes.tableContainer}>
