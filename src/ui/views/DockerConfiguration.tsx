@@ -173,10 +173,7 @@ function DockerConfiguration() {
 
     const pullDockerImage=()=>{
          setShowLoader(true)
-      
-
-       
-        const timer = setTimeout(() => {
+         const timer = setTimeout(() => {
             var ouput = DockerUtils.pull_image();
             if(ouput.includes(Utils.GW_DOCKER_IMG_NAME)){
                 setHealthCheckStatus(4)
