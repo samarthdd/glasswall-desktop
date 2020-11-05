@@ -153,7 +153,7 @@ function DockerConfiguration() {
             status = Number(sessionStorage.getItem(Utils.DOCKER_HEALTH_STATUS_KEY));
            
         }
-        setHealthCheckStatus(healthCheckStatus)
+        setHealthCheckStatus(status)
     }, []);
 
 
@@ -172,13 +172,15 @@ function DockerConfiguration() {
          setShowLoader(true)
       
 
-        setShowLoader(true)
+        
         const timer = setTimeout(() => {
             var ouput = DockerUtils.pull_image();
             if(ouput.includes(Utils.GW_DOCKER_IMG_NAME)){
                 alert("Image pulled successfully. Rerun Health check")
+                setShowLoader(false)
             }else{
                 alert("Failed to pull image")
+                setShowLoader(false)
             }
           }, 10);
 
