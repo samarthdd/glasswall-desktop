@@ -57,6 +57,16 @@ const useStyles = makeStyles((theme) => ({
         padding:                    '10px',
         float:                      'left',
         fontSize:                   '12px',
+    },
+    logButton:{
+       margin:                      '14px',
+       background:                 '#0c3451',
+       border:                     'none',
+       color:                      '#fff',
+       borderRadius:               '3px',
+       padding:                    '6px',
+       float:                      'left',
+       fontSize:                   '12px',
     }
  }));
 
@@ -129,7 +139,10 @@ function HealthCheckStatus({status}:CurrentStatus){
 
     return(
         <div className={classes.docerIconGroup}>
-        <h3>Rebuild Files With Docker</h3>
+            <div> 
+             <h3>Rebuild Files With Docker </h3>
+             <button className={classes.logButton}>Logs</button>
+            </div>
             <ul>
                 {getStatusUI(status)}
             </ul>
