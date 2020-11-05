@@ -711,7 +711,7 @@ function DockerRebuildFiles(){
                 <main className={classes.content}>
                     <div className={classes.toolbar} />  
                     <div className={classes.contentArea}>             
-                          <HealthCheckStatus status={1}/>       
+                          <HealthCheckStatus status={healthCheckStatus}/>       
                         <Dropzone onDrop={handleDrop} >
                             {({ getRootProps, getInputProps }) => (
                             <div {...getRootProps()} className={classes.dropzone}>
