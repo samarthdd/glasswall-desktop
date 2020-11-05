@@ -456,7 +456,7 @@ function DockerRebuildFiles(){
     const [showAlertBox, setshowAlertBox]           = useState(false);  
     const [files, setFiles]                         = useState<Array<DockerRebuildResult>>([]);
     const [flat, setFlat]                           = React.useState(true);
-    const [healthCheckStatus, setHealthCheckStatus] = React.useState( Number(sessionStorage.getItem("docker_status")) || 0);
+    const [healthCheckStatus, setHealthCheckStatus] = React.useState( Number(sessionStorage.getItem(Utils.DOCKER_HEALTH_STATUS_KEY)) || -1);
 
     interface DockerRebuildResult {
         id              : string,
@@ -484,12 +484,23 @@ function DockerRebuildFiles(){
 
     React.useEffect(() => {
        
-        console.log("health_chk" + DockerUtils.health_chk())
+        console.log("health_chk" + sessionStorage.getItem(Utils.DOCKER_HEALTH_STATUS_KEY))
         setShowLoader(true)
-        var status = DockerUtils.health_chk();
-        healthCheckStatus && setHealthCheckStatus(status)
-        //sessionStorage.setItem("docker_status", status )
-        setShowLoader(false)
+        var status = healthCheckStatus;
+        if(sessionStorage.getItem(Utils.DOCKER_HEALTH_STATUS_KEY) == null){
+            const timer = setTimeout(() => {
+                status = DockerUtils.health_chk();
+                sessionStorage.setItem(Utils.DOCKER_HEALTH_STATUS_KEY, "" + status )
+                setHealthCheckStatus(status)
+                setShowLoader(false)
+              }, 10);
+            
+        } else{
+            status = Number(sessionStorage.getItem(Utils.DOCKER_HEALTH_STATUS_KEY));
+            setHealthCheckStatus(status)
+            setShowLoader(false)
+        }
+        
     }, []);
 
     React.useEffect(() => {
