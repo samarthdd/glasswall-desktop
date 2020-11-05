@@ -23,6 +23,7 @@ import * as DockerUtils         from '../components/DockerUtils'
 import Loader                   from '../components/Loader';
 import * as Utils               from '../utils/utils'
 import RawXml                   from '../components/RawXml';
+import HealthCheckStatus        from '../components/HealthCheckStatus'
 const { dialog }                = require('electron').remote
 
 
@@ -33,6 +34,7 @@ const commonPath                = require('common-path');
 const useStyles = makeStyles((theme) => ({
     root:       {   
         display:                    'flex', 
+        background:                 '#fff'
     },    
     table: {
         minWidth:                   650,
@@ -68,6 +70,9 @@ const useStyles = makeStyles((theme) => ({
         marginBottom:               '20px',
         fontSize:                   '20px',
         alignItems:                 'center',    
+        width:                      '70%',
+        margin:                     '20px auto',
+        background:                 '#f3f8fe',
         '& p':{
             textAlign:              'center',    
             fontSize:               '25px',
@@ -119,9 +124,9 @@ const useStyles = makeStyles((theme) => ({
         padding:                    '10px',
         minWidth:                   '154px',
         borderRadius:               '4px',
-        border:                     '2px solid #6ab8f0',
-        color:                      '#6ab8f0',
-        background:                 '#fff'
+        color:                      '#fff',
+        background:                 '#469ffd',
+        border:                     'none'
    },
    errMsg:{
         color:                      'red',
@@ -165,7 +170,7 @@ const useStyles = makeStyles((theme) => ({
         padding:                    '7px 10px',
         fontSize:                   '12px',
         fontWeight:                 'normal',
-        backgroundColor:            '#0c3451',
+        backgroundColor:            '#144e78 ',
         borderRadius:               '3px',
      },
      deleteBtn:{
@@ -197,9 +202,8 @@ const useStyles = makeStyles((theme) => ({
         fontSize:                  '13px',
         lineHeight:                '25px',
         background:                '#ddd',
-        position:                  'absolute',
         left:                      '5px',
-        marginTop:                 '10px',
+        marginTop:                 '20px',
     },
      outFolderBtn:{
         background:                 '#3cb371',
@@ -217,7 +221,7 @@ const useStyles = makeStyles((theme) => ({
             transition:             '0.5s'
         },
         '&:focus':{ 
-            outline:             '0'
+            outline:                '0'
         }
      },
      outFolderBtnDissabled:{
@@ -265,7 +269,6 @@ const useStyles = makeStyles((theme) => ({
         fontSize:                   '15px'
     },
     settings:{
-        borderBottom:               '1px solid #ccc',
         paddingBottom:              '20px',
         float:                      'left',
         width:                      '100%',
@@ -280,12 +283,11 @@ const useStyles = makeStyles((theme) => ({
         width:                      '100%',
         '& h4':{
             position:               'relative',
-            float:                  'left',            
-        },
-        '& span':{
-            color:                  'red',
-            float:                  'left',
-            margin:                 '14px 5px 0 0px',
+            float:                  'left',  
+            '& span':{
+                color:                  'red',
+                margin:                 '14px 5px 0 0px',
+            },
         },
     },
     headingGroup:{
@@ -366,6 +368,7 @@ const useStyles = makeStyles((theme) => ({
     toggleContainer:{
         float:                      'right',
         position:                   'relative',
+        marginTop:                  '5px',
         '& span':{
             fontWeight:             'bold',
             
@@ -400,7 +403,7 @@ const useStyles = makeStyles((theme) => ({
         margin:                     '10px',
         padding:                    '10px',
         fontSize:                   '12px',
-        borderRadius:               '5px', 
+        borderRadius:               '5px',      
         right:                      '30px',
         maxWidth:                   '300px',
         fontWeight:                 'normal',
@@ -415,9 +418,23 @@ const useStyles = makeStyles((theme) => ({
             transform:              'rotate(45deg)',
         }
     },
-    infobBtn:{}
- }));
+    infobBtn:{},
+    tableContainer:{
+        background:                 '#f9f9f9',
+        borderRadius:               '20px',
+        padding:                    '20px',
+        boxShadow:                  '0px 0px 5px #ccc',
+        width:                      '100%',
+        marginBottom:               '20px',
+        float:                      'left'
+    },
+    docerIconGroup:{
+        '& h3':{
 
+        }
+    },
+
+ }));
 
 
 function DockerRebuildFiles(){
@@ -434,11 +451,12 @@ function DockerRebuildFiles(){
     const [rowsPerPage, setRowsPerPage]             = useState(10);  
     const [folderId, setFolderId]                   = useState("");  
     const [targetDir, setTargetDir]                 = useState("");  
-    const [userTargetDir, setUserTargetDir]         = useState("");  
+    const [userTargetDir, setUserTargetDir]         = useState(sessionStorage.getItem(Utils.DOCKER_OUPUT_DIR_KEY)||"");  
     const [masterMetaFile, setMasterMetaFile]       = useState<Array<Metadata>>([]);
     const [showAlertBox, setshowAlertBox]           = useState(false);  
     const [files, setFiles]                         = useState<Array<DockerRebuildResult>>([]);
     const [flat, setFlat]                           = React.useState(true);
+    const [healthCheckStatus, setHealthCheckStatus] = React.useState( Number(sessionStorage.getItem("docker_status")) || 0);
 
     interface DockerRebuildResult {
         id              : string,
@@ -451,8 +469,7 @@ function DockerRebuildFiles(){
         path?           : string;
         cleanFile?      : any;
       }
-
-    
+   
     interface Metadata {
         original_file       : string,
         clean_file?         : string;
@@ -462,8 +479,19 @@ function DockerRebuildFiles(){
         time?               : string;
         userTargetFolder?   : string;
     }
-
    
+    
+
+    React.useEffect(() => {
+       
+        console.log("health_chk" + DockerUtils.health_chk())
+        setShowLoader(true)
+        var status = DockerUtils.health_chk();
+        healthCheckStatus && setHealthCheckStatus(status)
+        //sessionStorage.setItem("docker_status", status )
+        setShowLoader(false)
+    }, []);
+
     React.useEffect(() => {
         if(folderId!=''){
             var rootFolder = Utils.getProcessedPath() + Utils.getPathSep() +folderId
@@ -474,7 +502,6 @@ function DockerRebuildFiles(){
             setTargetDir(rootFolder);
         }
     }, [folderId]);
-
 
     React.useEffect(() => {
         if (counter == 0 && loader == true) {
@@ -495,8 +522,6 @@ function DockerRebuildFiles(){
         }
         }
       }, [counter]);
-
-    
     
     React.useEffect(() => {
         let rebuildFile: DockerRebuildResult| undefined;
@@ -512,11 +537,8 @@ function DockerRebuildFiles(){
         setFiles(rebuildResultsPerPage)
         }, [rowsPerPage, page, rebuildFileNames]);
 
-
-
     //callback for rebuild and analysis
-    const downloadResult =(result: any)=>{
-    
+    const downloadResult =(result: any)=>{    
         setRebuildFileNames(rebuildFileNames =>[...rebuildFileNames,  {
                 id:result.id,
                 url: result.url,
@@ -595,8 +617,6 @@ function DockerRebuildFiles(){
         }        
     }
 
-   
-
     const getRebuildFileContent =(filePath: string)=>{
         var rebuild = rebuildFileNames.find(rebuild=>rebuild.path === filePath);
         if(rebuild)
@@ -604,7 +624,6 @@ function DockerRebuildFiles(){
         else    
             return null;
     }
-
      
     //Multi file drop callback 
     const handleDrop = async (acceptedFiles:any) =>{
@@ -663,6 +682,7 @@ function DockerRebuildFiles(){
     const successCallback =(result: any)=>{
      
         setUserTargetDir(result.filePaths[0])
+        sessionStorage.setItem(Utils.DOCKER_OUPUT_DIR_KEY, result.filePaths[0]);
     }
     const failureCallback =(error: any)=>{
         alert(`An error ocurred selecting the directory :${error.message}`) 
@@ -678,7 +698,6 @@ function DockerRebuildFiles(){
         promise = dialog.showOpenDialog(options)
         promise.then(successCallback, failureCallback);
     }
-
    
     const changeDownloadmode = (event:any) => {
         setFlat((prev) => !prev);
@@ -692,19 +711,7 @@ function DockerRebuildFiles(){
                 <main className={classes.content}>
                     <div className={classes.toolbar} />  
                     <div className={classes.contentArea}>             
-                    <h3>Rebuild Files With Docker
-                    <div className={classes.toggleContainer}>
-                    <FormControlLabel className={classes.toggleToolTip}
-                        //title={flat ? "Flat" : "Hierarchy"}
-                        value={flat ? "Flat" : "Hierarchy"}
-                        control={<Switch color="primary" checked={flat} onChange={changeDownloadmode}/>} 
-                        label={flat ? " Flat   " : "Hierarchy"} />
-                        <div className={classes.toggleToolTipTitle}>
-                        The hierarchical filesystems option to save processed files in a tree structure of directories,
-flat filesystem option to saves in a single directory that contains all files with no subdirectories
-                        </div>
-                    </div>
-                    </h3>
+                          <HealthCheckStatus status={healthCheckStatus}/>       
                         <Dropzone onDrop={handleDrop} >
                             {({ getRootProps, getInputProps }) => (
                             <div {...getRootProps()} className={classes.dropzone}>
@@ -719,119 +726,109 @@ flat filesystem option to saves in a single directory that contains all files wi
                     </Dropzone>
                     <div className={classes.errMsg}> Failed to upload </div>
                     <div className={classes.successMsg}>File uploaded successuly </div>
-                    <div>
-                    {showAlertBox && 
+                    <div className={classes.tableContainer}>
+                        <div>
+                            {showAlertBox && 
                                 <div className={classes.alertContainer}>
                                     <div className={classes.alertModel}>              
                                         <h3>Please Select Target Directory</h3>               
                                         <button className={classes.submitBtn} onClick={closeAlertBox}>ok</button>
                                     </div>
                                 </div>   
-                    }                       
-                        {loader  && <Loader/> }   
-                        
-                            <div className={classes.tableField}>
-                                <div className={classes.settings}>  
-                                    {/* <h2>Settings</h2> */}
-                                    <div className={classes.btnHeading}>                                                                           
-                                    <div className={classes.headingGroup}>                                                                         
-                                            <h4>Select Directory Path </h4>
-                                            <span>*</span> 
-                                            {/* <Tooltip title="Add" aria-label="add" className={classes.infoIcon}>                                            
-                                                <InfoOutlinedIcon className={classes.infobBtn}/>
-                                            </Tooltip> */}
-                                        </div>   
-                                        <div className={classes.saveFileBtn}>
-                                            <input 
-                                                readOnly        = {true} 
-                                                type            = "text"
-                                                placeholder     = "Directory Path"
-                                                defaultValue    = {userTargetDir}
-                                            />
-                                            <button onClick={selectUserTargetDir}>
-                                                <FolderIcon className={classes.btnIcon}/> 
-                                                Select Target Directory
-                                             </button>
-                                        </div>
+                            }                       
+                            {loader  && <Loader/> }   
+                            
+                                <div className={classes.tableField}>
+                                    <div className={classes.settings}>  
+                                        <div className={classes.btnHeading}>                                                                           
+                                        <div className={classes.headingGroup}>                                                                         
+                                                <h4>Select Directory Path  <span>*</span> </h4>
+                                               
+                                                <div className={classes.toggleContainer}>
+                                                    <FormControlLabel className={classes.toggleToolTip}
+                                                        //title={flat ? "Flat" : "Hierarchy"}
+                                                        value={flat ? "Flat" : "Hierarchy"}
+                                                        control={<Switch color="primary" checked={flat} onChange={changeDownloadmode}/>} 
+                                                        label={flat ? " Flat   " : "Hierarchy"} />
+                                                        <div className={classes.toggleToolTipTitle}>
+                                                        The hierarchical filesystems option to save processed files in a tree structure of directories,
+                                flat filesystem option to saves in a single directory that contains all files with no subdirectories
+                                                        </div>
+                                                    </div>
+                                            </div>   
+                                            <div className={classes.saveFileBtn}>
+                                                <input 
+                                                    readOnly        = {true} 
+                                                    type            = "text"
+                                                    placeholder     = "Directory Path"
+                                                    defaultValue    = {userTargetDir}
+                                                />
+                                                <button onClick={selectUserTargetDir}>
+                                                    <FolderIcon className={classes.btnIcon}/> 
+                                                    Select Target Directory
+                                                </button>
+                                            </div>
+                                        </div>                                        
                                     </div>
-                                    {/* <div className={classes.fileType}>
-                                        <h4>Output Type</h4>
-                                        <div className={classes.fileOption}>
-                                            <input  type        = "radio" 
-                                                    checked     = {outputDirType == Utils.OUTPUT_DIR_FLAT} 
-                                                    onChange    = {handleChange}
-                                                    value       = {Utils.OUTPUT_DIR_FLAT} 
-                                                    name        = "fileoption"/>
-                                            <span>Flat</span>
-                                        </div>
-                                        <div className={classes.fileOption}>
-                                            <input  type        = "radio" 
-                                                    value       = {Utils.OUTPUT_DIR_HIERARCY}
-                                                    onChange    = {handleChange}
-                                                    checked     = {outputDirType == Utils.OUTPUT_DIR_HIERARCY} 
-                                                    name        = "fileoption"/>
-                                            <span>Hierarchy</span>
-                                        </div>
-                                    </div> */}
-                                 </div>
-                                 {rebuildFileNames.length>0 && 
-                                <div> 
-                                <h3>Rebuild Files  With Docker
-                                    <button onClick={()=>Utils.open_file_exp(targetDir)} className={rebuildFileNames.length>0? classes.outFolderBtn:classes.outFolderBtnDissabled}><FolderIcon className={classes.btnIcon}/> Browse Output Folder</button>
-                                </h3>
-                                <Table className={classes.table} size="small" aria-label="a dense table">
-                                    <TableHead>
-                                    <TableRow>
-                                        <TableCell className={classes.texttBold}>Status</TableCell>
-                                        <TableCell align="left" className={classes.texttBold}>Original</TableCell>
-                                        <TableCell align="left" className={classes.texttBold}>Rebuilt</TableCell>
-                                        <TableCell align="left" className={classes.texttBold}>XML</TableCell>
-                                    </TableRow>
-                                    </TableHead>
-                                    <TableBody>
-                                    {files.map((row) => (
-                                        <TableRow key={row.id}>
-                                        <TableCell align="left" className={classes.status}>{row.isError == true? <span>Failed</span>:<p>Success</p>}</TableCell>
-                                        <TableCell align="left"><a id="download_link" href={row.sourceFileUrl} download={row.name} className={classes.downloadLink} title={row.name}><FileCopyIcon className={classes.fileIcon}/> {row.name}</a></TableCell>
-                                        {
-                                            !row.isError ?
-                                                <TableCell align="left"><a id="download_link" href={row.url} download={row.name} className={classes.downloadLink} title={row.name}><FileCopyIcon className={classes.fileIcon}/>{row.name}</a></TableCell>
-                                                : <TableCell align="left">{row.msg}</TableCell>
-                                        }
-                                         {
-                                            !row.isError ?
-                                            <TableCell align="left"><button  onClick={() => viewXML(row.id)} className={classes.viewBtn}>{!row.isError?'View Report':''}</button></TableCell>
-                                                : <TableCell align="left"></TableCell>
-                                        }
-                                             
+                                    {rebuildFileNames.length>0 && 
+                                    <div> 
+                                    <h3>Rebuild Files  With Docker
+                                        <button onClick={()=>Utils.open_file_exp(targetDir)} className={rebuildFileNames.length>0? classes.outFolderBtn:classes.outFolderBtnDissabled}><FolderIcon className={classes.btnIcon}/> Browse Output Folder</button>
+                                    </h3>
+                                    <Table className={classes.table} size="small" aria-label="a dense table">
+                                        <TableHead>
+                                        <TableRow>
+                                            <TableCell className={classes.texttBold}>Status</TableCell>
+                                            <TableCell align="left" className={classes.texttBold}>Original</TableCell>
+                                            <TableCell align="left" className={classes.texttBold}>Rebuilt</TableCell>
+                                            <TableCell align="left" className={classes.texttBold}>XML</TableCell>
                                         </TableRow>
-                                    ))}
-                                    </TableBody>
-                                </Table>
-                                <button onClick={clearAll} className={files.length>0?classes.deleteBtn:classes.deleteBtnDisabled}><DeleteIcon className={classes.btnIcon}/> Clear All</button>
+                                        </TableHead>
+                                        <TableBody>
+                                        {files.map((row) => (
+                                            <TableRow key={row.id}>
+                                            <TableCell align="left" className={classes.status}>{row.isError == true? <span>Failed</span>:<p>Success</p>}</TableCell>
+                                            <TableCell align="left"><a id="download_link" href={row.sourceFileUrl} download={row.name} className={classes.downloadLink} title={row.name}><FileCopyIcon className={classes.fileIcon}/> {row.name}</a></TableCell>
+                                            {
+                                                !row.isError ?
+                                                    <TableCell align="left"><a id="download_link" href={row.url} download={row.name} className={classes.downloadLink} title={row.name}><FileCopyIcon className={classes.fileIcon}/>{row.name}</a></TableCell>
+                                                    : <TableCell align="left">{row.msg}</TableCell>
+                                            }
+                                            {
+                                                !row.isError ?
+                                                <TableCell align="left"><button  onClick={() => viewXML(row.id)} className={classes.viewBtn}>{!row.isError?'View Report':''}</button></TableCell>
+                                                    : <TableCell align="left"></TableCell>
+                                            }
+                                                
+                                            </TableRow>
+                                        ))}
+                                        </TableBody>
+                                    </Table>
+                                    <button onClick={clearAll} className={files.length>0?classes.deleteBtn:classes.deleteBtnDisabled}><DeleteIcon className={classes.btnIcon}/> Clear All</button>
+                                    </div>
+                                    }
                                 </div>
-                                }
-                            </div>
-                            </div>
-                       
-                        {
-                        files.length>0 &&
-                         <CardActions className={classes.actions}>
-                             <TablePagination
-                                  onChangePage        ={handleChangePage }
-                                  onChangeRowsPerPage ={handleChangeRowsPerPage}
-                                  component           ="div"
-                                  count               ={rebuildFileNames.length                   }
-                                  page                ={page                           }
-                                  rowsPerPage         ={rowsPerPage                    }
-                                  rowsPerPageOptions  ={[5, 10, 25, { label: 'All', value: -1 }]     }               
-                                  SelectProps         ={{
-                                                          inputProps: { 'aria-label': 'rows per page' },
-                                                          native: true,
-                                                        }}
-                              />
-                          </CardActions> 
+                                </div>
+                        
+                            {
+                            files.length>0 &&
+                            <CardActions className={classes.actions}>
+                                <TablePagination
+                                    onChangePage        ={handleChangePage }
+                                    onChangeRowsPerPage ={handleChangeRowsPerPage}
+                                    component           ="div"
+                                    count               ={rebuildFileNames.length                   }
+                                    page                ={page                           }
+                                    rowsPerPage         ={rowsPerPage                    }
+                                    rowsPerPageOptions  ={[5, 10, 25, { label: 'All', value: -1 }]     }               
+                                    SelectProps         ={{
+                                                            inputProps: { 'aria-label': 'rows per page' },
+                                                            native: true,
+                                                            }}
+                                />
+                            </CardActions> 
                           }
+                    </div>
                     </div>
                     <Footer/>
                 </main>
