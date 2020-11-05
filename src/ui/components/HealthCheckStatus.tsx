@@ -73,6 +73,7 @@ const useStyles = makeStyles((theme) => ({
 
  type CurrentStatus = {
     status: number;
+    handleOpen  :  () => void;    
 }
 
 // export const DOCKER_NOT_INSTALLED       =  1; // Docker not installed;
@@ -82,10 +83,9 @@ const useStyles = makeStyles((theme) => ({
 // export const REBUILD_FAILED             =  5; // File failed rebuild
 // export const MISSING_OUTPUT_PROPERTY    =  6; //Does not have output property
 
-function HealthCheckStatus({status}:CurrentStatus){
+function HealthCheckStatus({status, handleOpen}:CurrentStatus){
     const classes = useStyles(); 
     console.log("heatlh status:" + status)
-
 
     const getStatusUI =(status: number)=>{
 
@@ -141,7 +141,7 @@ function HealthCheckStatus({status}:CurrentStatus){
         <div className={classes.docerIconGroup}>
             <div> 
              <h3>Rebuild Files With Docker </h3>
-             <button className={classes.logButton}>Logs</button>
+             <button onClick={() =>handleOpen()}className={classes.logButton}>Logs</button>
             </div>
             <ul>
                 {getStatusUI(status)}

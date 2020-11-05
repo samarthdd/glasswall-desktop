@@ -52,7 +52,8 @@ const writeDecodedBase64File = (baseBase64Response: string, xmlReport:string, re
        ba[i] = bs.charCodeAt(i);
    }
    var file = new Blob([ba], { type: request.type });
-   var url = window.webkitURL.createObjectURL(file);      
+   var url = window.webkitURL.createObjectURL(file);    
+   Utils.addLogLine(request.filename,"Processing complete ");  
    resultCallback({'source':sourceFileUrl, 'url':url, 'filename':request.filename, isError:false, msg:'',
        cleanFile:decodedBase64, xmlResult: xmlReport, id:requestId, targetDir:targetFolder, original:request.content, path:request.path})
    
@@ -97,26 +98,31 @@ export const makeRequest = (request: any, sourceFileUrl: string, requestId: stri
     if(fileSize < 6){
         const rebuiltBase64 = docker_exec_rebuild(payload,request.filename);
         if(rebuiltBase64 == -1 ){
+            Utils.addLogLine(request.filename,"Docker Daemon is not started");
             resultCallback({'source':sourceFileUrl, 'url':'TBD', 'filename':request.filename, isError:true,
                 msg:'Docker Daemon is not started', id:requestId, targetDir:folderId, original:request.content});
                 return;
         }
         if(rebuiltBase64 == -2 ){
+            Utils.addLogLine(request.filename,"Docker not installed");
             resultCallback({'source':sourceFileUrl, 'url':'TBD', 'filename':request.filename, isError:true,
                 msg:'Docker not installed', id:requestId, targetDir:folderId, original:request.content});
                 return;
         }
         if(rebuiltBase64 == null){
+            Utils.addLogLine(request.filename,"File rebuild failed");
             resultCallback({'source':sourceFileUrl, 'url':'TBD', 'filename':request.filename, isError:true,
                 msg:'File could not be rebuilt', id:requestId, targetDir:folderId, original:request.content});
                 return;
         }
         
         try{
+            Utils.addLogLine(request.filename,"Rebuild succesfull. Starting analysis");
             getAnalysisResult(false, rebuiltBase64, request, sourceFileUrl, requestId, folderId, resultCallback);
         }
         catch(err:any){
             console.log("3:" + JSON.stringify(err));
+            Utils.addLogLine(request.filename,"Analysis Error "+err.message);
             if(err.message.indexOf('422') > -1){
                 resultCallback({'source':sourceFileUrl, 'url':'TBD', 'filename':request.filename, isError:true,
              msg:'File of this type cannot be processed - '+err.message, id:requestId, targetDir:folderId, original:request.content})
@@ -128,6 +134,7 @@ export const makeRequest = (request: any, sourceFileUrl: string, requestId: stri
         }        
     }
     else{
+        Utils.addLogLine(request.filename,"File size > 6 MB. Unprocessable");
         resultCallback({'source':sourceFileUrl, 'url':'TBD', 'filename':request.filename, isError:true,
              msg:'File too big. 4 bytes to 6 MB file size bracket', id:requestId, targetDir:folderId, original:request.content})
     }
@@ -150,6 +157,7 @@ export const getAnalysisResult = (isBinaryFile: boolean, reBuildResponse: any, r
                          targetFolder, resultCallback)               
             }
         catch(err: any){
+            Utils.addLogLine(request.filename,"Analysis error "+err.message);
             console.log("11" + err.message);
             console.log("11" + err.stack);
             resultCallback({'source':sourceFile, 'url':'TBD', 'filename':request.filename, isError:true,
@@ -193,44 +201,7 @@ export const docker_exec_rebuild = (payload: any,fileName:string) => {
     fs.writeFileSync(path.join(inputDir,fileName),base64Data,{encoding:"base64"});
     console.log("Created rebuild dirs in "+directory+", inputDir "+inputDir+", outputDir"+outputDir);
     var options={"timeout":5000, "shell":false};
-    var totalOutput : any;
-    // Check if image there
-    var checkResponse = spawnSync('docker', ['images'],options); 
-    console.log(JSON.stringify(checkResponse));  
-    if(checkResponse.hasOwnProperty("error")){
-        let error =  checkResponse["error"];
-        if(error.hasOwnProperty("errno")){
-            let errno =  error["errno"];
-            if(errno.indexOf("ENOENT") > -1 ){
-                return -2;
-            }
-        }
-        
-    } 
-    if(checkResponse.hasOwnProperty("output")){        
-        for(var i=0;i<checkResponse["output"].length;i++){
-            var output = checkResponse["output"][i];            
-            if(output != null && output != ""){
-                totalOutput = totalOutput+output;
-            }            
-        }
-    }
-    console.log("Image check output = "+totalOutput);    
-    // Pull if not
-    if (totalOutput.indexOf(Utils.GW_DOCKER_IMG_TAG) == -1){
-        totalOutput = "";
-        var options={"timeout":120000, "shell":false};
-        var pullResponse = spawnSync('docker', [ 'pull',Utils.GW_DOCKER_IMG_NAME], options);
-        if(pullResponse.hasOwnProperty("output")){            
-            for(var i=0;i<pullResponse["output"].length;i++){
-                var output = pullResponse["output"][i];        
-                if(output != null && output != ""){
-                    totalOutput = totalOutput+output;
-                }            
-            }
-        console.log("PullResponse output = "+totalOutput);        
-        }
-    }
+    var totalOutput : any;    
     totalOutput = "";
     // Run container 
     options={"timeout":10000, "shell":false};   
@@ -292,33 +263,7 @@ export const docker_exec_analysis = (payload: any,fileName:string) => {
     fs.writeFileSync(path.join(inputDir,fileName),base64Data,{encoding:"base64"});
     console.log("<docker_exec_analysis> Created analysis dirs in "+directory+", inputDir "+inputDir+", outputDir"+outputDir);
     var options={"timeout":5000, "shell":false};
-    var totalOutput : any;
-    // Check if image there
-    var checkResponse = spawnSync('docker', ['images'],options);    
-    if(checkResponse.hasOwnProperty("output")){        
-        for(var i=0;i<checkResponse["output"].length;i++){
-            var output = checkResponse["output"][i];            
-            if(output != null && output != ""){
-                totalOutput = totalOutput+output;
-            }            
-        }
-    }
-    console.log("<docker_exec_analysis> Image check output = "+totalOutput);    
-    // Pull if not
-    if (totalOutput.indexOf(Utils.GW_DOCKER_IMG_TAG) == -1){
-        totalOutput = "";
-        var options={"timeout":120000, "shell":false};
-        var pullResponse = spawnSync('docker', [ 'pull',Utils.GW_DOCKER_IMG_NAME], options);
-        if(pullResponse.hasOwnProperty("output")){            
-            for(var i=0;i<pullResponse["output"].length;i++){
-                var output = pullResponse["output"][i];        
-                if(output != null && output != ""){
-                    totalOutput = totalOutput+output;
-                }            
-            }
-        console.log("<docker_exec_analysis> PullResponse output = "+totalOutput);        
-        }
-    }
+    var totalOutput : any;    
     totalOutput = "";
     // Run container        
     let configDir = resolve(Utils.getAppDataPath() + Utils.getPathSep() + 'config');
@@ -353,19 +298,23 @@ export const docker_exec_analysis = (payload: any,fileName:string) => {
             if(fs.existsSync(outFile)){
                 const contents = fs.readFileSync(outFile);    
                 console.log('XML content - '+contents); 
+                Utils.addLogLine(fileName,"Analysis successful.");
                 return contents;
             }
             else{
                 console.log('<docker_exec_analysis> File failed analysis, Managed dir was there but not the rebuilt file');
+                Utils.addLogLine(fileName,"File analysis failed.");
                 return null;
             }
         }
         else{
+            Utils.addLogLine(fileName,"File analysis failed.");
             console.log('<docker_exec_analysis> File failed analysis');
             return null;
         }
      }
      else{
+        Utils.addLogLine(fileName,"File analysis failed.");
         console.log("<docker_exec_analysis> Does not have output property");
      }
      // TODO : Cleanup temp
@@ -386,7 +335,9 @@ const new_guid = () => {
  * 4 - License invalid
  * 5,6,7 - Unknown Error
  */
-export const health_chk = () => {    
+export const health_chk = () => {     
+    var oldLogs = "";    
+    localStorage.setItem("healthLogs",oldLogs);       
     const id = new UUID(4).format();
     const directory = path.join(Utils.getAppDataPath() +  Utils.getPathSep() + 'temp', id);
     const inputDir = path.join(directory,'input');
@@ -411,11 +362,14 @@ export const health_chk = () => {
             let errno =  error["errno"];
             if(errno.indexOf("ENOENT") > -1 ){
                 // Docker not installed
+                oldLogs += "\n"+Utils.getLogTime()+" - ERROR \n DOCKER NOT INSTALLED - "+checkResponse;                
+                localStorage.setItem("healthLogs",oldLogs);
                 return 1;
-            }
+            }                            
         }
         
     } 
+    oldLogs += "\n"+Utils.getLogTime()+" - INFO \n DOCKER IS INSTALLED ";                            
     if(checkResponse.hasOwnProperty("output")){        
         for(var i=0;i<checkResponse["output"].length;i++){
             var output = checkResponse["output"][i];            
@@ -427,7 +381,12 @@ export const health_chk = () => {
     console.log("Image check output = "+totalOutput);        
     if (totalOutput.indexOf(Utils.GW_DOCKER_IMG_TAG) == -1){
         // Image not present
+        oldLogs += "\n"+Utils.getLogTime()+" - ERROR \n GW IMAGE MISSING - "+totalOutput        
+        localStorage.setItem("healthLogs",oldLogs);       
         return 3;
+    }
+    else{
+        oldLogs += "\n"+Utils.getLogTime()+" - INFO \n GW IMAGE PRESENT"
     }
     totalOutput = "";
     // Run container 
@@ -450,26 +409,37 @@ export const health_chk = () => {
         console.log("Rebuild output = "+totalOutput);
         if(totalOutput.indexOf("error during connect") > -1){
             // Docker not started
+            oldLogs += "\n"+Utils.getLogTime()+" - ERROR \n DOCKER NOT RUNNING - "+totalOutput;
+            localStorage.setItem("healthLogs",oldLogs);       
             return 2;
+        }
+        else{
+            oldLogs += "\n"+Utils.getLogTime()+" - INFO \n DOCKER RUNNING";            
         }
         if (fs.existsSync(path.join(outputDir,'Managed'))) {
             const outFile = path.join(outputDir,'Managed',fileName);
             if(fs.existsSync(outFile)){
+                oldLogs += "\n"+Utils.getLogTime()+" - INFO \n GW LICENSE OK";                
+                localStorage.setItem("healthLogs",oldLogs);       
                 return 0;
             }
             else{
                 console.log('File failed rebuild, Managed dir was there but not the rebuilt file');
                 // License not valid
+                oldLogs += "\n"+Utils.getLogTime()+" - ERROR \n GW LICENSE HAS EXPIRED - "+totalOutput;   
+                localStorage.setItem("healthLogs",oldLogs);                    
                 return 4;
             }
         }
         else{
             console.log('File failed rebuild');
+            localStorage.setItem("healthLogs",oldLogs);       
             return 5;
         }
      }
      else{
         console.log("Does not have output property");
+        localStorage.setItem("healthLogs",oldLogs);       
         return 6;
      }     
      return 7;
@@ -477,6 +447,7 @@ export const health_chk = () => {
 
 
 export const pull_image = () =>{
+    var oldLogs = localStorage.getItem("healthLogs") || "";    
     var options={"timeout":5000, "shell":false};
     var totalOutput : any;    
     // Pull    
@@ -492,5 +463,7 @@ export const pull_image = () =>{
         }
     console.log("<docker_exec_analysis> PullResponse output = "+totalOutput);        
     }
+    oldLogs += "\n"+Utils.getLogTime()+" - INFO \n IMAGE PULL LOGS - "+totalOutput;
+    localStorage.setItem("healthLogs",oldLogs);  
     return totalOutput; 
 } 

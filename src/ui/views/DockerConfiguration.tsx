@@ -13,6 +13,7 @@ import CancelIcon               from '@material-ui/icons/Cancel';
 import * as Utils               from '../utils/utils'
 import * as DockerUtils         from '../components/DockerUtils'
 import Loader                   from '../components/Loader';
+import Logs                     from '../components/Logs';
 const shell                     = require('electron').shell
 
 const useStyles = makeStyles((theme) => ({
@@ -113,7 +114,18 @@ const useStyles = makeStyles((theme) => ({
     cancel:{
         color:                      'red',
         width:                      '18px'
-    }
+    },
+    logButton:{
+        background:                 '#3cb371',
+        border:                     'none',
+        color:                      '#fff',
+        borderRadius:               '3px',
+        padding:                    '10px 20px',
+        float:                      'right',
+        fontSize:                   '12px',
+        marginBottom:               '20px',
+        marginLeft:                 '5px'                 
+     }
 }));
 
 function createData(type:any, status:any, action:any) {
@@ -128,6 +140,7 @@ function DockerConfiguration() {
     const classes = useStyles();    
     const [healthCheckStatus, setHealthCheckStatus] = React.useState(-1);
     const [loader, setShowLoader]                   = useState(false);  
+    const [logView, setLogView]                     = useState(false);      
 
     React.useEffect(() => {
        
@@ -177,12 +190,10 @@ function DockerConfiguration() {
 
     const getConfigurationRows =()=>{
         var rows = [
-            createData('DOCKER NOT INSTALLED', healthCheckStatus == 1, healthCheckStatus == 1 && <button onClick={() =>installDocker()} className={classes.installBtn}>Install</button>),
-            createData('DOCKER NOT STARTED', healthCheckStatus >= 1  && healthCheckStatus <= 2,healthCheckStatus == 2 && <button onClick={() =>startDocker()} className={classes.installBtn}>Start docker</button>),
-            createData('DOCKER GW IMAGE NOT_PRESENT', healthCheckStatus >= 1  && healthCheckStatus <= 3,healthCheckStatus == 3 && <button onClick={() =>pullDockerImage()}  className={classes.installBtn}>Pull Image</button>),
-            createData('LICENSE NOT VALID', healthCheckStatus >= 1  && healthCheckStatus <= 4, healthCheckStatus == 4 && <button onClick={() =>renewLicense()} className={classes.installBtn}>Renew License</button>),
-            createData('REBUILD FAILED', healthCheckStatus >= 1  && healthCheckStatus <= 5,null),
-            createData('MISSING OUTPUT PROPERTY', healthCheckStatus >= 1  && healthCheckStatus <= 6,null)
+            createData('DOCKER INSTALLED', healthCheckStatus == 1, healthCheckStatus == 1 && <button onClick={() =>installDocker()} className={classes.installBtn}>Install</button>),
+            createData('DOCKER  STARTED', healthCheckStatus >= 1  && healthCheckStatus <= 2,healthCheckStatus == 2 && <button onClick={() =>startDocker()} className={classes.installBtn}>Start docker</button>),
+            createData('GW IMAGE PRESENT', healthCheckStatus >= 1  && healthCheckStatus <= 3,healthCheckStatus == 3 && <button onClick={() =>pullDockerImage()}  className={classes.installBtn}>Pull Image</button>),
+            createData('LICENSE VALID', healthCheckStatus >= 1  && healthCheckStatus <= 4, healthCheckStatus == 4 && <button onClick={() =>renewLicense()} className={classes.installBtn}>Renew License</button>),            
         ];
 
       return (
@@ -208,18 +219,24 @@ function DockerConfiguration() {
           }, 10);
     }
 
+    const openLogView =()=>{
+        setLogView(!logView);
+    }
+
     console.log("health loader" + loader)
     return (
         <div className={classes.root}>
+            {logView && <Logs content={ localStorage.getItem("healthLogs") || ""} isOpen={logView} handleOpen={openLogView}/>   }                
             <SideDrawer showBack={false} />
             <main className={classes.content}>
             {loader  && <Loader/> }   
                 <div className={classes.toolbar} />
                 <div className={classes.contentArea}>
-                    <h3>Health Check Status</h3>
-                    <p>Check health status of the Docker Revbuild image </p>
+                    <h3>Health Check Status</h3>                    
+                    <p>Perform a health check of pre-requisites before using docker-rebuild </p>
                     <div className={classes.textContainer}>
-                        <button onClick={() =>executeHealthCheck()} className={classes.healthCheckBtn}>Health Check Btn</button>
+                        <button onClick={() =>openLogView()}className={classes.logButton}>Logs</button>
+                        <button onClick={() =>executeHealthCheck()} className={classes.healthCheckBtn}>Check Health</button>                        
                         <TableContainer>
                             <Table className={classes.table} size="small" aria-label="a dense table">
                                 <TableHead>

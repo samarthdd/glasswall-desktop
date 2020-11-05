@@ -127,7 +127,7 @@ function makeWindow(): typeof BrowserWindow {
 
 let mainWindow: typeof BrowserWindow | undefined
 
-function openMainWindow(): void {
+function openMainWindow(): void {    
     let url = `file://${__dirname}/../ui/index.html`;
 
     if (!mainWindow || mainWindow.isDestroyed()) {
