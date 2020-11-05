@@ -352,7 +352,8 @@ export const health_chk = () => {
     fs.writeFileSync(path.join(inputDir,fileName),base64Data,{encoding:"base64"});
     console.log("Created rebuild dirs in "+directory+", inputDir "+inputDir+", outputDir"+outputDir);
     var options={"timeout":5000, "shell":false};
-    var totalOutput : any;
+    var totalOutput : string;
+    totalOutput = "";
     // Check if image there
     var checkResponse = spawnSync('docker', ['images'],options); 
     console.log(JSON.stringify(checkResponse));  
@@ -378,8 +379,13 @@ export const health_chk = () => {
             }            
         }
     }
-    console.log("Image check output = "+totalOutput);        
-    if (totalOutput.indexOf(Utils.GW_DOCKER_IMG_TAG) == -1){
+    console.log("Image check output = "+totalOutput);     
+    if(totalOutput.indexOf("error during connect") > -1){
+        oldLogs += "\n"+Utils.getLogTime()+" - ERROR \n DOCKER NOT RUNNING - "+totalOutput        
+        localStorage.setItem("healthLogs",oldLogs);       
+        return 2;
+    }   
+    else if (totalOutput.indexOf(Utils.GW_DOCKER_IMG_TAG) == -1){
         // Image not present
         oldLogs += "\n"+Utils.getLogTime()+" - ERROR \n GW IMAGE MISSING - "+totalOutput        
         localStorage.setItem("healthLogs",oldLogs);       
