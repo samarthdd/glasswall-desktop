@@ -140,7 +140,10 @@ function DockerConfiguration() {
     const classes = useStyles();    
     const [healthCheckStatus, setHealthCheckStatus] = React.useState(-1);
     const [loader, setShowLoader]                   = useState(false);  
-    const [logView, setLogView]                     = useState(false);      
+    const [logView, setLogView]                     = useState(false); 
+    const [imagePulled, setImagePulled]             = useState(false);      
+
+    var rows = [];
 
     React.useEffect(() => {
        
@@ -153,7 +156,7 @@ function DockerConfiguration() {
             status = Number(sessionStorage.getItem(Utils.DOCKER_HEALTH_STATUS_KEY));
            
         }
-        setHealthCheckStatus(healthCheckStatus)
+        setHealthCheckStatus(status)
     }, []);
 
 
@@ -172,13 +175,19 @@ function DockerConfiguration() {
          setShowLoader(true)
       
 
-        setShowLoader(true)
+       
         const timer = setTimeout(() => {
             var ouput = DockerUtils.pull_image();
             if(ouput.includes(Utils.GW_DOCKER_IMG_NAME)){
-                alert("Image pulled successfully. Rerun Health check")
+                setHealthCheckStatus(4)
+                sessionStorage.setItem(Utils.DOCKER_HEALTH_STATUS_KEY, "" + 4 )
+                
+                setShowLoader(false)
             }else{
                 alert("Failed to pull image")
+                setHealthCheckStatus(3)
+                sessionStorage.setItem(Utils.DOCKER_HEALTH_STATUS_KEY, "" + 3 )
+                setImagePulled(false)
             }
           }, 10);
 
@@ -187,9 +196,9 @@ function DockerConfiguration() {
     const renewLicense=()=>{
         alert("TBD")
     }
-
+    
     const getConfigurationRows =()=>{
-        var rows = [
+         rows = [
             createData('DOCKER INSTALLED', healthCheckStatus == 1, healthCheckStatus == 1 && <button onClick={() =>installDocker()} className={classes.installBtn}>Install</button>),
             createData('DOCKER  STARTED', healthCheckStatus >= 1  && healthCheckStatus <= 2,healthCheckStatus == 2 && <button onClick={() =>startDocker()} className={classes.installBtn}>Start docker</button>),
             createData('GW IMAGE PRESENT', healthCheckStatus >= 1  && healthCheckStatus <= 3,healthCheckStatus == 3 && <button onClick={() =>pullDockerImage()}  className={classes.installBtn}>Pull Image</button>),
@@ -214,7 +223,9 @@ function DockerConfiguration() {
         const timer = setTimeout(() => {
             var status = DockerUtils.health_chk();
             sessionStorage.setItem(Utils.DOCKER_HEALTH_STATUS_KEY, "" + status )
+            setImagePulled(false)
             setHealthCheckStatus(status)
+            
             setShowLoader(false)
           }, 10);
     }

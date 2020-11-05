@@ -35,7 +35,4 @@ const App = () => (
       </div>
     </HashRouter>
 );
-
-console.log(localStorage.getItem(Utils.WELCOME_PAGE_VISTIED_KEY))
-
 ReactDOM.render(<App />, app);
