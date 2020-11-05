@@ -23,6 +23,7 @@ import * as DockerUtils         from '../components/DockerUtils'
 import Loader                   from '../components/Loader';
 import * as Utils               from '../utils/utils'
 import RawXml                   from '../components/RawXml';
+import Logs                     from '../components/Logs';
 import HealthCheckStatus        from '../components/HealthCheckStatus'
 const { dialog }                = require('electron').remote
 
@@ -447,6 +448,7 @@ function DockerRebuildFiles(){
     const [id, setId]                               = useState("");  
     const [open, setOpen]                           = useState(false);  
     const [xml, setXml]                             = useState("");  
+    const [logView, setLogView]                     = useState(false);      
     const [page, setPage]                           = useState(0); 
     const [rowsPerPage, setRowsPerPage]             = useState(10);  
     const [folderId, setFolderId]                   = useState("");  
@@ -456,7 +458,7 @@ function DockerRebuildFiles(){
     const [showAlertBox, setshowAlertBox]           = useState(false);  
     const [files, setFiles]                         = useState<Array<DockerRebuildResult>>([]);
     const [flat, setFlat]                           = React.useState(true);
-    const [healthCheckStatus, setHealthCheckStatus] = React.useState( Number(sessionStorage.getItem(Utils.DOCKER_HEALTH_STATUS_KEY)) || -1);
+    const [healthCheckStatus, setHealthCheckStatus] = React.useState( Number(sessionStorage.getItem("docker_status")) || 0);    
 
     interface DockerRebuildResult {
         id              : string,
@@ -480,7 +482,6 @@ function DockerRebuildFiles(){
         userTargetFolder?   : string;
     }
    
-    
 
     React.useEffect(() => {
        
@@ -638,6 +639,7 @@ function DockerRebuildFiles(){
      
     //Multi file drop callback 
     const handleDrop = async (acceptedFiles:any) =>{
+        Utils.initLogger();
         let outputDirId: string;
         if(userTargetDir ==""){
             setshowAlertBox(true);
@@ -652,6 +654,7 @@ function DockerRebuildFiles(){
             setShowLoader(true);            
             acceptedFiles.map((file: File) => {
                 DockerUtils.getFile(file).then(async (data: any) => {
+                    Utils.addLogLine(file.name,"Starting rebuild");
                     setFileNames((fileNames: any) =>[...fileNames, file.name]);
                     var url = window.webkitURL.createObjectURL(file);
                     let guid: string;
@@ -659,7 +662,8 @@ function DockerRebuildFiles(){
                     DockerUtils.makeRequest(data, url, guid, outputDirId, downloadResult);
                 })
             })
-        }
+        }        
+
     }  
 
     //view XML
@@ -670,7 +674,9 @@ function DockerRebuildFiles(){
     const openXml =(open:boolean)=>{
         setOpen(open);
     }
-
+    const openLogView =()=>{
+        setLogView(!logView);
+    }
     const handleChangePage = (event: any, newPage: number) => {
         setPage(newPage);
     };
@@ -691,9 +697,12 @@ function DockerRebuildFiles(){
     }
 
     const successCallback =(result: any)=>{
-     
-        setUserTargetDir(result.filePaths[0])
-        sessionStorage.setItem(Utils.DOCKER_OUPUT_DIR_KEY, result.filePaths[0]);
+        console.log(result.filePaths)
+        if(result.filePaths != undefined){
+            console.log(result.filePaths[0])
+            setUserTargetDir(result.filePaths[0])
+            sessionStorage.setItem(Utils.DOCKER_OUPUT_DIR_KEY, result.filePaths[0]);
+        }        
     }
     const failureCallback =(error: any)=>{
         alert(`An error ocurred selecting the directory :${error.message}`) 
@@ -716,13 +725,14 @@ function DockerRebuildFiles(){
 
     return(
         <div>   
-            {open && <RawXml content={'\'' + xml + '\''} isOpen={open} handleOpen={openXml}/>   }                
+            {open && <RawXml content={'\'' + xml + '\''} isOpen={open} handleOpen={openXml}/>   }
+            {logView && <Logs content={ localStorage.getItem("logs") || ""} isOpen={logView} handleOpen={openLogView}/>   }                
             <div className={classes.root}> 
                 <SideDrawer showBack={false}/>
                 <main className={classes.content}>
                     <div className={classes.toolbar} />  
                     <div className={classes.contentArea}>             
-                          <HealthCheckStatus status={healthCheckStatus}/>       
+                          <HealthCheckStatus handleOpen={openLogView} status={healthCheckStatus}/>       
                         <Dropzone onDrop={handleDrop} >
                             {({ getRootProps, getInputProps }) => (
                             <div {...getRootProps()} className={classes.dropzone}>

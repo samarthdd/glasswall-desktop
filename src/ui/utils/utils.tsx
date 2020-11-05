@@ -67,6 +67,41 @@ export const RELEAE_NOTES           =[
                                         }
                                       ]
 
+
+export let DOCKER_LOGS = {}; 
+
+export const initLogger = () => {
+  DOCKER_LOGS = {}
+  localStorage.removeItem("logs")
+  localStorage.setItem("logs","")
+}
+
+
+export const addLogLine = (filename:string, sentence:string) => {     
+  const logs  = localStorage.getItem("logs");
+  if(logs != null){
+    var logsCopy = logs;
+    logsCopy +=  "\n"+getLogTime()+" - INFO - File-Name - "+filename+" --> "+sentence+"\n" 
+    localStorage.setItem("logs",logsCopy)
+  }
+  else{
+    localStorage.setItem("logs","")
+    var logsCopy = "\n"+getLogTime()+" - INFO - File-Name - "+filename+" --> "+sentence+"\n" 
+    console.log('adding log '+logsCopy)
+    localStorage.setItem("logs",logsCopy)
+  }
+}
+
+export const getLogs = () => {
+  return localStorage.getItem("logs");
+}
+
+export const getLogTime = () => {
+  var date = new Date();
+  var str = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " " +  date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+  return str;
+}
+
 export const sleepDelay = (milliseconds:number) => {
     return new Promise(resolve => setTimeout(resolve, milliseconds))
   }
@@ -82,9 +117,6 @@ export const sleepDelay = (milliseconds:number) => {
     return s ? "-" + p.substr(0,4) + "-" + p.substr(4,4) : p ;
 }
  export const guid=()=> {
-   
-    //return _p8(false) + _p8(true) + _p8(true) + _p8(false);
-    //return _p8(false) + _p8(true);
     return _p8(false);
     
 }
