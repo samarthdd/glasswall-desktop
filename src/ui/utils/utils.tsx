@@ -28,6 +28,8 @@ export const WELCOME_PAGE_VISTIED_VAL   = "yes"
 
 export const DOCKER_OUPUT_DIR_KEY       = "DOCKER_OUPUT_DIR"
 export const CLOUD_OUPUT_DIR_KEY        = "CLOUD_OUPUT_DIR"
+export const DOCKER_HEALTH_STATUS_KEY   = "docker_health_status"
+
 
 export const DOCKER_RUNNING             =  9; // Docker running;
 export const DOCKER_NOT_INSTALLED       =  1; // Docker not installed;

@@ -10,6 +10,10 @@ import TableRow                 from '@material-ui/core/TableRow';
 import Paper                    from '@material-ui/core/Paper';
 import CheckCircleIcon          from '@material-ui/icons/CheckCircle';
 import CancelIcon               from '@material-ui/icons/Cancel';
+import * as Utils               from '../utils/utils'
+import * as DockerUtils         from '../components/DockerUtils'
+import Loader                   from '../components/Loader';
+const shell                     = require('electron').shell
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -117,24 +121,105 @@ function createData(type:any, status:any, action:any) {
 }
 
 const rows = [
-    createData('Docker installed', 'ok', "Install", ),
-    createData('Start Docker', 'cancel', 9.0),
-    createData('License', 'cancel', 16.0)
+   
 ];
 
 function DockerConfiguration() {
     const classes = useStyles();    
+    const [healthCheckStatus, setHealthCheckStatus] = React.useState(-1);
+    const [loader, setShowLoader]                   = useState(false);  
 
+    React.useEffect(() => {
+       
+        console.log("DockerConfiguration health_chk" + sessionStorage.getItem(Utils.DOCKER_HEALTH_STATUS_KEY))
+        var status = healthCheckStatus;
+        if(sessionStorage.getItem(Utils.DOCKER_HEALTH_STATUS_KEY) == null){
+            status = DockerUtils.health_chk();
+            sessionStorage.setItem(Utils.DOCKER_HEALTH_STATUS_KEY, "" + status )
+        } else{
+            status = Number(sessionStorage.getItem(Utils.DOCKER_HEALTH_STATUS_KEY));
+           
+        }
+        setHealthCheckStatus(healthCheckStatus)
+    }, []);
+
+
+    const installDocker=()=>{
+       
+        shell.openExternal('https://docs.docker.com/engine/install/')
+
+    }
+
+    const startDocker=()=>{
+        shell.openExternal('https://docs.docker.com/config/daemon/')
+
+    }
+
+    const pullDockerImage=()=>{
+         setShowLoader(true)
+      
+
+        setShowLoader(true)
+        const timer = setTimeout(() => {
+            var ouput = DockerUtils.pull_image();
+            if(ouput.includes(Utils.GW_DOCKER_IMG_NAME)){
+                alert("Image pulled successfully. Rerun Health check")
+            }else{
+                alert("Failed to pull image")
+            }
+          }, 10);
+
+    }
+
+    const renewLicense=()=>{
+        alert("TBD")
+    }
+
+    const getConfigurationRows =()=>{
+        var rows = [
+            createData('DOCKER NOT INSTALLED', healthCheckStatus == 1, healthCheckStatus == 1 && <button onClick={() =>installDocker()} className={classes.installBtn}>Install</button>),
+            createData('DOCKER NOT STARTED', healthCheckStatus >= 1  && healthCheckStatus <= 2,healthCheckStatus == 2 && <button onClick={() =>startDocker()} className={classes.installBtn}>Start docker</button>),
+            createData('DOCKER GW IMAGE NOT_PRESENT', healthCheckStatus >= 1  && healthCheckStatus <= 3,healthCheckStatus == 3 && <button onClick={() =>pullDockerImage()}  className={classes.installBtn}>Pull Image</button>),
+            createData('LICENSE NOT VALID', healthCheckStatus >= 1  && healthCheckStatus <= 4, healthCheckStatus == 4 && <button onClick={() =>renewLicense()} className={classes.installBtn}>Renew License</button>),
+            createData('REBUILD FAILED', healthCheckStatus >= 1  && healthCheckStatus <= 5,null),
+            createData('MISSING OUTPUT PROPERTY', healthCheckStatus >= 1  && healthCheckStatus <= 6,null)
+        ];
+
+      return (
+        <TableBody>
+            {rows.map((row) => (
+                <TableRow key={row.type}>
+                    <TableCell>                 {row.type}          </TableCell>
+                     <TableCell align="left">   {row.status?<CancelIcon className={classes.cancel}/>:<CheckCircleIcon className={classes.check}/>}</TableCell>
+                    <TableCell align="left">    {row.action}        </TableCell>
+                </TableRow>
+            ))}
+        </TableBody>
+      )
+    }
+
+    const executeHealthCheck=()=>{
+        setShowLoader(true)
+        const timer = setTimeout(() => {
+            var status = DockerUtils.health_chk();
+            sessionStorage.setItem(Utils.DOCKER_HEALTH_STATUS_KEY, "" + status )
+            setHealthCheckStatus(status)
+            setShowLoader(false)
+          }, 10);
+    }
+
+    console.log("health loader" + loader)
     return (
         <div className={classes.root}>
             <SideDrawer showBack={false} />
             <main className={classes.content}>
+            {loader  && <Loader/> }   
                 <div className={classes.toolbar} />
                 <div className={classes.contentArea}>
                     <h3>Health Check Status</h3>
-                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry </p>
+                    <p>Check health status of the Docker Revbuild image </p>
                     <div className={classes.textContainer}>
-                        <button className={classes.healthCheckBtn}>Health Check Btn</button>
+                        <button onClick={() =>executeHealthCheck()} className={classes.healthCheckBtn}>Health Check Btn</button>
                         <TableContainer>
                             <Table className={classes.table} size="small" aria-label="a dense table">
                                 <TableHead>
@@ -144,20 +229,7 @@ function DockerConfiguration() {
                                         <TableCell align="left">Action</TableCell>
                                     </TableRow>
                                 </TableHead>
-                                <TableBody>
-                                    {rows.map((row) => (
-                                        <TableRow key={row.type}>
-                                            <TableCell>
-                                                {row.type}
-                                            </TableCell>
-                                            <TableCell align="left">{row.status} <CheckCircleIcon className={classes.check}/></TableCell>
-                                            <TableCell align="left">{row.action} 
-                                                <button className={classes.installBtn}>Install</button>
-                                                <button className={classes.installBtn}>Pull Image</button>
-                                            </TableCell>
-                                        </TableRow>
-                                    ))}
-                                </TableBody>
+                               {getConfigurationRows()}
                             </Table>
                         </TableContainer>
                     </div>
