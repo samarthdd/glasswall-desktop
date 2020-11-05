@@ -1,5 +1,6 @@
-import  React       from 'react';
+import  React                   from 'react';
 import { makeStyles }           from '@material-ui/core/styles';
+import { Link}                  from 'react-router-dom'
 
 const useStyles = makeStyles((theme) => ({
     docerIconGroup:{
@@ -81,13 +82,16 @@ function HealthCheckStatus({status}:CurrentStatus){
         var uiDOM=null;
         switch(status){
             case 0:{
-                uiDOM = <li><span className={classes.grenBtn}> </span> <p>Docker is running</p></li>
+                uiDOM = <div>
+                 <li><span className={classes.grenBtn}> </span> <p>Docker is running</p></li>
+                
+                </div>    
             }break;
             case 1:{
                 uiDOM = 
                 <div>
                 <li><span className={classes.redBtn}></span><p>Docker not installed</p></li>
-                <li><button className={classes.configureBtn}>Configure</button></li>
+                <li><Link to="/configure" className={classes.configureBtn}>Configure</Link></li>
                 </div>
                 
             }break;
@@ -95,13 +99,13 @@ function HealthCheckStatus({status}:CurrentStatus){
                 uiDOM = 
                     <div>
                     <li><span className={classes.redBtn}></span><p>Docker not started</p></li>
-                    <li><button className={classes.configureBtn}>Configure</button></li>
+                    <li><Link to="/configure" className={classes.configureBtn}>Configure</Link></li>
                     </div>
             }break;
             case 3:{
                 uiDOM =  <div> 
                             <li><span className={classes.orangeBtn}></span><p>GW Rebuild Image not present. Click configure</p></li>
-                            <li><button className={classes.configureBtn}>Configure</button></li>
+                            <li><Link to="/configure" className={classes.configureBtn}>Configure</Link></li>
                         </div>
             }break;
             case 4:{

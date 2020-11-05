@@ -213,9 +213,9 @@ function SideDrawer({ showBack }: headerOptions) {
         anchLink:   '/dockerrebuildFiles'
     },
     {
-        navName:    'Configure',
+        navName:    'Configuration',
         navIcon:    SettingIcon,
-        anchLink:   '/configureDocker'
+        anchLink:   '/configure'
     }
 ]
 

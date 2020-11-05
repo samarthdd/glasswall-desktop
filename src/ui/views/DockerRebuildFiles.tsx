@@ -23,7 +23,7 @@ import * as DockerUtils         from '../components/DockerUtils'
 import Loader                   from '../components/Loader';
 import * as Utils               from '../utils/utils'
 import RawXml                   from '../components/RawXml';
-import HealthCheckStatus        from './HealthCheckStatus'
+import HealthCheckStatus        from '../components/HealthCheckStatus'
 const { dialog }                = require('electron').remote
 
 
@@ -456,7 +456,7 @@ function DockerRebuildFiles(){
     const [showAlertBox, setshowAlertBox]           = useState(false);  
     const [files, setFiles]                         = useState<Array<DockerRebuildResult>>([]);
     const [flat, setFlat]                           = React.useState(true);
-    const [healthCheckStatus, setHealthCheckStatus] = React.useState(0);
+    const [healthCheckStatus, setHealthCheckStatus] = React.useState( Number(sessionStorage.getItem("docker_status")) || 0);
 
     interface DockerRebuildResult {
         id              : string,
@@ -485,7 +485,11 @@ function DockerRebuildFiles(){
     React.useEffect(() => {
        
         console.log("health_chk" + DockerUtils.health_chk())
-        setHealthCheckStatus(DockerUtils.health_chk())
+        setShowLoader(true)
+        var status = DockerUtils.health_chk();
+        healthCheckStatus && setHealthCheckStatus(status)
+        //sessionStorage.setItem("docker_status", status )
+        setShowLoader(false)
     }, []);
 
     React.useEffect(() => {

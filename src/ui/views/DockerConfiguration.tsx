@@ -122,7 +122,7 @@ const rows = [
     createData('License', 'cancel', 16.0)
 ];
 
-function ConfigureDockerFiles() {
+function DockerConfiguration() {
     const classes = useStyles();    
 
     return (
@@ -169,4 +169,4 @@ function ConfigureDockerFiles() {
     )
 }
 
-export default ConfigureDockerFiles;
+export default DockerConfiguration;
