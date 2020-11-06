@@ -1,8 +1,8 @@
 {
   "name": "glasswall-desktop",
   "productName": "glasswall-desktop",
-  "version": "0.1.4",
-  "description": "POC project to create a desktop application using Electron and Gatsby",
+  "version": "0.1.5",
+  "description": "Glasswall desktop application using Electron and React",
   "main": "./out/electron/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

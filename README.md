@@ -54,7 +54,7 @@ Warning: This software is under active development. Use at your own risk.
 
 ### macOS
 
-Download the latest [glasswall-desktop release](https://github.com/k8-proxy/glasswall-desktop/releases/download/v0.1.4/glasswall-desktop-0.1.4.dmg).
+Download the latest [glasswall-desktop release](https://github.com/k8-proxy/glasswall-desktop/releases/download/v0.1.5/glasswall-desktop-0.1.5.dmg).
 
 Mac users will need to follow the below steps on the app when you first launch it, until we have [code signing](https://www.electron.build/code-signing) set up
 
@@ -76,12 +76,12 @@ TBD: Will automatically update when a new release is available.
 
 ### Windows
 
-Download the latest [glasswall-desktop release](https://github.com/k8-proxy/glasswall-desktop/releases/download/v0.1.4/glasswall-desktop-Setup-0.1.4.exe)
+Download the latest [glasswall-desktop release](https://github.com/k8-proxy/glasswall-desktop/releases/download/v0.1.5/glasswall-desktop-Setup-0.1.5.exe)
 
 Windows users will need to follow the below steps to install and launch the application.
 
 * **Step 1**
-Download the package from the above link, observe that .exe executable would be downloaded, glasswall-desktop-Setup-0.1.4.exe.
+Download the package from the above link, observe that .exe executable would be downloaded, glasswall-desktop-Setup-0.1.5.exe.
 
 
 * **Step 2**
@@ -150,7 +150,7 @@ Once added, further rebuilds will not prompt to allow sharing the directory each
 ### Linux Snap
 
 Glasswall desktop is only available for 64-bit Linux systems.
-Download the latest [glasswall-desktop release](https://github.com/k8-proxy/glasswall-desktop/releases/download/v0.1.4/glasswall-desktop-0.1.4.snap)
+Download the latest [glasswall-desktop release](https://github.com/k8-proxy/glasswall-desktop/releases/download/v0.1.5/glasswall-desktop-0.1.5.snap)
 
 Linux/Ubuntu users will need to follow the below steps on the app when you first launch it.
 

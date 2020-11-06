@@ -3,7 +3,7 @@ const path                      = require('path');
 var fs                          = require('fs');
 
 export const GW_DOCKER_IMG_NAME         = 'glasswallsolutions/evaluationsdk:1';
-export const GW_DOCKER_IMG_TAG          = '9c7002869f36';
+export const GW_DOCKER_IMG_NAME_WO_TAG  = 'glasswallsolutions/evaluationsdk';
 export const WEBSITE_URL                = 'https://glasswall-desktop.com';
 export const RELEASE_URL                = 'https://github.com/k8-proxy/glasswall-desktop/releases';
 export const LICENSE_URL                = 'https://github.com/k8-proxy/glasswall-desktop/blob/master/LICENSE';
