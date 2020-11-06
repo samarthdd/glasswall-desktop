@@ -14,7 +14,7 @@ export const REBUILD_ANALYSIS_URL       = 'https://o7ymnow6vf.execute-api.us-wes
 export const REPO_GIT_ISSUE_URL         = "https://github.com/k8-proxy/glasswall-desktop/issues/new";
 
 export const REBUILD_API_KEY            = 'dp2Ug1jtEh4xxFHpJBfWn9V7fKB3yVcv60lhwOAG';
-export const VERSION                    = '0.1.4'
+export const VERSION                    = '0.1.5'
 export const _PROCESSED_FOLDER          = "processed"
 export const _CLEAN_FOLDER              = "clean"
 export const _ORIGINAL_FOLDER           = "original"
@@ -24,7 +24,7 @@ export const OUTPUT_DIR_FLAT            = "flat";
 export const OUTPUT_DIR_HIERARCY        = "hierarcy";
 
 export const WELCOME_PAGE_VISTIED_KEY   = "visited"
-export const WELCOME_PAGE_VISTIED_VAL   = "yes"
+export const WELCOME_PAGE_VISTIED_VAL   = "yes1"
 
 export const DOCKER_OUPUT_DIR_KEY       = "DOCKER_OUPUT_DIR"
 export const CLOUD_OUPUT_DIR_KEY        = "CLOUD_OUPUT_DIR"
@@ -42,28 +42,24 @@ export const MISSING_OUTPUT_PROPERTY    =  6; //Does not have output property
 
 export const RELEAE_NOTES           =[
                                         {
-                                          "date":"October 29th 2020",
-                                          "desc":"Processing rebuild locally through Docker after pulling the docker image"
+                                          "date":"November 6th 2020",
+                                          "desc":"Local rebuild health check : To check the local rebuild configuration and it state"
                                         }, 
                                         {
-                                          "date":"October 28th 2020",
-                                          "desc":"Creating analysis report for rebuilt files locally through Docker."
+                                          "date":"November 5th 2020",
+                                          "desc":"Health check event logging:  Added the event logs for docker health check."
                                         },
                                         {
-                                          "date":"October 27th  2020",
-                                          "desc":"Added option for User to rebuild app either locally or through cloud."
+                                          "date":"November 4th  2020",
+                                          "desc":"Rebuild & File analysis event logging:  Added the event logs for local Rebuild and file analysis."
                                         }, 
                                         {
-                                          "date":"October 26th  2020 ",
-                                          "desc":"Fixed MAC Builder: Browse button on Desktop app Browse Output Folder is not working "
+                                          "date":"November 3rd  2020",
+                                          "desc":"Added health check functionality on UI."
                                         },
                                          {
-                                          "date":"October 25th  2020 ",
-                                          "desc":"Fixed Readonly path issue on MAC"
-                                        },
-                                        {
-                                          "date":"October 25th  2020 ",
-                                          "desc":"Other minor issues "
+                                          "date":"November 2nd  2020",
+                                          "desc":"Made output path persistent across rebuilds."
                                         }
                                       ]
 
