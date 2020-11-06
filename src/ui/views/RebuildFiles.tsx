@@ -452,7 +452,7 @@ function RebuildFiles(){
     const [masterMetaFile, setMasterMetaFile]       = useState<Array<Metadata>>([]);
     const [outputDirType, setOutputDirType]         = useState(Utils.OUTPUT_DIR_FLAT)
     const [showAlertBox, setshowAlertBox]           = useState(false);
-    const [flat, setFlat]                           = React.useState(true);
+    const [flat, setFlat]                           = React.useState(false);
     const [files, setFiles]                         = useState<Array<RebuildResult>>([]);  
 
     interface RebuildResult {

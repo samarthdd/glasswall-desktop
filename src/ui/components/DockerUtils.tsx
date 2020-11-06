@@ -385,7 +385,7 @@ export const health_chk = () => {
         localStorage.setItem("healthLogs",oldLogs);       
         return 2;
     }   
-    else if (totalOutput.indexOf(Utils.GW_DOCKER_IMG_TAG) == -1){
+    else if (!totalOutput.includes(Utils.GW_DOCKER_IMG_NAME_WO_TAG)){
         // Image not present
         oldLogs += "\n"+Utils.getLogTime()+" - ERROR \n GW IMAGE MISSING - "+totalOutput        
         localStorage.setItem("healthLogs",oldLogs);       

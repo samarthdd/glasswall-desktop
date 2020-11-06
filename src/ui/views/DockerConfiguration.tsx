@@ -196,8 +196,8 @@ function DockerConfiguration() {
     
     const getConfigurationRows =()=>{
          rows = [
-            createData('DOCKER INSTALLED', healthCheckStatus == 1, healthCheckStatus == 1 && <button onClick={() =>installDocker()} className={classes.installBtn}>Install</button>),
-            createData('DOCKER  STARTED', healthCheckStatus >= 1  && healthCheckStatus <= 2,healthCheckStatus == 2 && <button onClick={() =>startDocker()} className={classes.installBtn}>Start docker</button>),
+            createData('DOCKER INSTALLED', healthCheckStatus == 1, healthCheckStatus == 1 && <button onClick={() =>installDocker()} className={classes.installBtn}>Steps to install docker</button>),
+            createData('DOCKER  STARTED', healthCheckStatus >= 1  && healthCheckStatus <= 2,healthCheckStatus == 2 && <button onClick={() =>startDocker()} className={classes.installBtn}>Steps to start docker</button>),
             createData('GW IMAGE PRESENT', healthCheckStatus >= 1  && healthCheckStatus <= 3,healthCheckStatus == 3 && <button onClick={() =>pullDockerImage()}  className={classes.installBtn}>Pull Image</button>),
             createData('LICENSE VALID', healthCheckStatus >= 1  && healthCheckStatus <= 4, healthCheckStatus == 4 && <button onClick={() =>renewLicense()} className={classes.installBtn}>Renew License</button>),            
         ];
@@ -249,7 +249,7 @@ function DockerConfiguration() {
                             <Table className={classes.table} size="small" aria-label="a dense table">
                                 <TableHead>
                                     <TableRow>
-                                        <TableCell>Type</TableCell>
+                                        <TableCell>Required</TableCell>
                                         <TableCell align="left">Status</TableCell>
                                         <TableCell align="left">Action</TableCell>
                                     </TableRow>

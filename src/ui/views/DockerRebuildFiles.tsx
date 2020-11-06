@@ -462,7 +462,7 @@ function DockerRebuildFiles(){
     const [masterMetaFile, setMasterMetaFile]       = useState<Array<Metadata>>([]);
     const [showAlertBox, setshowAlertBox]           = useState(false);  
     const [files, setFiles]                         = useState<Array<DockerRebuildResult>>([]);
-    const [flat, setFlat]                           = React.useState(true);
+    const [flat, setFlat]                           = React.useState(false);
     const [healthCheckStatus, setHealthCheckStatus] = React.useState( Number(sessionStorage.getItem("docker_status")) || 0);    
 
     interface DockerRebuildResult {
