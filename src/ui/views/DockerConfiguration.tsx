@@ -185,6 +185,7 @@ function DockerConfiguration() {
                 setHealthCheckStatus(3)
                 sessionStorage.setItem(Utils.DOCKER_HEALTH_STATUS_KEY, "" + 3 )
                 setImagePulled(false)
+                setShowLoader(false)
             }
           }, 10);
 
