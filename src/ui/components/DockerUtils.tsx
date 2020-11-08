@@ -3,7 +3,6 @@ import * as Utils                       from '../utils/utils'
 const UUID                              = require('pure-uuid');
 const fs                                = require('fs-extra')
 const path                              = require('path');
-import axios                            from "axios";
 const shell                             = require('shelljs');
 const resolve                           = require('path').resolve
 const fixPath                           = require('fix-path');
@@ -85,7 +84,7 @@ const getBase64 = (file: File) => {
    return res;
 }
 
-export const makeRequest = (request: any, sourceFileUrl: string, requestId: string, folderId: string,
+export const makeRequest = async (request: any, sourceFileUrl: string, requestId: string, folderId: string,
       resultCallback: Function) => {
     let payload: string | any;
     let url : string;
@@ -94,82 +93,15 @@ export const makeRequest = (request: any, sourceFileUrl: string, requestId: stri
     payload = getPayload(request)
     var fileSize = payload.fileSize;
 
-    
-    if(fileSize < 6){
-        const rebuiltBase64 = docker_exec_rebuild(payload,request.filename);
-        if(rebuiltBase64 == -1 ){
-            Utils.addLogLine(request.filename,"Docker Daemon is not started");
-            resultCallback({'source':sourceFileUrl, 'url':'TBD', 'filename':request.filename, isError:true,
-                msg:'Docker Daemon is not started', id:requestId, targetDir:folderId, original:request.content});
-                return;
-        }
-        if(rebuiltBase64 == -2 ){
-            Utils.addLogLine(request.filename,"Docker not installed");
-            resultCallback({'source':sourceFileUrl, 'url':'TBD', 'filename':request.filename, isError:true,
-                msg:'Docker not installed', id:requestId, targetDir:folderId, original:request.content});
-                return;
-        }
-        if(rebuiltBase64 == null){
-            Utils.addLogLine(request.filename,"File rebuild failed");
-            resultCallback({'source':sourceFileUrl, 'url':'TBD', 'filename':request.filename, isError:true,
-                msg:'File could not be rebuilt', id:requestId, targetDir:folderId, original:request.content});
-                return;
-        }
-        
-        try{
-            Utils.addLogLine(request.filename,"Rebuild succesfull. Starting analysis");
-            getAnalysisResult(false, rebuiltBase64, request, sourceFileUrl, requestId, folderId, resultCallback);
-        }
-        catch(err:any){
-            console.log("3:" + JSON.stringify(err));
-            Utils.addLogLine(request.filename,"Analysis Error "+err.message);
-            if(err.message.indexOf('422') > -1){
-                resultCallback({'source':sourceFileUrl, 'url':'TBD', 'filename':request.filename, isError:true,
-             msg:'File of this type cannot be processed - '+err.message, id:requestId, targetDir:folderId, original:request.content})
-            }
-            else{
-                resultCallback({'source':sourceFileUrl, 'url':'TBD', 'filename':request.filename, isError:true,
-                  msg:err.message, id:requestId, targetDir:folderId, original:request.content})
-            }
-        }        
+    if(fileSize < 50){
+        return docker_exec_rebuild(payload,request,requestId,folderId,sourceFileUrl,resultCallback);                
     }
     else{
         Utils.addLogLine(request.filename,"File size > 6 MB. Unprocessable");
         resultCallback({'source':sourceFileUrl, 'url':'TBD', 'filename':request.filename, isError:true,
-             msg:'File too big. 4 bytes to 6 MB file size bracket', id:requestId, targetDir:folderId, original:request.content})
+             msg:'File too big. 4 bytes to 50 MB file size bracket', id:requestId, targetDir:folderId, original:request.content})
     }
 }
-
-export const getAnalysisResult = (isBinaryFile: boolean, reBuildResponse: any, request: any, sourceFile: string,
-     requestId: string, targetFolder: string, resultCallback: Function)=>{
-
-    let payload: string | any;
-    let url : string;
-    url = Utils.REBUILD_ANALYSIS_URL;
-
-    payload = getAnalysisPayload(request)
-    var fileSize = payload.fileSize;
-    
-    if(fileSize < 6){
-        try{
-               var xml = docker_exec_analysis(payload,request.filename);                              
-               writeDecodedBase64File(reBuildResponse, xml, request, sourceFile, requestId,
-                         targetFolder, resultCallback)               
-            }
-        catch(err: any){
-            Utils.addLogLine(request.filename,"Analysis error "+err.message);
-            console.log("11" + err.message);
-            console.log("11" + err.stack);
-            resultCallback({'source':sourceFile, 'url':'TBD', 'filename':request.filename, isError:true,
-                 msg:err.message, id:requestId, targetDir:targetFolder, original:request.content})
-        }
-    }
-    else{
-        resultCallback({'source':sourceFile, 'url':'TBD', 'filename':request.filename, isError:true,
-             msg:'File too big. 4 bytes to 6 MB file size bracket', id:requestId, targetDir:targetFolder, original:request.content})
-    }
-}
-
 
 export const getFile = (file: any) => {
 
@@ -185,7 +117,8 @@ export const getFile = (file: any) => {
 
 }
 
-export const docker_exec_rebuild = (payload: any,fileName:string) => {
+export const docker_exec_rebuild = async (payload: any,request:any,requestId:string
+    ,folderId:string,sourceFileUrl:string,resultCallback:any) => {
     const id = new UUID(4).format();
     const directory = path.join(Utils.getAppDataPath() +  Utils.getPathSep() + 'temp', id);
     const inputDir = path.join(directory,'input');
@@ -194,60 +127,76 @@ export const docker_exec_rebuild = (payload: any,fileName:string) => {
     fs.mkdirSync(inputDir);
     fs.mkdirSync(outputDir);
     console.log('payload '+JSON.stringify(payload));    
-    console.log('fileName '+fileName);
+    console.log('fileName '+request.filename);
     console.log('inputDir '+inputDir);
     console.log('outputDir '+outputDir);
     var base64Data = payload.Base64.replace(/^data:image\/png;base64,/, "");
-    fs.writeFileSync(path.join(inputDir,fileName),base64Data,{encoding:"base64"});
-    console.log("Created rebuild dirs in "+directory+", inputDir "+inputDir+", outputDir"+outputDir);
-    var options={"timeout":5000, "shell":false};
-    var totalOutput : any;    
-    totalOutput = "";
+    fs.writeFileSync(path.join(inputDir,request.filename),base64Data,{encoding:"base64"});
+    console.log("Created rebuild dirs in "+directory+", inputDir "+inputDir+", outputDir"+outputDir);          
     // Run container 
-    options={"timeout":10000, "shell":false};   
-    var spawned = spawnSync('docker', [ 'run',
-                                        '--rm',
-                                        '-v', resolve(inputDir)+':/input',
-                                        '-v', resolve(outputDir)+':/output',
-                                        Utils.GW_DOCKER_IMG_NAME], options);
-    console.log("Got response "+String(spawned))             
-     if(spawned.hasOwnProperty("output")){
-        console.log("Spawned length "+spawned["output"].length);
-        for(var i=0;i<spawned["output"].length;i++){
-            var output = spawned["output"][i];
-            console.log("Spawned output"+output);
-            if(output != null && output != ""){
-                totalOutput = totalOutput+output;
-            }            
+    var cmd = 'docker run --rm -v '+resolve(inputDir)+':/input -v '+resolve(outputDir)+':/output '+Utils.GW_DOCKER_IMG_NAME;
+    exec(cmd, function (err:Error, stdout:string, stderr:string) {      
+        if(err){
+            console.log('Error during rebuild -> \n '+err.stack+"\n")
+            Utils.addLogLine(request.filename,'Error during rebuild -> \n '+err.stack+"\n");
+            resultCallback({'source':sourceFileUrl, 'url':'TBD', 'filename':request.filename, isError:true,
+             msg:'Error during rebuild', id:requestId, targetDir:folderId, original:request.content})
+             return;
         }
-        console.log("Rebuild output = "+totalOutput);
-        if(totalOutput.indexOf("error during connect") > -1){
-            return -1;
-        }
-        if (fs.existsSync(path.join(outputDir,'Managed'))) {
-            const outFile = path.join(outputDir,'Managed',fileName);
-            if(fs.existsSync(outFile)){
-                const contents = fs.readFileSync(outFile, {encoding: 'base64'});     
-                return contents;
-            }
-            else{
-                console.log('File failed rebuild, Managed dir was there but not the rebuilt file');
-                return null;
-            }
-        }
-        else{
-            console.log('File failed rebuild');
-            return null;
-        }
-     }
-     else{
-        console.log("Does not have output property");
-     }
-     // TODO : Cleanup temp
-     return null;
-}
+        return analyseRebuilt(stdout, stderr, cmd, payload,request,requestId
+            ,folderId,sourceFileUrl,inputDir,outputDir,resultCallback) 
+    })
+  }
 
-export const docker_exec_analysis = (payload: any,fileName:string) => {
+  export const analyseRebuilt = async (stdout:string, stderr:string, cmd:string, payload:any,request:any,
+    requestId:string,folderId:string,sourceFileUrl:string,inputDir:string,outputDir:string,resultCallback:any) => {
+        console.log("Rebuild stdout -> "+String(stdout))             
+        console.log("Rebuild stderr -> "+String(stderr))             
+        if(stdout.indexOf("error during connect") > -1){
+            Utils.addLogLine(request.filename,"Docker Daemon is not started");
+            resultCallback({'source':sourceFileUrl, 'url':'TBD', 'filename':request.filename, isError:true,
+                msg:'Docker Daemon is not started', id:requestId, targetDir:folderId, original:request.content});
+            return;
+        }
+        fs.stat(outputDir+'/Managed', function(err:Error,stat:any) {          
+            if (err == null) {                 
+                fs.stat(outputDir+'/Managed/'+request.filename, function(err:Error,stat:any) { 
+                    if(err == null){
+                        console.log('Out file exists');
+                        fs.readFile(outputDir+'/Managed/'+request.filename, 'base64', function (err:Error, data:string) {
+                            if (err) {
+                                console.log('Failed to read output file '+(outputDir+'/Managed/'+request.filename));
+                                Utils.addLogLine(request.filename,'Failed to read output file '+(outputDir+'/Managed/'+request.filename));
+                                resultCallback({'source':sourceFileUrl, 'url':'TBD', 'filename':request.filename, isError:true,
+                                    msg:'Failed to read rebuilt file', id:requestId, targetDir:folderId, original:request.content});
+                                    return;
+                            }
+                            Utils.addLogLine(request.filename,'File rebuild successful. Starting analysis');
+                            return docker_exec_analysis(payload,request,requestId,folderId,
+                                sourceFileUrl,resultCallback)               
+                          });
+                    }
+                    else{
+                        console.log('File failed rebuuild.Managed dir present. File missing - \n'+err.stack);
+                        Utils.addLogLine(request.filename,"File failed analysis.Managed dir present.File missing - "+err.stack);
+                        resultCallback({'source':sourceFileUrl, 'url':'TBD', 'filename':request.filename, isError:true,
+                            msg:'File type not supported', id:requestId, targetDir:folderId, original:request.content});
+                            return;
+                    }
+                });
+            } 
+            else{
+                console.log('File failed rebuild.Managed dir missing \n'+err.stack);
+                Utils.addLogLine(request.filename,"File failed rebuild.Managed dir missing - \n"+err.stack);
+                resultCallback({'source':sourceFileUrl, 'url':'TBD', 'filename':request.filename, isError:true,
+                    msg:'File type not supported', id:requestId, targetDir:folderId, original:request.content});
+                    return;
+            }
+          });
+    }
+
+export const docker_exec_analysis = async (payload:any,request:any,requestId:string,folderId:string,
+    sourceFileUrl:string,resultCallback:any) => {
     const id = new UUID(4).format();
     const directory = path.join(Utils.getAppDataPath() + Utils.getPathSep() +  'temp', id);
     const inputDir = path.join(directory,'input');
@@ -256,11 +205,11 @@ export const docker_exec_analysis = (payload: any,fileName:string) => {
     fs.mkdirSync(inputDir);
     fs.mkdirSync(outputDir);
     console.log('<docker_exec_analysis> payload '+JSON.stringify(payload));    
-    console.log('<docker_exec_analysis> fileName '+fileName);
+    console.log('<docker_exec_analysis> fileName '+request.filename);
     console.log('<docker_exec_analysis> inputDir '+inputDir);
     console.log('<docker_exec_analysis> outputDir '+outputDir);
     var base64Data = payload.Base64.replace(/^data:image\/png;base64,/, "");
-    fs.writeFileSync(path.join(inputDir,fileName),base64Data,{encoding:"base64"});
+    fs.writeFileSync(path.join(inputDir,request.filename),base64Data,{encoding:"base64"});
     console.log("<docker_exec_analysis> Created analysis dirs in "+directory+", inputDir "+inputDir+", outputDir"+outputDir);
     var options={"timeout":5000, "shell":false};
     var totalOutput : any;    
@@ -275,52 +224,70 @@ export const docker_exec_analysis = (payload: any,fileName:string) => {
     fs.writeFileSync(path.join(configDir,"config.ini"),Utils.CONFIG_INI);
     fs.writeFileSync(path.join(configDir,"config.xml"),Utils.CONFIG_XML);    
     console.log('Config dir - '+(configDir));
-    options={"timeout":10000, "shell":false};
-    var spawned = spawnSync('docker', [ 'run',
-                                        '--rm',
-                                        '-v', configDir+':/home/glasswall',
-                                        '-v', resolve(inputDir)+':/input',
-                                        '-v', resolve(outputDir)+':/output',
-                                        Utils.GW_DOCKER_IMG_NAME], options);
-    console.log("<docker_exec_analysis> Got response "+String(spawned))             
-     if(spawned.hasOwnProperty("output")){
-        console.log("<docker_exec_analysis> Spawned length "+spawned["output"].length);
-        for(var i=0;i<spawned["output"].length;i++){
-            var output = spawned["output"][i];
-            console.log("<docker_exec_analysis> Spawned output"+output);
-            if(output != null && output != ""){
-                totalOutput = totalOutput+output;
-            }            
+    // Run container 
+    var cmd = 'docker run --rm -v '+configDir+':/home/glasswall -v '+
+        resolve(inputDir)+':/input -v '+resolve(outputDir)+':/output '+Utils.GW_DOCKER_IMG_NAME;
+    exec(cmd, function (err:Error, stdout:string, stderr:string) {      
+        if(err){
+            console.log('Error during analysis -> \n '+err.stack+"\n")
+            Utils.addLogLine(request.filename,'Error during analysis -> \n '+err.stack+"\n");
+            resultCallback({'source':sourceFileUrl, 'url':'TBD', 'filename':request.filename, isError:true,
+             msg:'Error during analysis', id:requestId, targetDir:folderId, original:request.content})
+             return;
         }
-        console.log("<docker_exec_analysis> Analysis output = "+totalOutput);
-        if (fs.existsSync(path.join(outputDir,'Managed'))) {
-            const outFile = path.join(outputDir,'Managed',fileName+'.xml');
-            if(fs.existsSync(outFile)){
-                const contents = fs.readFileSync(outFile);    
-                console.log('XML content - '+contents); 
-                Utils.addLogLine(fileName,"Analysis successful.");
-                return contents;
-            }
-            else{
-                console.log('<docker_exec_analysis> File failed analysis, Managed dir was there but not the rebuilt file');
-                Utils.addLogLine(fileName,"File analysis failed.");
-                return null;
-            }
-        }
-        else{
-            Utils.addLogLine(fileName,"File analysis failed.");
-            console.log('<docker_exec_analysis> File failed analysis');
-            return null;
-        }
-     }
-     else{
-        Utils.addLogLine(fileName,"File analysis failed.");
-        console.log("<docker_exec_analysis> Does not have output property");
-     }
-     // TODO : Cleanup temp
-     return null;
+        analyseAnalyzed(stdout, stderr, cmd, base64Data,request,requestId
+                ,folderId,sourceFileUrl,inputDir,outputDir,resultCallback) 
+    })
 }
 
+
+export const analyseAnalyzed = async (stdout:string, stderr:string, cmd:string, payload:any,request:any,
+    requestId:string,folderId:string,sourceFileUrl:string,inputDir:string,outputDir:string,resultCallback:any) => {
+        console.log("Analysis stdout -> "+String(stdout))             
+        console.log("Analysis stderr -> "+String(stderr))             
+        if(stdout.indexOf("error during connect") > -1){
+            Utils.addLogLine(request.filename,"Docker Daemon is not started");
+            resultCallback({'source':sourceFileUrl, 'url':'TBD', 'filename':request.filename, isError:true,
+                msg:'Docker Daemon is not started', id:requestId, targetDir:folderId, original:request.content});
+            return;
+        }
+        fs.stat(outputDir+'/Managed', function(err:Error,stat:any) { 
+            if (err == null) {                 
+                fs.stat(outputDir+'/Managed/'+request.filename+'.xml', function(err:Error,stat:any) { 
+                    if(err == null){
+                        console.log('Analysis Out file exists');
+                        fs.readFile(outputDir+'/Managed/'+request.filename+'.xml', 'utf8', function (err:Error, data:string) {
+                            if (err) {
+                                console.log('Failed to read xml file '+(outputDir+'/Managed/'+request.filename));
+                                Utils.addLogLine(request.filename,'Failed to read xml file '+(outputDir+'/Managed/'+request.filename+'.xml'));
+                                resultCallback({'source':sourceFileUrl, 'url':'TBD', 'filename':request.filename, isError:true,
+                                    msg:'Failed to read analyzed file', id:requestId, targetDir:folderId, original:request.content});
+                                    return;
+                            }
+                            Utils.addLogLine(request.filename,'File analysis successful. Writing results');
+                            return writeDecodedBase64File(payload, data, request, sourceFileUrl, requestId,
+                                folderId, resultCallback);           
+                          });
+                    }
+                    else{
+                        console.log('File failed analysis.Managed dir present. File missing - \n'+err.stack);
+                        Utils.addLogLine(request.filename,"File failed analysis.Managed dir present. File  - \n"+err.stack);
+                        resultCallback({'source':sourceFileUrl, 'url':'TBD', 'filename':request.filename, isError:true,
+                            msg:'File type not supported', id:requestId, targetDir:folderId, original:request.content});
+                            return;
+                    }
+                });
+            } 
+            else{
+                console.log('File failed analysis.Managed dir missing \n '+err.stack);
+                Utils.addLogLine(request.filename,"File failed analysis.Managed dir missing \n"+err.stack);
+                resultCallback({'source':sourceFileUrl, 'url':'TBD', 'filename':request.filename, isError:true,
+                    msg:'File type not supported', id:requestId, targetDir:folderId, original:request.content});
+                    return;
+            }
+          });
+    }
+  
 
 const new_guid = () => {
         return new UUID(4).format()
