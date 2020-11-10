@@ -772,6 +772,7 @@ flat filesystem option to saves in a single directory that contains all files wi
                                 flat filesystem option to saves in a single directory that contains all files with no subdirectories
                                                         </div>
                                                     </div>
+                                                    
                                             </div>  
                                             <div className={classes.saveFileBtn}>
                                                 <input 

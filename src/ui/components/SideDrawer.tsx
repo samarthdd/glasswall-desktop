@@ -24,6 +24,8 @@ import SettingIcon              from '../assets/images/setting.png'
 import HomeIcon                 from '../assets/images/homeIcon.png';
 import Tooltip                  from '@material-ui/core/Tooltip';
 import dockerIcon               from '../assets/images/docker.png'
+import HealthCheck              from '../assets/images/healthcheck.png';
+import LOGICON                  from '../assets/images/log.png';
 import { useLocation }          from 'react-router-dom'
 
 const drawerWidth = 280;
@@ -213,9 +215,19 @@ function SideDrawer({ showBack }: headerOptions) {
         anchLink:   '/dockerrebuildFiles'
     },
     {
-        navName:    'Configuration',
-        navIcon:    SettingIcon,
+        navName:    'Health Check',
+        navIcon:    HealthCheck,
         anchLink:   '/configure'
+    },
+    {
+        navName:    'LOGS',
+        navIcon:    LOGICON,
+        anchLink:   '/logs'
+    },
+    {
+        navName:    'Settings',
+        navIcon:    SettingIcon,
+        anchLink:   '/settings'
     }
 ]
 

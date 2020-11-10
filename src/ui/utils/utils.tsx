@@ -5,16 +5,16 @@ var fs                          = require('fs');
 export const GW_DOCKER_IMG_NAME         = 'glasswallsolutions/evaluationsdk:1';
 export const GW_DOCKER_IMG_NAME_WO_TAG  = 'glasswallsolutions/evaluationsdk';
 export const GW_DOCKER_PULL_IMG_OUTPUT  = 'Downloaded newer image for glasswallsolutions/evaluationsdk';
+export const GW_DOCKER_PULL_IMG_OUTPUT_2 = 'Image is up to date for glasswallsolutions/evaluationsdk';
+
 export const WEBSITE_URL                = 'https://glasswall-desktop.com';
 export const RELEASE_URL                = 'https://github.com/k8-proxy/glasswall-desktop/releases';
 export const LICENSE_URL                = 'https://github.com/k8-proxy/glasswall-desktop/blob/master/LICENSE';
 export const FW_URL                     = 'https://forensic-workbench.com/';
 export const FILE_DROP_URL              = 'https://file-drop.co.uk/';
-export const REBUILD_ENGINE_URL         = 'https://8oiyjy8w63.execute-api.us-west-2.amazonaws.com/Prod/api/rebuild/base64';
-export const REBUILD_ANALYSIS_URL       = 'https://o7ymnow6vf.execute-api.us-west-2.amazonaws.com/Prod/api/Analyse/base64';
 export const REPO_GIT_ISSUE_URL         = "https://github.com/k8-proxy/glasswall-desktop/issues/new";
 
-export const REBUILD_API_KEY            = 'dp2Ug1jtEh4xxFHpJBfWn9V7fKB3yVcv60lhwOAG';
+
 export const VERSION                    = '0.1.5'
 export const _PROCESSED_FOLDER          = "processed"
 export const _CLEAN_FOLDER              = "clean"
@@ -31,6 +31,15 @@ export const DOCKER_OUPUT_DIR_KEY       = "DOCKER_OUPUT_DIR"
 export const CLOUD_OUPUT_DIR_KEY        = "CLOUD_OUPUT_DIR"
 export const DOCKER_HEALTH_STATUS_KEY   = "docker_health_status"
 
+export const REBUILD_URL_KEY       = "rebuild_url"
+export const ANALYSIS_URL_KEY      = "anaylsis_url"
+export const APIKEY_KEY            = "apikey_key"
+
+
+
+export const REBUILD_ENGINE_URL         =  !localStorage.getItem(REBUILD_URL_KEY)? 'https://8oiyjy8w63.execute-api.us-west-2.amazonaws.com/Prod/api/rebuild/base64':localStorage.getItem(REBUILD_URL_KEY);
+export const REBUILD_ANALYSIS_URL       =  !localStorage.getItem(ANALYSIS_URL_KEY)?'https://o7ymnow6vf.execute-api.us-west-2.amazonaws.com/Prod/api/Analyse/base64':localStorage.getItem(ANALYSIS_URL_KEY);
+export const REBUILD_API_KEY            =  !localStorage.getItem(APIKEY_KEY) ?'dp2Ug1jtEh4xxFHpJBfWn9V7fKB3yVcv60lhwOAG':  localStorage.getItem(APIKEY_KEY);
 
 export const DOCKER_RUNNING             =  9; // Docker running;
 export const DOCKER_NOT_INSTALLED       =  1; // Docker not installed;

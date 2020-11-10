@@ -89,7 +89,7 @@ export const makeRequest = async (request: any, sourceFileUrl: string, requestId
         });*/
 
     let payload: string | any;
-    let url : string;
+    let url : string| null;
     url = Utils.REBUILD_ENGINE_URL;
 
     payload = getPayload(request)
@@ -100,7 +100,7 @@ export const makeRequest = async (request: any, sourceFileUrl: string, requestId
     let retries = NUM_RETRIES
     if(fileSize < 6){
 
-        return await axios.post(url, payload, {
+        return url && await axios.post(url, payload, {
                 headers: {
                     "x-api-key": Utils.REBUILD_API_KEY,
                     "Content-Type": "application/json"
@@ -135,7 +135,7 @@ export const retry = async (request: any, sourceFileUrl: string, requestId: stri
       resultCallback: Function) => {
 
     let payload: string | any;
-    let url : string;
+    let url : string| null;
     url = Utils.REBUILD_ENGINE_URL;
 
     payload = getPayload(request)
@@ -145,7 +145,7 @@ export const retry = async (request: any, sourceFileUrl: string, requestId: stri
     payload = JSON.stringify(payload)
     if(fileSize < 6){
 
-        return await axios.post(url, payload, {
+        return  url &&  await axios.post(url, payload, {
                 headers: {
                     "x-api-key": Utils.REBUILD_API_KEY,
                     "Content-Type": "application/json"
@@ -172,7 +172,7 @@ export const getAnalysisResult= async (isBinaryFile: boolean, reBuildResponse: a
      requestId: string, targetFolder: string, resultCallback: Function)=>{
 
     let payload: string | any;
-    let url : string;
+    let url : string| null;
     url = Utils.REBUILD_ANALYSIS_URL;
 
     payload = getAnalysisPayload(request)
@@ -182,7 +182,7 @@ export const getAnalysisResult= async (isBinaryFile: boolean, reBuildResponse: a
     Utils.sleep(500);
 
     if(fileSize < 6){
-        return await axios.post(url, payload, {
+        return url &&  await axios.post(url, payload, {
                 headers: {
                     "x-api-key": Utils.REBUILD_API_KEY,
                     "Content-Type": "application/json"

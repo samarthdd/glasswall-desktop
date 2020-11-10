@@ -463,6 +463,7 @@ function DockerRebuildFiles(){
     const [showAlertBox, setshowAlertBox]           = useState(false);  
     const [files, setFiles]                         = useState<Array<DockerRebuildResult>>([]);
     const [flat, setFlat]                           = React.useState(false);
+    const [parallel, setParallel]                   = React.useState(true);
     const [healthCheckStatus, setHealthCheckStatus] = React.useState( Number(sessionStorage.getItem("docker_status")) || 0);    
 
     interface DockerRebuildResult {
@@ -731,8 +732,13 @@ function DockerRebuildFiles(){
         promise.then(successCallback, failureCallback);
     }
    
+    
     const changeDownloadmode = (event:any) => {
         setFlat((prev) => !prev);
+    };
+
+    const changeProcessingMode = (event:any) => {
+        setParallel((prev) => !prev);
     };   
 
     return(
@@ -787,6 +793,16 @@ function DockerRebuildFiles(){
                                                         <div className={classes.toggleToolTipTitle}>
                                                         The hierarchical filesystems option to save processed files in a tree structure of directories,
                                 flat filesystem option to saves in a single directory that contains all files with no subdirectories
+                                                        </div>
+                                                    </div>
+                                                    <div className={classes.toggleContainer}>
+                                                    <FormControlLabel className={classes.toggleToolTip}
+                                                        value={parallel ? "Parallel" : "Sequential"}
+                                                        control={<Switch color="primary" checked={parallel} 
+                                                        onChange={changeProcessingMode}/>} 
+                                                        label={parallel ? "Parallel" : "Sequential"} />
+                                                        <div className={classes.toggleToolTipTitle}>
+                                                        Parallel or Sequential processing
                                                         </div>
                                                     </div>
                                             </div>   
