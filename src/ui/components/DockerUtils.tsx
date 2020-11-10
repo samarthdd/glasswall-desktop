@@ -440,3 +440,87 @@ export const pull_image = () =>{
     localStorage.setItem("healthLogs",oldLogs);  
     return totalOutput; 
 } 
+
+/**
+ * Returns
+ * 0 : Valid
+ * 1 : Invalid
+ */
+export const check_license = () =>{
+    var oldLogs = localStorage.getItem("healthLogs");    
+    if(oldLogs == null || oldLogs == undefined){
+        oldLogs = "";
+    }
+    oldLogs += "\n"+Utils.getLogTime()+" - INFO \n ========== Starting License Validation ==========";                
+    localStorage.setItem("healthLogs",oldLogs);       
+    const id = new UUID(4).format();
+    const directory = path.join(Utils.getAppDataPath() +  Utils.getPathSep() + 'temp', id);
+    const inputDir = path.join(directory,'input');
+    const outputDir = path.join(directory,'output');
+    shell.mkdir('-p', directory);    
+    fs.mkdirSync(inputDir);
+    fs.mkdirSync(outputDir);    
+    console.log('inputDir '+inputDir);
+    console.log('outputDir '+outputDir);
+    var base64Data = Utils.HEALTH_CHK_PNG_BASE64;
+    var fileName = Utils.HEALTH_CHK_PNG_NAME;
+    fs.writeFileSync(path.join(inputDir,fileName),base64Data,{encoding:"base64"});
+    console.log("Created rebuild dirs in "+directory+", inputDir "+inputDir+", outputDir"+outputDir);
+    var options={"timeout":5000, "shell":false};
+    var totalOutput : string;
+    totalOutput = "";
+    // Run container 
+    options={"timeout":10000, "shell":false};   
+    var spawned = spawnSync('docker', [ 'run',
+                                        '--rm',
+                                        '-v', resolve(inputDir)+':/input',
+                                        '-v', resolve(outputDir)+':/output',
+                                        Utils.GW_DOCKER_IMG_NAME], options);
+    console.log("License check response "+String(spawned))             
+    if(spawned.hasOwnProperty("output")){
+        console.log("Spawned length "+spawned["output"].length);
+        for(var i=0;i<spawned["output"].length;i++){
+            var output = spawned["output"][i];
+            console.log("Spawned output"+output);
+            if(output != null && output != ""){
+                totalOutput = totalOutput+output;
+            }            
+        }
+        console.log("License check output = "+totalOutput);        
+        if (fs.existsSync(path.join(outputDir,'Managed'))) {
+            const outFile = path.join(outputDir,'Managed',fileName);
+            if(fs.existsSync(outFile)){
+                oldLogs += "\n"+Utils.getLogTime()+" - INFO \n GW LICENSE OK";                
+                localStorage.setItem("healthLogs",oldLogs);       
+                oldLogs += "\n"+Utils.getLogTime()+" - INFO \n ========== License Validation Finised ==========";                
+                localStorage.setItem("healthLogs",oldLogs);       
+                return 0;
+            }
+            else{
+                console.log('File failed rebuild, Managed dir was there but not the rebuilt file');
+                // License not valid
+                oldLogs += "\n"+Utils.getLogTime()+" - ERROR \n GW LICENSE HAS EXPIRED. Rebuilt sample file now found - "+totalOutput;   
+                localStorage.setItem("healthLogs",oldLogs);         
+                oldLogs += "\n"+Utils.getLogTime()+" - INFO \n ========== License Validation Finised ==========";                
+                localStorage.setItem("healthLogs",oldLogs);                  
+                return 1;
+            }
+        }
+        else{
+            console.log('File failed rebuild');
+            oldLogs += "\n"+Utils.getLogTime()+" - ERROR \n GW LICENSE HAS EXPIRED. Rebuilt Managed dir now found - "+totalOutput;   
+            localStorage.setItem("healthLogs",oldLogs);
+            oldLogs += "\n"+Utils.getLogTime()+" - INFO \n ========== License Validation Finised ==========";                
+            localStorage.setItem("healthLogs",oldLogs);       
+            return 1;
+        }
+    }
+    else{
+        console.log("Does not have output property");
+        oldLogs += "\n"+Utils.getLogTime()+" - ERROR \n Inconsistent output while checking license - "+totalOutput;   
+        localStorage.setItem("healthLogs",oldLogs);  
+        oldLogs += "\n"+Utils.getLogTime()+" - INFO \n ========== License Validation Finised ==========";                
+        localStorage.setItem("healthLogs",oldLogs);            
+        return 1;
+    }         
+} 
