@@ -49,6 +49,8 @@ export const LICENSE_NOT_VALID          =  4; // License not valid
 export const REBUILD_FAILED             =  5; // File failed rebuild
 export const MISSING_OUTPUT_PROPERTY    =  6; //Does not have output property
 
+export const TEXT_PARALLEL              =  "Parallel"
+export const TEXT_SEQUENTIAL            =  "Sequential"
 
 export const RELEAE_NOTES           =[
                                         {
@@ -74,10 +76,35 @@ export const RELEAE_NOTES           =[
                                       ]
 
 
-export let DOCKER_LOGS = {}; 
+export const cleanRawLogger = () => {
+  localStorage.removeItem("rawlogs")
+  localStorage.setItem("rawlogs","")
+}
 
-export const initLogger = () => {
-  DOCKER_LOGS = {}
+export const addRawLogLine = (level:number, filename:string, sentence:string) => {     
+  const logs  = localStorage.getItem("rawlogs");
+  let levelStr : string;
+  levelStr = "ERROR"
+  if(level == 0){
+    levelStr = "DEBUG"
+  }
+  else if (level == 1){
+    levelStr = "INFO"
+  }  
+  if(logs != null){
+    var logsCopy = logs;
+    logsCopy +=  "\n"+getLogTime()+" - "+levelStr+" - File-Name - "+filename+" --> "+sentence+"\n" 
+    localStorage.setItem("rawlogs",logsCopy)
+  }
+  else{
+    localStorage.setItem("rawlogs","")
+    var logsCopy = "\n"+getLogTime()+" - "+levelStr+" - File-Name - "+filename+" --> "+sentence+"\n" 
+    console.log('adding log '+logsCopy)
+    localStorage.setItem("rawlogs",logsCopy)
+  }
+}
+
+export const initLogger = () => {  
   localStorage.removeItem("logs")
   localStorage.setItem("logs","")
 }

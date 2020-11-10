@@ -220,7 +220,7 @@ function SideDrawer({ showBack }: headerOptions) {
         anchLink:   '/configure'
     },
     {
-        navName:    'LOGS',
+        navName:    'Raw Logs',
         navIcon:    LOGICON,
         anchLink:   '/logs'
     },

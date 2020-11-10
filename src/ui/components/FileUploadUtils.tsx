@@ -7,7 +7,7 @@ const NUM_RETRIES = 5;
 const getPayload = (data: any) => {
     let buffer = Buffer.from(data.content, 'base64');
     let size_of_file = buffer.length / 1000000;
-    console.log("File Size (MB) : " + size_of_file);
+    Utils.addRawLogLine(0,"-","File Size (MB) : " + size_of_file);
     var json = {
             fileSize : size_of_file,
             Base64 : data.content
@@ -112,7 +112,7 @@ export const makeRequest = async (request: any, sourceFileUrl: string, requestId
             }
         })
         .catch(async err => {
-            console.log("3:" + JSON.stringify(err));
+            Utils.addRawLogLine(2,"-","3:" + JSON.stringify(err));
             if(err.message.indexOf('422') > -1){
                 resultCallback({'source':sourceFileUrl, 'url':'TBD', 'filename':request.filename, isError:true,
              msg:'File of this type cannot be processed - '+err.message, id:requestId, targetDir:folderId, original:request.content})
@@ -189,7 +189,7 @@ export const getAnalysisResult= async (isBinaryFile: boolean, reBuildResponse: a
                 }
             })
         .then((response) => {
-            console.log("response.status" + response.status)
+            Utils.addRawLogLine(2,"-","response.status" + response.status)
             if(response.status === 200){
                if(isBinaryFile){
                     writeBinaryFile(reBuildResponse, response.data, request, sourceFile, requestId, targetFolder, resultCallback)
@@ -200,7 +200,7 @@ export const getAnalysisResult= async (isBinaryFile: boolean, reBuildResponse: a
             }
         })
         .catch(err => {
-            console.log("11" + err.message);
+            Utils.addRawLogLine(2,"-","11" + err.message);
             resultCallback({'source':sourceFile, 'url':'TBD', 'filename':request.filename, isError:true,
                  msg:err.message, id:requestId, targetDir:targetFolder, original:request.content})
         })

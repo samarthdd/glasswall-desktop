@@ -98,7 +98,7 @@ function LoggerView(){
                 <div className={classes.toolbar} />  
                 <div className={classes.contentArea}>             
                     <h3>Logs</h3>
-                    <Highlight language='javascript'>{localStorage.getItem("logs") || ""}</Highlight>
+                    <Highlight language='javascript'>{localStorage.getItem("rawlogs") || ""}</Highlight>
                 </div>   
             </main>   
         </div>

@@ -1,6 +1,7 @@
 import  React                   from 'react';
 import { makeStyles }           from '@material-ui/core/styles';
 import { Link}                  from 'react-router-dom'
+import * as Utils               from '../utils/utils'
 
 const useStyles = makeStyles((theme) => ({
     docerIconGroup:{
@@ -85,7 +86,7 @@ const useStyles = makeStyles((theme) => ({
 
 function HealthCheckStatus({status, handleOpen}:CurrentStatus){
     const classes = useStyles(); 
-    console.log("heatlh status:" + status)
+    Utils.addRawLogLine(2,"-","heatlh status:" + status)
 
     const getStatusUI =(status: number)=>{
 

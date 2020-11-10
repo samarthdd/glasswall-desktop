@@ -12,7 +12,7 @@ fixPath();
 const getPayload = (data: any) => {
     let buffer = Buffer.from(data.content, 'base64');
     let size_of_file = buffer.length / 1000000;
-    console.log("File Size (MB) : " + size_of_file);
+    Utils.addRawLogLine(0,"-","File Size (MB) : " + size_of_file);
     var json = {
             fileSize : size_of_file,
             Base64 : data.content
@@ -124,18 +124,18 @@ export const docker_exec_rebuild = async (payload: any,request:any,requestId:str
     shell.mkdir('-p', directory);    
     fs.mkdirSync(inputDir);
     fs.mkdirSync(outputDir);
-    console.log('payload '+JSON.stringify(payload));    
-    console.log('fileName '+request.filename);
-    console.log('inputDir '+inputDir);
-    console.log('outputDir '+outputDir);
+    Utils.addRawLogLine(0,request.filename,"payload "+JSON.stringify(payload));    
+    Utils.addRawLogLine(0,request.filename,'fileName '+request.filename);
+    Utils.addRawLogLine(0,request.filename,'inputDir '+inputDir);
+    Utils.addRawLogLine(0,request.filename,'outputDir '+outputDir);
     var base64Data = payload.Base64.replace(/^data:image\/png;base64,/, "");
     fs.writeFileSync(path.join(inputDir,request.filename),base64Data,{encoding:"base64"});
-    console.log("Created rebuild dirs in "+directory+", inputDir "+inputDir+", outputDir"+outputDir);          
+    Utils.addRawLogLine(0,request.filename,"Created rebuild dirs in "+directory+", inputDir "+inputDir+", outputDir"+outputDir);          
     // Run container 
     var cmd = 'docker run --rm -v '+resolve(inputDir)+':/input -v '+resolve(outputDir)+':/output '+Utils.GW_DOCKER_IMG_NAME;
     exec(cmd, function (err:Error, stdout:string, stderr:string) {      
         if(err){
-            console.log('Error during rebuild -> \n '+err.stack+"\n")
+            Utils.addRawLogLine(0,request.filename,'Error during rebuild -> \n '+err.stack+"\n")
             Utils.addLogLine(request.filename,'Error during rebuild -> \n '+err.stack+"\n");
             resultCallback({'source':sourceFileUrl, 'url':'TBD', 'filename':request.filename, isError:true,
              msg:'Error during rebuild', id:requestId, targetDir:folderId, original:request.content})
@@ -148,8 +148,8 @@ export const docker_exec_rebuild = async (payload: any,request:any,requestId:str
 
   export const analyseRebuilt = async (stdout:string, stderr:string, cmd:string, payload:any,request:any,
     requestId:string,folderId:string,sourceFileUrl:string,inputDir:string,outputDir:string,resultCallback:any) => {
-        console.log("Rebuild stdout -> "+String(stdout))             
-        console.log("Rebuild stderr -> "+String(stderr))             
+        Utils.addRawLogLine(0,request.filename,"Rebuild stdout -> "+String(stdout))             
+        Utils.addRawLogLine(0,request.filename,"Rebuild stderr -> "+String(stderr))             
         if(stdout.indexOf("error during connect") > -1){
             Utils.addLogLine(request.filename,"Docker Daemon is not started");
             resultCallback({'source':sourceFileUrl, 'url':'TBD', 'filename':request.filename, isError:true,
@@ -160,10 +160,10 @@ export const docker_exec_rebuild = async (payload: any,request:any,requestId:str
             if (err == null) {                 
                 fs.stat(outputDir+'/Managed/'+request.filename, function(err:Error,stat:any) { 
                     if(err == null){
-                        console.log('Out file exists');
+                        Utils.addRawLogLine(1,request.filename,'Out file exists');
                         fs.readFile(outputDir+'/Managed/'+request.filename, 'base64', function (err:Error, data:string) {
                             if (err) {
-                                console.log('Failed to read output file '+(outputDir+'/Managed/'+request.filename));
+                                Utils.addRawLogLine(2,request.filename,'Failed to read output file '+(outputDir+'/Managed/'+request.filename));
                                 Utils.addLogLine(request.filename,'Failed to read output file '+(outputDir+'/Managed/'+request.filename));
                                 resultCallback({'source':sourceFileUrl, 'url':'TBD', 'filename':request.filename, isError:true,
                                     msg:'Failed to read rebuilt file', id:requestId, targetDir:folderId, original:request.content});
@@ -175,7 +175,7 @@ export const docker_exec_rebuild = async (payload: any,request:any,requestId:str
                           });
                     }
                     else{
-                        console.log('File failed rebuuild.Managed dir present. File missing - \n'+err.stack);
+                        Utils.addRawLogLine(2,request.filename,'File failed rebuuild.Managed dir present. File missing - \n'+err.stack);
                         Utils.addLogLine(request.filename,"File failed analysis.Managed dir present.File missing - "+err.stack);
                         resultCallback({'source':sourceFileUrl, 'url':'TBD', 'filename':request.filename, isError:true,
                             msg:'File type not supported', id:requestId, targetDir:folderId, original:request.content});
@@ -184,7 +184,7 @@ export const docker_exec_rebuild = async (payload: any,request:any,requestId:str
                 });
             } 
             else{
-                console.log('File failed rebuild.Managed dir missing \n'+err.stack);
+                Utils.addRawLogLine(2,request.filename,'File failed rebuild.Managed dir missing \n'+err.stack);
                 Utils.addLogLine(request.filename,"File failed rebuild.Managed dir missing - \n"+err.stack);
                 resultCallback({'source':sourceFileUrl, 'url':'TBD', 'filename':request.filename, isError:true,
                     msg:'File type not supported', id:requestId, targetDir:folderId, original:request.content});
@@ -202,13 +202,13 @@ export const docker_exec_analysis = async (payload:any,request:any,requestId:str
     shell.mkdir('-p', directory);    
     fs.mkdirSync(inputDir);
     fs.mkdirSync(outputDir);
-    console.log('<docker_exec_analysis> payload '+JSON.stringify(payload));    
-    console.log('<docker_exec_analysis> fileName '+request.filename);
-    console.log('<docker_exec_analysis> inputDir '+inputDir);
-    console.log('<docker_exec_analysis> outputDir '+outputDir);
+    Utils.addRawLogLine(0,request.filename,'<docker_exec_analysis> payload '+JSON.stringify(payload));    
+    Utils.addRawLogLine(1,request.filename,'<docker_exec_analysis> fileName '+request.filename);
+    Utils.addRawLogLine(1,request.filename,'<docker_exec_analysis> inputDir '+inputDir);
+    Utils.addRawLogLine(1,request.filename,'<docker_exec_analysis> outputDir '+outputDir);
     var base64Data = payload.Base64.replace(/^data:image\/png;base64,/, "");
     fs.writeFileSync(path.join(inputDir,request.filename),base64Data,{encoding:"base64"});
-    console.log("<docker_exec_analysis> Created analysis dirs in "+directory+", inputDir "+inputDir+", outputDir"+outputDir);
+    Utils.addRawLogLine(1,request.filename,"<docker_exec_analysis> Created analysis dirs in "+directory+", inputDir "+inputDir+", outputDir"+outputDir);
     var options={"timeout":5000, "shell":false};
     var totalOutput : any;    
     totalOutput = "";
@@ -221,13 +221,13 @@ export const docker_exec_analysis = async (payload:any,request:any,requestId:str
     fs.openSync(path.join(configDir,"config.xml"),'w');
     fs.writeFileSync(path.join(configDir,"config.ini"),Utils.CONFIG_INI);
     fs.writeFileSync(path.join(configDir,"config.xml"),Utils.CONFIG_XML);    
-    console.log('Config dir - '+(configDir));
+    Utils.addRawLogLine(1,request.filename,'Config dir - '+(configDir));
     // Run container 
     var cmd = 'docker run --rm -v '+configDir+':/home/glasswall -v '+
         resolve(inputDir)+':/input -v '+resolve(outputDir)+':/output '+Utils.GW_DOCKER_IMG_NAME;
     exec(cmd, function (err:Error, stdout:string, stderr:string) {      
         if(err){
-            console.log('Error during analysis -> \n '+err.stack+"\n")
+            Utils.addRawLogLine(2,request.filename,'Error during analysis -> \n '+err.stack+"\n")
             Utils.addLogLine(request.filename,'Error during analysis -> \n '+err.stack+"\n");
             resultCallback({'source':sourceFileUrl, 'url':'TBD', 'filename':request.filename, isError:true,
              msg:'Error during analysis', id:requestId, targetDir:folderId, original:request.content})
@@ -241,8 +241,8 @@ export const docker_exec_analysis = async (payload:any,request:any,requestId:str
 
 export const analyseAnalyzed = async (stdout:string, stderr:string, cmd:string, payload:any,request:any,
     requestId:string,folderId:string,sourceFileUrl:string,inputDir:string,outputDir:string,resultCallback:any) => {
-        console.log("Analysis stdout -> "+String(stdout))             
-        console.log("Analysis stderr -> "+String(stderr))             
+        Utils.addRawLogLine(0,request.filename,"Analysis stdout -> "+String(stdout))             
+        Utils.addRawLogLine(1,request.filename,"Analysis stderr -> "+String(stderr))             
         if(stdout.indexOf("error during connect") > -1){
             Utils.addLogLine(request.filename,"Docker Daemon is not started");
             resultCallback({'source':sourceFileUrl, 'url':'TBD', 'filename':request.filename, isError:true,
@@ -253,10 +253,10 @@ export const analyseAnalyzed = async (stdout:string, stderr:string, cmd:string, 
             if (err == null) {                 
                 fs.stat(outputDir+'/Managed/'+request.filename+'.xml', function(err:Error,stat:any) { 
                     if(err == null){
-                        console.log('Analysis Out file exists');
+                        Utils.addRawLogLine(2,request.filename,'Analysis Out file exists');
                         fs.readFile(outputDir+'/Managed/'+request.filename+'.xml', 'utf8', function (err:Error, data:string) {
                             if (err) {
-                                console.log('Failed to read xml file '+(outputDir+'/Managed/'+request.filename));
+                                Utils.addRawLogLine(2,request.filename,'Failed to read xml file '+(outputDir+'/Managed/'+request.filename)+ '\n '+err.stack );
                                 Utils.addLogLine(request.filename,'Failed to read xml file '+(outputDir+'/Managed/'+request.filename+'.xml'));
                                 resultCallback({'source':sourceFileUrl, 'url':'TBD', 'filename':request.filename, isError:true,
                                     msg:'Failed to read analyzed file', id:requestId, targetDir:folderId, original:request.content});
@@ -268,7 +268,7 @@ export const analyseAnalyzed = async (stdout:string, stderr:string, cmd:string, 
                           });
                     }
                     else{
-                        console.log('File failed analysis.Managed dir present. File missing - \n'+err.stack);
+                        Utils.addRawLogLine(2,request.filename,'File failed analysis.Managed dir present. File missing - \n'+err.stack);
                         Utils.addLogLine(request.filename,"File failed analysis.Managed dir present. File  - \n"+err.stack);
                         resultCallback({'source':sourceFileUrl, 'url':'TBD', 'filename':request.filename, isError:true,
                             msg:'File type not supported', id:requestId, targetDir:folderId, original:request.content});
@@ -277,7 +277,7 @@ export const analyseAnalyzed = async (stdout:string, stderr:string, cmd:string, 
                 });
             } 
             else{
-                console.log('File failed analysis.Managed dir missing \n '+err.stack);
+                Utils.addRawLogLine(2,request.filename,'File failed analysis.Managed dir missing \n '+err.stack);
                 Utils.addLogLine(request.filename,"File failed analysis.Managed dir missing \n"+err.stack);
                 resultCallback({'source':sourceFileUrl, 'url':'TBD', 'filename':request.filename, isError:true,
                     msg:'File type not supported', id:requestId, targetDir:folderId, original:request.content});
@@ -310,18 +310,17 @@ export const health_chk = () => {
     shell.mkdir('-p', directory);    
     fs.mkdirSync(inputDir);
     fs.mkdirSync(outputDir);    
-    console.log('inputDir '+inputDir);
-    console.log('outputDir '+outputDir);
+    Utils.addRawLogLine(1,'-', '<health_chk> License check inputDir '+inputDir);
+    Utils.addRawLogLine(1,'-', '<health_chk> License check outputDir '+outputDir);
     var base64Data = Utils.HEALTH_CHK_PNG_BASE64;
     var fileName = Utils.HEALTH_CHK_PNG_NAME;
     fs.writeFileSync(path.join(inputDir,fileName),base64Data,{encoding:"base64"});
-    console.log("Created rebuild dirs in "+directory+", inputDir "+inputDir+", outputDir"+outputDir);
+    Utils.addRawLogLine(1,'-', "<health_chk> License check created  dirs in "+directory+", inputDir "+inputDir+", outputDir"+outputDir);
     var options={"timeout":5000, "shell":false};
     var totalOutput : string;
     totalOutput = "";
     // Check if image there
-    var checkResponse = spawnSync('docker', ['images'],options); 
-    console.log(JSON.stringify(checkResponse));  
+    var checkResponse = spawnSync('docker', ['images'],options);      
     if(checkResponse.hasOwnProperty("error")){
         let error =  checkResponse["error"];
         if(error.hasOwnProperty("errno")){
@@ -343,8 +342,7 @@ export const health_chk = () => {
                 totalOutput = totalOutput+output;
             }            
         }
-    }
-    console.log("Image check output = "+totalOutput);     
+    }       
     if(totalOutput.indexOf("error during connect") > -1 || totalOutput.indexOf("Error response from daemon") > -1){
         oldLogs += "\n"+Utils.getLogTime()+" - ERROR \n DOCKER NOT RUNNING - "+totalOutput        
         localStorage.setItem("healthLogs",oldLogs);       
@@ -359,6 +357,7 @@ export const health_chk = () => {
     else{
         oldLogs += "\n"+Utils.getLogTime()+" - INFO \n GW IMAGE PRESENT"
     }
+    Utils.addRawLogLine(0,"-", "<health_chk> Image check ouput \n"+totalOutput); 
     totalOutput = "";
     // Run container 
     options={"timeout":10000, "shell":false};   
@@ -366,10 +365,8 @@ export const health_chk = () => {
                                         '--rm',
                                         '-v', resolve(inputDir)+':/input',
                                         '-v', resolve(outputDir)+':/output',
-                                        Utils.GW_DOCKER_IMG_NAME], options);
-    console.log("Got response "+String(spawned))             
+                                        Utils.GW_DOCKER_IMG_NAME], options);    
      if(spawned.hasOwnProperty("output")){
-        console.log("Spawned length "+spawned["output"].length);
         for(var i=0;i<spawned["output"].length;i++){
             var output = spawned["output"][i];
             console.log("Spawned output"+output);
@@ -377,7 +374,7 @@ export const health_chk = () => {
                 totalOutput = totalOutput+output;
             }            
         }
-        console.log("Rebuild output = "+totalOutput);
+        Utils.addRawLogLine(0,"-", "<health_chk> License check response \n "+String(totalOutput))             
         if(totalOutput.indexOf("error during connect") > -1){
             // Docker not started
             oldLogs += "\n"+Utils.getLogTime()+" - ERROR \n DOCKER NOT RUNNING - "+totalOutput;
@@ -395,7 +392,7 @@ export const health_chk = () => {
                 return 0;
             }
             else{
-                console.log('File failed rebuild, Managed dir was there but not the rebuilt file');
+                Utils.addRawLogLine(2,"-", "<health_chk> File failed rebuild, Managed dir was there but not the rebuilt file");
                 // License not valid
                 oldLogs += "\n"+Utils.getLogTime()+" - ERROR \n GW LICENSE HAS EXPIRED - "+totalOutput;   
                 localStorage.setItem("healthLogs",oldLogs);                    
@@ -403,13 +400,13 @@ export const health_chk = () => {
             }
         }
         else{
-            console.log('File failed rebuild');
+            Utils.addRawLogLine(2,"-", "<health_chk> File failed rebuild");
             localStorage.setItem("healthLogs",oldLogs);       
             return 5;
         }
      }
      else{
-        console.log("Does not have output property");
+        Utils.addRawLogLine(2,"-", "<health_chk> Does not have output property");
         localStorage.setItem("healthLogs",oldLogs);       
         return 6;
      }     
@@ -432,7 +429,7 @@ export const pull_image = () =>{
                 totalOutput = totalOutput+output;
             }            
         }
-    console.log("<docker_exec_analysis> PullResponse output = "+totalOutput);        
+        Utils.addRawLogLine(1,"-", "<pull_image> Pull Response  = "+totalOutput);        
     }
     oldLogs += "\n"+Utils.getLogTime()+" - INFO \n IMAGE PULL LOGS - "+totalOutput;
     localStorage.setItem("healthLogs",oldLogs);  
@@ -458,12 +455,12 @@ export const check_license = () =>{
     shell.mkdir('-p', directory);    
     fs.mkdirSync(inputDir);
     fs.mkdirSync(outputDir);    
-    console.log('inputDir '+inputDir);
-    console.log('outputDir '+outputDir);
+    Utils.addRawLogLine(1,"-", "check_license  =  inputDir "+inputDir);
+    Utils.addRawLogLine(1,"-", "check_license  =  "+outputDir);
     var base64Data = Utils.HEALTH_CHK_PNG_BASE64;
     var fileName = Utils.HEALTH_CHK_PNG_NAME;
     fs.writeFileSync(path.join(inputDir,fileName),base64Data,{encoding:"base64"});
-    console.log("Created rebuild dirs in "+directory+", inputDir "+inputDir+", outputDir"+outputDir);
+    Utils.addRawLogLine(1,"-", "check_license  Created rebuild dirs in "+directory+", inputDir "+inputDir+", outputDir"+outputDir);
     var options={"timeout":5000, "shell":false};
     var totalOutput : string;
     totalOutput = "";
@@ -473,8 +470,7 @@ export const check_license = () =>{
                                         '--rm',
                                         '-v', resolve(inputDir)+':/input',
                                         '-v', resolve(outputDir)+':/output',
-                                        Utils.GW_DOCKER_IMG_NAME], options);
-    console.log("License check response "+String(spawned))             
+                                        Utils.GW_DOCKER_IMG_NAME], options);    
     if(spawned.hasOwnProperty("output")){
         console.log("Spawned length "+spawned["output"].length);
         for(var i=0;i<spawned["output"].length;i++){
@@ -484,7 +480,7 @@ export const check_license = () =>{
                 totalOutput = totalOutput+output;
             }            
         }
-        console.log("License check output = "+totalOutput);        
+        Utils.addRawLogLine(1,"-", "License check output = "+totalOutput);        
         if (fs.existsSync(path.join(outputDir,'Managed'))) {
             const outFile = path.join(outputDir,'Managed',fileName);
             if(fs.existsSync(outFile)){
@@ -495,7 +491,7 @@ export const check_license = () =>{
                 return 0;
             }
             else{
-                console.log('File failed rebuild, Managed dir was there but not the rebuilt file');
+                Utils.addRawLogLine(2,"-", "Licese check file failed rebuild, Managed dir was there but not the rebuilt file");
                 // License not valid
                 oldLogs += "\n"+Utils.getLogTime()+" - ERROR \n GW LICENSE HAS EXPIRED. Rebuilt sample file now found - "+totalOutput;   
                 localStorage.setItem("healthLogs",oldLogs);         
@@ -505,7 +501,7 @@ export const check_license = () =>{
             }
         }
         else{
-            console.log('File failed rebuild');
+            Utils.addRawLogLine(2,"-","license check File failed rebuild");
             oldLogs += "\n"+Utils.getLogTime()+" - ERROR \n GW LICENSE HAS EXPIRED. Rebuilt Managed dir now found - "+totalOutput;   
             localStorage.setItem("healthLogs",oldLogs);
             oldLogs += "\n"+Utils.getLogTime()+" - INFO \n ========== License Validation Finised ==========";                
@@ -514,7 +510,7 @@ export const check_license = () =>{
         }
     }
     else{
-        console.log("Does not have output property");
+        Utils.addRawLogLine(2,"-","license check Does not have output property");
         oldLogs += "\n"+Utils.getLogTime()+" - ERROR \n Inconsistent output while checking license - "+totalOutput;   
         localStorage.setItem("healthLogs",oldLogs);  
         oldLogs += "\n"+Utils.getLogTime()+" - INFO \n ========== License Validation Finised ==========";                

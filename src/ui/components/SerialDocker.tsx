@@ -14,7 +14,7 @@ fixPath();
 const getPayload = (data: any) => {
     let buffer = Buffer.from(data.content, 'base64');
     let size_of_file = buffer.length / 1000000;
-    console.log("File Size (MB) : " + size_of_file);
+    Utils.addRawLogLine(0,"-","File Size (MB) : " + size_of_file);
     var json = {
             fileSize : size_of_file,
             Base64 : data.content
@@ -122,7 +122,7 @@ export const makeRequest = (request: any, sourceFileUrl: string, requestId: stri
             getAnalysisResult(false, rebuiltBase64, request, sourceFileUrl, requestId, folderId, resultCallback);
         }
         catch(err:any){
-            console.log("3:" + JSON.stringify(err));
+            Utils.addRawLogLine(2,request.filename,"3:" + JSON.stringify(err));
             Utils.addLogLine(request.filename,"Analysis Error "+err.message);
             if(err.message.indexOf('422') > -1){
                 resultCallback({'source':sourceFileUrl, 'url':'TBD', 'filename':request.filename, isError:true,
@@ -159,8 +159,8 @@ export const getAnalysisResult = (isBinaryFile: boolean, reBuildResponse: any, r
             }
         catch(err: any){
             Utils.addLogLine(request.filename,"Analysis error "+err.message);
-            console.log("11" + err.message);
-            console.log("11" + err.stack);
+            Utils.addRawLogLine(2,request.filename,"11" + err.message);
+            Utils.addRawLogLine(0,request.filename,"11" + err.stack);
             resultCallback({'source':sourceFile, 'url':'TBD', 'filename':request.filename, isError:true,
                  msg:err.message, id:requestId, targetDir:targetFolder, original:request.content})
         }
@@ -194,13 +194,13 @@ export const docker_exec_rebuild = (payload: any,fileName:string) => {
     shell.mkdir('-p', directory);    
     fs.mkdirSync(inputDir);
     fs.mkdirSync(outputDir);
-    console.log('payload '+JSON.stringify(payload));    
-    console.log('fileName '+fileName);
-    console.log('inputDir '+inputDir);
-    console.log('outputDir '+outputDir);
+    Utils.addRawLogLine(0,fileName,"payload "+JSON.stringify(payload));    
+    Utils.addRawLogLine(0,fileName,'fileName '+fileName);
+    Utils.addRawLogLine(0,fileName,'inputDir '+inputDir);
+    Utils.addRawLogLine(0,fileName,'outputDir '+outputDir);
     var base64Data = payload.Base64.replace(/^data:image\/png;base64,/, "");
     fs.writeFileSync(path.join(inputDir,fileName),base64Data,{encoding:"base64"});
-    console.log("Created rebuild dirs in "+directory+", inputDir "+inputDir+", outputDir"+outputDir);
+    Utils.addRawLogLine(0,fileName,"Created rebuild dirs in "+directory+", inputDir "+inputDir+", outputDir"+outputDir);          
     var options={"timeout":5000, "shell":false};
     var totalOutput : any;    
     totalOutput = "";
@@ -211,17 +211,15 @@ export const docker_exec_rebuild = (payload: any,fileName:string) => {
                                         '-v', resolve(inputDir)+':/input',
                                         '-v', resolve(outputDir)+':/output',
                                         Utils.GW_DOCKER_IMG_NAME], options);
-    console.log("Got response "+String(spawned))             
-     if(spawned.hasOwnProperty("output")){
-        console.log("Spawned length "+spawned["output"].length);
+    Utils.addRawLogLine(0,fileName," Rebuild spawned response "+String(spawned))             
+     if(spawned.hasOwnProperty("output")){        
         for(var i=0;i<spawned["output"].length;i++){
-            var output = spawned["output"][i];
-            console.log("Spawned output"+output);
+            var output = spawned["output"][i];            
             if(output != null && output != ""){
                 totalOutput = totalOutput+output;
             }            
         }
-        console.log("Rebuild output = "+totalOutput);
+        Utils.addRawLogLine(0,fileName,"Rebuild output = "+totalOutput);
         if(totalOutput.indexOf("error during connect") > -1){
             return -1;
         }
@@ -232,17 +230,17 @@ export const docker_exec_rebuild = (payload: any,fileName:string) => {
                 return contents;
             }
             else{
-                console.log('File failed rebuild, Managed dir was there but not the rebuilt file');
+                Utils.addRawLogLine(2,fileName,'File failed rebuild, Managed dir was there but not the rebuilt file');
                 return null;
             }
         }
         else{
-            console.log('File failed rebuild');
+            Utils.addRawLogLine(2,fileName,'File failed rebuild');
             return null;
         }
      }
      else{
-        console.log("Does not have output property");
+        Utils.addRawLogLine(2,fileName,"Rebuild failed. Spawned Output does not have output property");
      }
      // TODO : Cleanup temp
      return null;
@@ -256,13 +254,13 @@ export const docker_exec_analysis = (payload: any,fileName:string) => {
     shell.mkdir('-p', directory);    
     fs.mkdirSync(inputDir);
     fs.mkdirSync(outputDir);
-    console.log('<docker_exec_analysis> payload '+JSON.stringify(payload));    
-    console.log('<docker_exec_analysis> fileName '+fileName);
-    console.log('<docker_exec_analysis> inputDir '+inputDir);
-    console.log('<docker_exec_analysis> outputDir '+outputDir);
+    Utils.addRawLogLine(0,fileName,'<docker_exec_analysis> payload '+JSON.stringify(payload));    
+    Utils.addRawLogLine(1,fileName,'<docker_exec_analysis> fileName '+fileName);
+    Utils.addRawLogLine(1,fileName,'<docker_exec_analysis> inputDir '+inputDir);
+    Utils.addRawLogLine(1,fileName,'<docker_exec_analysis> outputDir '+outputDir);
     var base64Data = payload.Base64.replace(/^data:image\/png;base64,/, "");
     fs.writeFileSync(path.join(inputDir,fileName),base64Data,{encoding:"base64"});
-    console.log("<docker_exec_analysis> Created analysis dirs in "+directory+", inputDir "+inputDir+", outputDir"+outputDir);
+    Utils.addRawLogLine(1,fileName,"<docker_exec_analysis> Created analysis dirs in "+directory+", inputDir "+inputDir+", outputDir"+outputDir);
     var options={"timeout":5000, "shell":false};
     var totalOutput : any;    
     totalOutput = "";
@@ -275,7 +273,7 @@ export const docker_exec_analysis = (payload: any,fileName:string) => {
     fs.openSync(path.join(configDir,"config.xml"),'w');
     fs.writeFileSync(path.join(configDir,"config.ini"),Utils.CONFIG_INI);
     fs.writeFileSync(path.join(configDir,"config.xml"),Utils.CONFIG_XML);    
-    console.log('Config dir - '+(configDir));
+    Utils.addRawLogLine(1,fileName,'Config dir - '+(configDir));
     options={"timeout":10000, "shell":false};
     var spawned = spawnSync('docker', [ 'run',
                                         '--rm',
@@ -283,40 +281,38 @@ export const docker_exec_analysis = (payload: any,fileName:string) => {
                                         '-v', resolve(inputDir)+':/input',
                                         '-v', resolve(outputDir)+':/output',
                                         Utils.GW_DOCKER_IMG_NAME], options);
-    console.log("<docker_exec_analysis> Got response "+String(spawned))             
-     if(spawned.hasOwnProperty("output")){
-        console.log("<docker_exec_analysis> Spawned length "+spawned["output"].length);
+    Utils.addRawLogLine(1,fileName,"<docker_exec_analysis> Spawned response "+String(spawned))             
+     if(spawned.hasOwnProperty("output")){        
         for(var i=0;i<spawned["output"].length;i++){
-            var output = spawned["output"][i];
-            console.log("<docker_exec_analysis> Spawned output"+output);
+            var output = spawned["output"][i];            
             if(output != null && output != ""){
                 totalOutput = totalOutput+output;
             }            
         }
-        console.log("<docker_exec_analysis> Analysis output = "+totalOutput);
+        Utils.addRawLogLine(1,fileName,"<docker_exec_analysis> Analysis output = "+totalOutput);
         if (fs.existsSync(path.join(outputDir,'Managed'))) {
             const outFile = path.join(outputDir,'Managed',fileName+'.xml');
             if(fs.existsSync(outFile)){
                 const contents = fs.readFileSync(outFile);    
-                console.log('XML content - '+contents); 
+                Utils.addRawLogLine(1,fileName,'<docker_exec_analysis> XML content - '+contents); 
                 Utils.addLogLine(fileName,"Analysis successful.");
                 return contents;
             }
             else{
-                console.log('<docker_exec_analysis> File failed analysis, Managed dir was there but not the rebuilt file');
+                Utils.addRawLogLine(2,fileName,'<docker_exec_analysis> File failed analysis, Managed dir was there but not the rebuilt file');
                 Utils.addLogLine(fileName,"File analysis failed.");
                 return null;
             }
         }
         else{
             Utils.addLogLine(fileName,"File analysis failed.");
-            console.log('<docker_exec_analysis> File failed analysis');
+            Utils.addRawLogLine(2,fileName,'<docker_exec_analysis> File failed analysis');
             return null;
         }
      }
      else{
         Utils.addLogLine(fileName,"File analysis failed.");
-        console.log("<docker_exec_analysis> Does not have output property");
+        Utils.addRawLogLine(2,fileName,"<docker_exec_analysis> Does not have output property");
      }
      // TODO : Cleanup temp
      return null;
