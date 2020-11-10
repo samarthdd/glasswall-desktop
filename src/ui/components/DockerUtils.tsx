@@ -87,9 +87,7 @@ const getBase64 = (file: File) => {
 export const makeRequest = async (request: any, sourceFileUrl: string, requestId: string, folderId: string,
       resultCallback: Function) => {
     let payload: string | any;
-    let url : string;
-    url = Utils.REBUILD_ENGINE_URL;
-
+   
     payload = getPayload(request)
     var fileSize = payload.fileSize;
 

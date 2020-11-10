@@ -175,7 +175,7 @@ function DockerConfiguration() {
          setShowLoader(true)
          const timer = setTimeout(() => {
             var ouput = DockerUtils.pull_image();
-            if(ouput.includes(Utils.GW_DOCKER_PULL_IMG_OUTPUT)){
+            if(ouput.includes(Utils.GW_DOCKER_PULL_IMG_OUTPUT) || ouput.includes(Utils.GW_DOCKER_PULL_IMG_OUTPUT_2)){
                 setHealthCheckStatus(4)
                 sessionStorage.setItem(Utils.DOCKER_HEALTH_STATUS_KEY, "" + 4 )
                 setShowLoader(false)
