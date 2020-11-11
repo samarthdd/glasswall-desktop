@@ -142,7 +142,7 @@ function HealthCheckStatus({status, handleOpen}:CurrentStatus){
         <div className={classes.docerIconGroup}>
             <div> 
              <h3>Rebuild Files With Docker </h3>
-             <button onClick={() =>handleOpen()}className={classes.logButton}>Logs</button>
+             {/* <button onClick={() =>handleOpen()}className={classes.logButton}>Logs</button> */}
             </div>
             <ul>
                 {getStatusUI(status)}
