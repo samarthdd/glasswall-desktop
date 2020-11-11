@@ -53,6 +53,28 @@ const useStyles = makeStyles((theme) => ({
     }
     
     },
+    logButton:{
+        background:                 '#3cb371',
+        border:                     'none',
+        color:                      '#fff',
+        borderRadius:               '3px',
+        padding:                    '10px 20px',
+        fontSize:                   '12px',
+        marginBottom:               '20px',
+        marginLeft:                 '5px',
+        cursor:                     'pointer'                 
+     },
+     disabledLogButton:{
+        background:                 'grey',
+        border:                     'none',
+        color:                      'white',
+        borderRadius:               '3px',
+        padding:                    '10px 20px',
+        fontSize:                   '12px',
+        marginBottom:               '20px',
+        marginLeft:                 '5px'
+                        
+     },
    apiKeyBox:{
         margin:                    '10px 0',
         background:                '#e7e7e7',
@@ -86,8 +108,9 @@ function LoggerView(){
     const classes = useStyles(); 
     const [logView, setLogView]                     = useState(true);  
 
-    const openLogView =()=>{
-        setLogView(!logView);
+    const clearLogs =()=>{
+        localStorage.removeItem("rawlogs");
+        setLogView(!logView)
     }
 
    
@@ -97,8 +120,13 @@ function LoggerView(){
             <main className={classes.content}>
                 <div className={classes.toolbar} />  
                 <div className={classes.contentArea}>             
-                    <h3>Logs</h3>
+                    <div> 
+                    <h3>Raw Logs </h3>
+                    <button disabled={!localStorage.getItem("rawlogs") }  onClick={() =>clearLogs()}className={localStorage.getItem("rawlogs")?classes.logButton:classes.disabledLogButton}>Clear Logs</button>
                     <Highlight language='javascript'>{localStorage.getItem("rawlogs") || ""}</Highlight>
+                    </div>
+                   
+                    
                 </div>   
             </main>   
         </div>
