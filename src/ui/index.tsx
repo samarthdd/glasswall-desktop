@@ -35,6 +35,7 @@ const App = () => (
         <Route path="/settings"               exact component=  { Settings            } />
         <Route path="/configure"              exact component=  { DockerConfiguration } />
         <Route path="/logs"                   exact component=  { LoggerView           } />
+        <Route path="/sessions"                   exact component=  { LoggerView           } />
       </div>
     </HashRouter>
 );
