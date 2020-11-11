@@ -147,7 +147,7 @@ function DockerConfiguration() {
 
     React.useEffect(() => {
        
-        console.log("DockerConfiguration health_chk" + sessionStorage.getItem(Utils.DOCKER_HEALTH_STATUS_KEY))
+        Utils.addRawLogLine(1,'-',"DockerConfiguration health_chk" + sessionStorage.getItem(Utils.DOCKER_HEALTH_STATUS_KEY))
         var status = healthCheckStatus;
         if(sessionStorage.getItem(Utils.DOCKER_HEALTH_STATUS_KEY) == null){
             status = DockerUtils.health_chk();
@@ -231,7 +231,7 @@ function DockerConfiguration() {
         setLogView(!logView);
     }
 
-    console.log("health loader" + loader)
+    Utils.addRawLogLine(1,'-',"health loader" + loader)
     return (
         <div className={classes.root}>
             {logView && <Logs content={ localStorage.getItem("healthLogs") || ""} isOpen={logView} handleOpen={openLogView}/>   }                

@@ -116,8 +116,7 @@ function HomePage(){
     const [version, setVersion] = React.useState("0.1.0")
     
     const getVersion = () =>{   
-        ipcRenderer.send('app_version');
-        console.log("Added version element");
+        ipcRenderer.send('app_version');        
         ipcRenderer.on('app_version', (event:any, arg:any) => {
             setVersion(arg.version);
         });

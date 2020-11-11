@@ -21,6 +21,7 @@ import FileCopyIcon             from '@material-ui/icons/FileCopy';
 import DropIcon                 from '../assets/images/dropIcon.png'
 import SideDrawer               from '../components/SideDrawer';
 import * as DockerUtils         from '../components/DockerUtils'
+import * as SerialDocker        from '../components/SerialDocker'
 import Loader                   from '../components/Loader';
 import * as Utils               from '../utils/utils'
 import RawXml                   from '../components/RawXml';
@@ -666,14 +667,26 @@ function DockerRebuildFiles(){
             setFolderId(outputDirId);
             setShowLoader(true);            
             acceptedFiles.map((file: File) => {
-                DockerUtils.getFile(file).then(async (data: any) => {
-                    Utils.addLogLine(file.name,"Starting rebuild");
-                    setFileNames((fileNames: any) =>[...fileNames, file.name]);
-                    var url = window.webkitURL.createObjectURL(file);
-                    let guid: string;
-                    guid =  Utils.guid();                                    
-                    DockerUtils.makeRequest(data, url, guid, outputDirId, downloadResult);
-                })
+                if(parallel){
+                    DockerUtils.getFile(file).then(async (data: any) => {
+                        Utils.addLogLine(file.name,"Starting rebuild");
+                        setFileNames((fileNames: any) =>[...fileNames, file.name]);
+                        var url = window.webkitURL.createObjectURL(file);
+                        let guid: string;
+                        guid =  Utils.guid();                                    
+                        DockerUtils.makeRequest(data, url, guid, outputDirId, downloadResult);
+                    })
+                }
+                else{
+                    SerialDocker.getFile(file).then(async (data: any) => {
+                        Utils.addLogLine(file.name,"Starting rebuild");
+                        setFileNames((fileNames: any) =>[...fileNames, file.name]);
+                        var url = window.webkitURL.createObjectURL(file);
+                        let guid: string;
+                        guid =  Utils.guid();                                    
+                        SerialDocker.makeRequest(data, url, guid, outputDirId, downloadResult);
+                    })
+                }
             })
         }        
 
@@ -797,10 +810,10 @@ function DockerRebuildFiles(){
                                                     </div>
                                                     <div className={classes.toggleContainer}>
                                                     <FormControlLabel className={classes.toggleToolTip}
-                                                        value={parallel ? "Parallel" : "Sequential"}
+                                                        value={parallel ? Utils.TEXT_PARALLEL : Utils.TEXT_SEQUENTIAL}
                                                         control={<Switch color="primary" checked={parallel} 
                                                         onChange={changeProcessingMode}/>} 
-                                                        label={parallel ? "Parallel" : "Sequential"} />
+                                                        label={parallel ? Utils.TEXT_PARALLEL : Utils.TEXT_SEQUENTIAL} />
                                                         <div className={classes.toggleToolTipTitle}>
                                                         Parallel or Sequential processing
                                                         </div>

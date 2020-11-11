@@ -594,7 +594,7 @@ const downloadResult =(result: any)=>{
         var OriginalFilePath =Utils.getProcessedPath() +  Utils.getPathSep()
                             + result.targetDir + Utils.getPathSep() + fileHash +  Utils.getPathSep() + 
                                 Utils._ORIGINAL_FOLDER;
-        console.log("Error case:" +OriginalFilePath + ", result.targetDir:" + result.targetDir)
+        Utils.addRawLogLine(1,result.filename,"Error case:" +OriginalFilePath + ", result.targetDir:" + result.targetDir)
         Utils.saveBase64File(result.original, OriginalFilePath, result.filename);
         let content: Metadata;
         content ={
