@@ -24,17 +24,21 @@ export const _REPORT_FOLDER             = "report"
 export const OUTPUT_DIR_FLAT            = "flat";
 export const OUTPUT_DIR_HIERARCY        = "hierarcy";
 
+//Storage Keys Starts
 export const WELCOME_PAGE_VISTIED_KEY   = "visited"
 export const WELCOME_PAGE_VISTIED_VAL   = "yes"
 
 export const DOCKER_OUPUT_DIR_KEY       = "DOCKER_OUPUT_DIR"
 export const CLOUD_OUPUT_DIR_KEY        = "CLOUD_OUPUT_DIR"
 export const DOCKER_HEALTH_STATUS_KEY   = "docker_health_status"
+export const REBUILD_URL_KEY            = "rebuild_url"
+export const ANALYSIS_URL_KEY           = "anaylsis_url"
+export const APIKEY_KEY                 = "apikey_key"
+//Storage Keys ends
 
-export const REBUILD_URL_KEY       = "rebuild_url"
-export const ANALYSIS_URL_KEY      = "anaylsis_url"
-export const APIKEY_KEY            = "apikey_key"
 
+export const REBUILD_TYPE_CLOUD         = "Cloud"
+export const REBUILD_TYPE_DOCKER        = "Docker Image"
 
 
 export const REBUILD_ENGINE_URL         =  !localStorage.getItem(REBUILD_URL_KEY)? 'https://8oiyjy8w63.execute-api.us-west-2.amazonaws.com/Prod/api/rebuild/base64':localStorage.getItem(REBUILD_URL_KEY);

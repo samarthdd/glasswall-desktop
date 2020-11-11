@@ -487,6 +487,7 @@ function DockerRebuildFiles(){
         message?            : string;
         time?               : string;
         userTargetFolder?   : string;
+        rebuildSource       : string;
     }
    
 
@@ -602,6 +603,7 @@ function DockerRebuildFiles(){
                 status              : "Success",
                 time                : new Date().toLocaleDateString(),
                 userTargetFolder    : userTargetDir,
+                rebuildSource       : Utils.REBUILD_TYPE_DOCKER
             }
             Utils.saveTextFile(JSON.stringify(content), metadataFilePath, 'metadata.json');
         
@@ -632,7 +634,8 @@ function DockerRebuildFiles(){
                 status              : "Failure",
                 time                : new Date().toLocaleDateString(),
                 userTargetFolder    : userTargetDir,
-                message             : result.msg
+                message             : result.msg,
+                rebuildSource       : Utils.REBUILD_TYPE_DOCKER
             }
             masterMetaFile.push(content);
         }        
@@ -761,9 +764,12 @@ function DockerRebuildFiles(){
             <div className={classes.root}> 
                 <SideDrawer showBack={false}/>
                 {healthCheckStatus !=0 && renderRedirect()}
+                
                 <main className={classes.content}>
+                {loader  && <Loader/> }  
                     <div className={classes.toolbar} />  
-                    <div className={classes.contentArea}>             
+                    <div className={classes.contentArea}>   
+                             
                         <HealthCheckStatus handleOpen={openLogView} status={healthCheckStatus}/> 
                             <Dropzone onDrop={handleDrop} >
                                 {({ getRootProps, getInputProps }) => (
@@ -780,6 +786,7 @@ function DockerRebuildFiles(){
                     <div className={classes.errMsg}> Failed to upload </div>
                     <div className={classes.successMsg}>File uploaded successuly </div>
                     <div className={classes.tableContainer}>
+                   
                         <div>
                             {showAlertBox && 
                                 <div className={classes.alertContainer}>
@@ -789,7 +796,7 @@ function DockerRebuildFiles(){
                                     </div>
                                 </div>   
                             }                       
-                            {loader  && <Loader/> }   
+                            
                             
                                 <div className={classes.tableField}>
                                     <div className={classes.settings}>  
