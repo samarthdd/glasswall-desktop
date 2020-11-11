@@ -476,6 +476,7 @@ function RebuildFiles(){
         message?            : string;
         time?               : string;
         userTargetFolder?   : string;
+        rebuildSource       : string;
     }
 
    
@@ -574,6 +575,7 @@ const downloadResult =(result: any)=>{
             status              : "Success",
             time                : new Date().toLocaleDateString(),
             userTargetFolder    : userTargetDir,
+            rebuildSource       : Utils.REBUILD_TYPE_CLOUD
         }
         Utils.saveTextFile(JSON.stringify(content), metadataFilePath, 'metadata.json');
     
@@ -604,7 +606,8 @@ const downloadResult =(result: any)=>{
             status              : "Failure",
             time                : new Date().toLocaleDateString(),
             userTargetFolder    : userTargetDir,
-            message             : result.msg
+            message             : result.msg,
+            rebuildSource       : Utils.REBUILD_TYPE_CLOUD
         }
         masterMetaFile.push(content);
     }        
@@ -715,7 +718,8 @@ const downloadResult =(result: any)=>{
                 <SideDrawer showBack={false}/>
                 <main className={classes.content}>
                     <div className={classes.toolbar} />  
-                    <div className={classes.contentArea}>             
+                    <div className={classes.contentArea}>  
+                    {loader  && <Loader/> }             
                     <h3>Cloud Rebuild Files                   
                     {/* <div className={classes.toggleContainer}>
                     <FormControlLabel className={classes.toggleToolTip}
@@ -753,7 +757,7 @@ flat filesystem option to saves in a single directory that contains all files wi
                                     </div>
                                 </div>   
                             }                       
-                            {loader  && <Loader/> }   
+                            
                                 <div className={classes.tableField}>
                                     <div className={classes.settings}>  
                                         <div className={classes.btnHeading}>                                                                           
