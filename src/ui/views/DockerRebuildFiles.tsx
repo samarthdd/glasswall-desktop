@@ -28,6 +28,7 @@ import RawXml                   from '../components/RawXml';
 import Logs                     from '../components/Logs';
 import HealthCheckStatus        from '../components/HealthCheckStatus'
 const { dialog }                = require('electron').remote
+import preceiveThreats          from '../components/ThreatIntelligence'
 
 
 var fs                          = require('fs');
@@ -477,6 +478,8 @@ function DockerRebuildFiles(){
         xmlResultDocker : string;
         path?           : string;
         cleanFile?      : any;
+        threat?         : boolean;
+        threat_level?   : string;
       }
    
     interface Metadata {
@@ -560,23 +563,12 @@ function DockerRebuildFiles(){
         }, [rowsPerPage, page, rebuildFileNames]);
 
     //callback for rebuild and analysis
-    const downloadResult =(result: any)=>{    
-        setRebuildFileNames(rebuildFileNames =>[...rebuildFileNames,  {
-                id:result.id,
-                url: result.url,
-                name: result.filename,
-                sourceFileUrl: result.source,
-                isError: result.isError,
-                msg: result.msg,
-                xmlResultDocker:result.xmlResult,
-                path: result.path,
-                cleanFile: result.cleanFile
-                }]);
-
+    const downloadResult = async (result: any)=>{            
         setCounter(state=>state-1);
         let fileHash: string;
         fileHash = Utils.getFileHash(result.original)
-          
+        let isThreat = false
+        let threatLevel = "Unknown"          
         if(!result.isError){
             var cleanFilePath = Utils.getProcessedPath() + Utils.getPathSep()
                                  + result.targetDir + Utils.getPathSep() + fileHash
@@ -596,7 +588,7 @@ function DockerRebuildFiles(){
             var metadataFilePath =  Utils.getProcessedPath() + Utils.getPathSep() + 
                                     result.targetDir + Utils.getPathSep() + fileHash;
             let content: Metadata;
-            content ={
+            content = {
                 original_file       : Utils._ORIGINAL_FOLDER + Utils.getPathSep() + result.filename,
                 clean_file          : Utils._CLEAN_FOLDER + Utils.getPathSep()+ result.filename,
                 report              : Utils._REPORT_FOLDER + Utils.getPathSep() + Utils.stipFileExt(result.filename)+'.xml',
@@ -619,8 +611,19 @@ function DockerRebuildFiles(){
                     Utils.saveBase64File(result.cleanFile, filepath, result.filename );
                 }
             }
- 
-        }else{
+            // TI Reporting         
+            let basePath = Utils.getProcessedPath() + Utils.getPathSep() + result.targetDir + Utils.getPathSep() + fileHash + Utils.getPathSep()
+            let xml = result.xmlResult   
+            let reportPath = Utils.stipFileExt(result.filename)+'.xml'
+            let threat = await preceiveThreats(xml,reportFilePath, reportPath, cleanFilePath, result.filename,basePath)
+            if(threat){                
+                threatLevel = threat.threat_level.toUpperCase() 
+                if(threatLevel != "OK" && threatLevel != "UNKNOWN"){
+                    isThreat = true
+                }
+            }
+        } 
+        else{
             var OriginalFilePath =Utils.getProcessedPath() +  Utils.getPathSep()
                                 + result.targetDir + Utils.getPathSep() + fileHash +  Utils.getPathSep() + 
                                     Utils._ORIGINAL_FOLDER;
@@ -639,6 +642,20 @@ function DockerRebuildFiles(){
             }
             masterMetaFile.push(content);
         }        
+        setRebuildFileNames(rebuildFileNames =>[...rebuildFileNames,  {
+            id:result.id,
+            url: result.url,
+            name: result.filename,
+            sourceFileUrl: result.source,
+            isError: result.isError,
+            msg: result.msg,
+            xmlResultDocker:result.xmlResult,
+            path: result.path,
+            cleanFile: result.cleanFile,
+            threat: isThreat,
+            threat_level: threatLevel
+            }]);
+
     }
 
     const getRebuildFileContent =(filePath: string)=>{
@@ -851,6 +868,7 @@ function DockerRebuildFiles(){
                                             <TableCell className={classes.texttBold}>Status</TableCell>
                                             <TableCell align="left" className={classes.texttBold}>Original</TableCell>
                                             <TableCell align="left" className={classes.texttBold}>Rebuilt</TableCell>
+                                            <TableCell align="left" className={classes.texttBold}>Threat Level</TableCell>
                                             <TableCell align="left" className={classes.texttBold}>XML</TableCell>
                                         </TableRow>
                                         </TableHead>
@@ -864,6 +882,7 @@ function DockerRebuildFiles(){
                                                     <TableCell align="left"><a id="download_link" href={row.url} download={row.name} className={classes.downloadLink} title={row.name}><FileCopyIcon className={classes.fileIcon}/>{row.name}</a></TableCell>
                                                     : <TableCell align="left">{row.msg}</TableCell>
                                             }
+                                            <TableCell align="left" className={classes.status}>{row.threat == true? <span>{row.threat_level}</span>:<p>{row.threat_level}</p>}</TableCell>
                                             {
                                                 !row.isError ?
                                                 <TableCell align="left"><button  onClick={() => viewXML(row.id)} className={classes.viewBtn}>{!row.isError?'View Report':''}</button></TableCell>

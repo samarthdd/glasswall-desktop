@@ -20,7 +20,7 @@ export const _PROCESSED_FOLDER          = "processed"
 export const _CLEAN_FOLDER              = "clean"
 export const _ORIGINAL_FOLDER           = "original"
 export const _REPORT_FOLDER             = "report"
-
+export const _ANALYSIS_FOLDER           = "analysis"
 export const OUTPUT_DIR_FLAT            = "flat";
 export const OUTPUT_DIR_HIERARCY        = "hierarcy";
 
@@ -55,6 +55,8 @@ export const MISSING_OUTPUT_PROPERTY    =  6; //Does not have output property
 
 export const TEXT_PARALLEL              =  "Parallel"
 export const TEXT_SEQUENTIAL            =  "Sequential"
+
+const REGEX_SAFE_FILE_NAME              = /[^a-zA-Z0-9-_\.]/g
 
 export const RELEAE_NOTES           =[
                                         {
@@ -326,4 +328,11 @@ export const open_file_exp=(fpath: string)=> {
   }
   child_process.exec(command, function(stdout:any) {
   });
+}
+
+export const sanitize_file_name = (file_name: string)=> {
+  if (typeof(file_name) !== 'string') {
+      throw new Error(`[sanitize_file_name] provided value was now a string, it was ${typeof(file_name)}`)
+  }
+  return file_name.replace(REGEX_SAFE_FILE_NAME, '_')
 }
