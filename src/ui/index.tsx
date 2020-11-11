@@ -8,6 +8,8 @@ import      HomePage              from './views/HomePage'
 import      Settings              from './views/settings'
 import      LoggerView            from './views/LoggerView'
 import      DockerConfiguration   from './views/DockerConfiguration'
+import      Sessions              from './views/Sessions'
+
 
 
 
@@ -35,7 +37,7 @@ const App = () => (
         <Route path="/settings"               exact component=  { Settings            } />
         <Route path="/configure"              exact component=  { DockerConfiguration } />
         <Route path="/logs"                   exact component=  { LoggerView           } />
-        <Route path="/sessions"                   exact component=  { LoggerView           } />
+        <Route path="/sessions"                   exact component=  { Sessions           } />
       </div>
     </HashRouter>
 );

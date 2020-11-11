@@ -444,7 +444,7 @@ const useStyles = makeStyles((theme) => ({
  }));
 
 
-function DockerRebuildFiles(){
+function Sessions(){
     
     const classes = useStyles(); 
     const [fileNames, setFileNames]                 = useState<Array<string>>([]);
@@ -759,85 +759,29 @@ function DockerRebuildFiles(){
 
     return(
         <div>   
-            {open && <RawXml content={'\'' + xml + '\''} isOpen={open} handleOpen={openXml}/>   }
-            {logView && <Logs content={ localStorage.getItem("logs") || ""} isOpen={logView} handleOpen={openLogView}/>   }                
             <div className={classes.root}> 
                 <SideDrawer showBack={false}/>
-                {healthCheckStatus !=0 && renderRedirect()}
                 
                 <main className={classes.content}>
-                {loader  && <Loader/> }  
+                 {loader  && <Loader/> }  
                     <div className={classes.toolbar} />  
                     <div className={classes.contentArea}>   
-                             
-                        <HealthCheckStatus handleOpen={openLogView} status={healthCheckStatus}/> 
-                            <Dropzone onDrop={handleDrop} >
-                                {({ getRootProps, getInputProps }) => (
-                                <div {...getRootProps()} className={classes.dropzone}>
-                                    <input {...getInputProps()} />
-                                        <div className={classes.dropField}>
-                                        <p>Drag and drop files</p>
-                                        <img src={DropIcon} className={classes.icons}/> 
-                                        <button className={classes.selectFileBtn}>Select files</button>
-                                    </div>
-                                </div>
-                            )}
-                            </Dropzone>
-                    <div className={classes.errMsg}> Failed to upload </div>
-                    <div className={classes.successMsg}>File uploaded successuly </div>
                     <div className={classes.tableContainer}>
                    
                         <div>
-                            {showAlertBox && 
-                                <div className={classes.alertContainer}>
-                                    <div className={classes.alertModel}>              
-                                        <h3>Please Select Target Directory</h3>               
-                                        <button className={classes.submitBtn} onClick={closeAlertBox}>ok</button>
-                                    </div>
-                                </div>   
-                            }                       
-                            
-                            
                                 <div className={classes.tableField}>
                                     <div className={classes.settings}>  
                                         <div className={classes.btnHeading}>                                                                           
                                         <div className={classes.headingGroup}>                                                                         
-                                                <h4>Select Directory Path  <span>*</span> </h4>
+                                                <h4>Session History  <span>*</span> </h4>
                                                
                                                 <div className={classes.toggleContainer}>
-                                                    <FormControlLabel className={classes.toggleToolTip}
-                                                        //title={flat ? "Flat" : "Hierarchy"}
-                                                        value={flat ? "Flat" : "Hierarchy"}
-                                                        control={<Switch color="primary" checked={flat} onChange={changeDownloadmode}/>} 
-                                                        label={flat ? " Flat   " : "Hierarchy"} />
-                                                        <div className={classes.toggleToolTipTitle}>
-                                                        The hierarchical filesystems option to save processed files in a tree structure of directories,
-                                flat filesystem option to saves in a single directory that contains all files with no subdirectories
-                                                        </div>
-                                                    </div>
+                                                </div>
                                                     <div className={classes.toggleContainer}>
-                                                    <FormControlLabel className={classes.toggleToolTip}
-                                                        value={parallel ? Utils.TEXT_PARALLEL : Utils.TEXT_SEQUENTIAL}
-                                                        control={<Switch color="primary" checked={parallel} 
-                                                        onChange={changeProcessingMode}/>} 
-                                                        label={parallel ? Utils.TEXT_PARALLEL : Utils.TEXT_SEQUENTIAL} />
-                                                        <div className={classes.toggleToolTipTitle}>
-                                                        Parallel or Sequential processing
-                                                        </div>
-                                                    </div>
+                                                   
+                                                 </div>
                                             </div>   
-                                            <div className={classes.saveFileBtn}>
-                                                <input 
-                                                    readOnly        = {true} 
-                                                    type            = "text"
-                                                    placeholder     = "Directory Path"
-                                                    defaultValue    = {userTargetDir}
-                                                />
-                                                <button onClick={selectUserTargetDir}>
-                                                    <FolderIcon className={classes.btnIcon}/> 
-                                                    Select Target Directory
-                                                </button>
-                                            </div>
+                                           
                                         </div>                                        
                                     </div>
                                     {rebuildFileNames.length>0 && 
@@ -850,7 +794,6 @@ function DockerRebuildFiles(){
                                         <TableRow>
                                             <TableCell className={classes.texttBold}>Status</TableCell>
                                             <TableCell align="left" className={classes.texttBold}>Original</TableCell>
-                                            <TableCell align="left" className={classes.texttBold}>Threat Level</TableCell>
                                             <TableCell align="left" className={classes.texttBold}>Rebuilt</TableCell>
                                             <TableCell align="left" className={classes.texttBold}>XML</TableCell>
                                         </TableRow>
@@ -860,8 +803,6 @@ function DockerRebuildFiles(){
                                             <TableRow key={row.id}>
                                             <TableCell align="left" className={classes.status}>{row.isError == true? <span>Failed</span>:<p>Success</p>}</TableCell>
                                             <TableCell align="left"><a id="download_link" href={row.sourceFileUrl} download={row.name} className={classes.downloadLink} title={row.name}><FileCopyIcon className={classes.fileIcon}/> {row.name}</a></TableCell>
-                                            <TableCell align="left" className={classes.status}><span>Medium</span></TableCell>
-                                            
                                             {
                                                 !row.isError ?
                                                     <TableCell align="left"><a id="download_link" href={row.url} download={row.name} className={classes.downloadLink} title={row.name}><FileCopyIcon className={classes.fileIcon}/>{row.name}</a></TableCell>
@@ -912,4 +853,4 @@ function DockerRebuildFiles(){
     )
 }
 
-export default DockerRebuildFiles;
+export default Sessions;
