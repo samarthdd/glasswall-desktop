@@ -627,7 +627,6 @@ function Sessions(){
                                         ))}
                                         </TableBody>
                                     </Table>
-                                    <button onClick={clearAll} className={sessionsPerPage.length>0?classes.deleteBtn:classes.deleteBtnDisabled}><DeleteIcon className={classes.btnIcon}/> Clear All</button>
                                     </div>
                                     }
                                 </div>
