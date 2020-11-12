@@ -2,7 +2,6 @@ import  React, {useState}       from 'react';
 import { makeStyles }           from '@material-ui/core/styles';
 import SideDrawer               from '../components/SideDrawer';
 import Highlight                from 'react-highlight.js';
-
 import * as Utils               from '../utils/utils'
 
 const useStyles = makeStyles((theme) => ({
@@ -123,7 +122,7 @@ function LoggerView(){
                     <div> 
                     <h3>Raw Logs </h3>
                     <button disabled={!localStorage.getItem("rawlogs") }  onClick={() =>clearLogs()}className={localStorage.getItem("rawlogs")?classes.logButton:classes.disabledLogButton}>Clear Logs</button>
-                    <Highlight language='javascript'>{localStorage.getItem("rawlogs") || ""}</Highlight>
+                    <Highlight language='javascript'>{Utils.getRawLogs() || ""}</Highlight>
                     </div>
                    
                     

@@ -64,15 +64,13 @@ const raw_analysis = async (xml_data:string) => {
     if (!xml_data)
         return
 
-    const json_data = await xml_parser(xml_data)
-    console.log('json_data = '+JSON.stringify(json_data))
+    const json_data = await xml_parser(xml_data)    
     const sanitisations = xpath.find(json_data, "//gw:SanitisationItem").map((match:any) => match['gw:TechnicalDescription'].pop())
     const remediations  = xpath.find(json_data, "//gw:RemedyItem"      ).map((match:any) => match['gw:TechnicalDescription'].pop())
     const issue_items   = xpath.find(json_data, "//gw:IssueItem"       ).map((match:any) => match['gw:TechnicalDescription'].pop())
     const fileType      = xpath.find(json_data, "//gw:FileType"        )[0]
     const fileSize      = xpath.find(json_data, "//gw:TotalSizeInBytes")[0]
-    const fileVersion   = xpath.find(json_data, "//gw:Version"         )[0]
-    console.log('sanitisations = '+JSON.stringify(sanitisations))
+    const fileVersion   = xpath.find(json_data, "//gw:Version"         )[0]    
     return  {   'sanitisations': sanitisations  ,
                 'remediations' : remediations   ,
                 'issue_items'  : issue_items    ,

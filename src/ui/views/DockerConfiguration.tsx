@@ -176,8 +176,15 @@ function DockerConfiguration() {
          const timer = setTimeout(() => {
             var ouput = DockerUtils.pull_image();
             if(ouput.includes(Utils.GW_DOCKER_PULL_IMG_OUTPUT) || ouput.includes(Utils.GW_DOCKER_PULL_IMG_OUTPUT_2)){
-                setHealthCheckStatus(4)
-                sessionStorage.setItem(Utils.DOCKER_HEALTH_STATUS_KEY, "" + 4 )
+                ouput = DockerUtils.check_license();
+                if(ouput != 0){
+                    setHealthCheckStatus(4)
+                    sessionStorage.setItem(Utils.DOCKER_HEALTH_STATUS_KEY, "" + 4 )                    
+                }
+                else{
+                    setHealthCheckStatus(Utils.DOCKER_RUNNING)
+                    sessionStorage.setItem(Utils.DOCKER_HEALTH_STATUS_KEY, "" + Utils.DOCKER_RUNNING )                    
+                }
                 setShowLoader(false)
             }else{
                 alert("Failed to pull image")
