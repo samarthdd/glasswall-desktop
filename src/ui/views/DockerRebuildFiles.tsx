@@ -256,6 +256,22 @@ const useStyles = makeStyles((theme) => ({
             fontWeight:             'bold'
         }
      },
+     high:{
+        color:                  'red',
+        fontWeight:             'bold'
+     },
+     medium:{
+        color:                  'orange',
+        fontWeight:             'bold'
+     },
+     low:{
+        color:                  'blue',
+        fontWeight:             'bold'
+     },
+     ok_unknown:{
+        color:                  '#098c44',
+        fontWeight:             'bold'
+     },
      tableField:{
          position:                  'relative',
         '& h3':{
@@ -531,6 +547,7 @@ function DockerRebuildFiles(){
     React.useEffect(() => {
         if (counter == 0 && loader == true) {
             setShowLoader(false);
+            sessionStorage.removeItem("docker_session_runnning")
             Utils.saveTextFile(JSON.stringify(masterMetaFile),  targetDir , 'metadata.json');
 
             if(userTargetDir !="" && !flat){
@@ -678,7 +695,8 @@ function DockerRebuildFiles(){
         if(userTargetDir ==""){
             setshowAlertBox(true);
         }
-        else {            
+        else {      
+            sessionStorage.setItem("docker_session_runnning", "true");     
             setCounter((state: any)=>state + acceptedFiles.length)
             setRebuildFileNames([]);
             setPage(0);
@@ -736,6 +754,7 @@ function DockerRebuildFiles(){
         setRebuildFileNames([])
         setMasterMetaFile([]);
         setCounter(0);
+        sessionStorage.removeItem("docker_session_runnning")
     }
 
     const closeAlertBox = () => {
@@ -773,6 +792,29 @@ function DockerRebuildFiles(){
     const changeProcessingMode = (event:any) => {
         setParallel((prev) => !prev);
     };   
+
+    const getFormattedThreatValue =(threat: boolean| undefined, threatValue: string| undefined)=>{
+        console.log("threat" +threat)
+        console.log("threatValue" +threatValue)
+        var uiDOM=null;
+        if(threat){
+            switch(threatValue){
+                case "HIGH":{
+                    uiDOM =  <span className ={classes.high} >{threatValue}</span>;
+                }break;
+                case "MEDIUM":{
+                    uiDOM =  <span className ={classes.medium}>{threatValue}</span>;
+                }break;
+                case "LOW":{
+                    uiDOM =  <span className ={classes.low}>{threatValue}</span>;
+                }break;
+            }
+        }else{
+            uiDOM =  <span className ={classes.ok_unknown}>{threatValue}</span>;
+        }
+        
+        return uiDOM
+    }
 
     return(
         <div>   
@@ -878,14 +920,14 @@ function DockerRebuildFiles(){
                                             <TableRow key={row.id}>
                                             <TableCell align="left" className={classes.status}>{row.isError == true? <span>Failed</span>:<p>Success</p>}</TableCell>
                                             <TableCell align="left"><a id="download_link" href={row.sourceFileUrl} download={row.name} className={classes.downloadLink} title={row.name}><FileCopyIcon className={classes.fileIcon}/> {row.name}</a></TableCell>
-                                            <TableCell align="left" className={classes.status}><span>Medium</span></TableCell>
                                             
                                             {
                                                 !row.isError ?
                                                     <TableCell align="left"><a id="download_link" href={row.url} download={row.name} className={classes.downloadLink} title={row.name}><FileCopyIcon className={classes.fileIcon}/>{row.name}</a></TableCell>
                                                     : <TableCell align="left">{row.msg}</TableCell>
                                             }
-                                            <TableCell align="left" className={classes.status}>{row.threat == true? <span>{row.threat_level}</span>:<p>{row.threat_level}</p>}</TableCell>
+                                            
+                                            <TableCell align="left" >{getFormattedThreatValue(row.threat, row.threat_level)}</TableCell>
                                             {
                                                 !row.isError ?
                                                 <TableCell align="left"><button  onClick={() => viewXML(row.id)} className={classes.viewBtn}>{!row.isError?'View Report':''}</button></TableCell>
