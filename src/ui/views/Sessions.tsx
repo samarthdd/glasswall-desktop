@@ -28,7 +28,6 @@ import RawXml                   from '../components/RawXml';
 import Logs                     from '../components/Logs';
 import HealthCheckStatus        from '../components/HealthCheckStatus'
 const { dialog }                = require('electron').remote
-import preceiveThreats          from '../components/ThreatIntelligence'
 
 
 var fs                          = require('fs');
@@ -256,22 +255,6 @@ const useStyles = makeStyles((theme) => ({
             fontWeight:             'bold'
         }
      },
-     high:{
-        color:                  'red',
-        fontWeight:             'bold'
-     },
-     medium:{
-        color:                  'orange',
-        fontWeight:             'bold'
-     },
-     low:{
-        color:                  'blue',
-        fontWeight:             'bold'
-     },
-     ok_unknown:{
-        color:                  '#098c44',
-        fontWeight:             'bold'
-     },
      tableField:{
          position:                  'relative',
         '& h3':{
@@ -461,7 +444,7 @@ const useStyles = makeStyles((theme) => ({
  }));
 
 
-function DockerRebuildFiles(){
+function Sessions(){
     
     const classes = useStyles(); 
     const [fileNames, setFileNames]                 = useState<Array<string>>([]);
@@ -494,8 +477,6 @@ function DockerRebuildFiles(){
         xmlResultDocker : string;
         path?           : string;
         cleanFile?      : any;
-        threat?         : boolean;
-        threat_level?   : string;
       }
    
     interface Metadata {
@@ -547,7 +528,6 @@ function DockerRebuildFiles(){
     React.useEffect(() => {
         if (counter == 0 && loader == true) {
             setShowLoader(false);
-            sessionStorage.removeItem("docker_session_runnning")
             Utils.saveTextFile(JSON.stringify(masterMetaFile),  targetDir , 'metadata.json');
 
             if(userTargetDir !="" && !flat){
@@ -580,12 +560,23 @@ function DockerRebuildFiles(){
         }, [rowsPerPage, page, rebuildFileNames]);
 
     //callback for rebuild and analysis
-    const downloadResult = async (result: any)=>{            
+    const downloadResult =(result: any)=>{    
+        setRebuildFileNames(rebuildFileNames =>[...rebuildFileNames,  {
+                id:result.id,
+                url: result.url,
+                name: result.filename,
+                sourceFileUrl: result.source,
+                isError: result.isError,
+                msg: result.msg,
+                xmlResultDocker:result.xmlResult,
+                path: result.path,
+                cleanFile: result.cleanFile
+                }]);
+
         setCounter(state=>state-1);
         let fileHash: string;
         fileHash = Utils.getFileHash(result.original)
-        let isThreat = false
-        let threatLevel = "Unknown"          
+          
         if(!result.isError){
             var cleanFilePath = Utils.getProcessedPath() + Utils.getPathSep()
                                  + result.targetDir + Utils.getPathSep() + fileHash
@@ -605,7 +596,7 @@ function DockerRebuildFiles(){
             var metadataFilePath =  Utils.getProcessedPath() + Utils.getPathSep() + 
                                     result.targetDir + Utils.getPathSep() + fileHash;
             let content: Metadata;
-            content = {
+            content ={
                 original_file       : Utils._ORIGINAL_FOLDER + Utils.getPathSep() + result.filename,
                 clean_file          : Utils._CLEAN_FOLDER + Utils.getPathSep()+ result.filename,
                 report              : Utils._REPORT_FOLDER + Utils.getPathSep() + Utils.stipFileExt(result.filename)+'.xml',
@@ -628,19 +619,8 @@ function DockerRebuildFiles(){
                     Utils.saveBase64File(result.cleanFile, filepath, result.filename );
                 }
             }
-            // TI Reporting         
-            let basePath = Utils.getProcessedPath() + Utils.getPathSep() + result.targetDir + Utils.getPathSep() + fileHash + Utils.getPathSep()
-            let xml = result.xmlResult   
-            let reportPath = Utils.stipFileExt(result.filename)+'.xml'
-            let threat = await preceiveThreats(xml,reportFilePath, reportPath, cleanFilePath, result.filename,basePath)
-            if(threat){                
-                threatLevel = threat.threat_level.toUpperCase() 
-                if(threatLevel != "OK" && threatLevel != "UNKNOWN"){
-                    isThreat = true
-                }
-            }
-        } 
-        else{
+ 
+        }else{
             var OriginalFilePath =Utils.getProcessedPath() +  Utils.getPathSep()
                                 + result.targetDir + Utils.getPathSep() + fileHash +  Utils.getPathSep() + 
                                     Utils._ORIGINAL_FOLDER;
@@ -659,20 +639,6 @@ function DockerRebuildFiles(){
             }
             masterMetaFile.push(content);
         }        
-        setRebuildFileNames(rebuildFileNames =>[...rebuildFileNames,  {
-            id:result.id,
-            url: result.url,
-            name: result.filename,
-            sourceFileUrl: result.source,
-            isError: result.isError,
-            msg: result.msg,
-            xmlResultDocker:result.xmlResult,
-            path: result.path,
-            cleanFile: result.cleanFile,
-            threat: isThreat,
-            threat_level: threatLevel
-            }]);
-
     }
 
     const getRebuildFileContent =(filePath: string)=>{
@@ -695,8 +661,7 @@ function DockerRebuildFiles(){
         if(userTargetDir ==""){
             setshowAlertBox(true);
         }
-        else {      
-            sessionStorage.setItem("docker_session_runnning", "true");     
+        else {            
             setCounter((state: any)=>state + acceptedFiles.length)
             setRebuildFileNames([]);
             setPage(0);
@@ -754,7 +719,6 @@ function DockerRebuildFiles(){
         setRebuildFileNames([])
         setMasterMetaFile([]);
         setCounter(0);
-        sessionStorage.removeItem("docker_session_runnning")
     }
 
     const closeAlertBox = () => {
@@ -793,110 +757,31 @@ function DockerRebuildFiles(){
         setParallel((prev) => !prev);
     };   
 
-    const getFormattedThreatValue =(threat: boolean| undefined, threatValue: string| undefined)=>{
-        console.log("threat" +threat)
-        console.log("threatValue" +threatValue)
-        var uiDOM=null;
-        if(threat){
-            switch(threatValue){
-                case "HIGH":{
-                    uiDOM =  <span className ={classes.high} >{threatValue}</span>;
-                }break;
-                case "MEDIUM":{
-                    uiDOM =  <span className ={classes.medium}>{threatValue}</span>;
-                }break;
-                case "LOW":{
-                    uiDOM =  <span className ={classes.low}>{threatValue}</span>;
-                }break;
-            }
-        }else{
-            uiDOM =  <span className ={classes.ok_unknown}>{threatValue}</span>;
-        }
-        
-        return uiDOM
-    }
-
     return(
         <div>   
-            {open && <RawXml content={'\'' + xml + '\''} isOpen={open} handleOpen={openXml}/>   }
-            {logView && <Logs content={ localStorage.getItem("logs") || ""} isOpen={logView} handleOpen={openLogView}/>   }                
             <div className={classes.root}> 
                 <SideDrawer showBack={false}/>
-                {healthCheckStatus !=0 && renderRedirect()}
                 
                 <main className={classes.content}>
-                {loader  && <Loader/> }  
+                 {loader  && <Loader/> }  
                     <div className={classes.toolbar} />  
                     <div className={classes.contentArea}>   
-                             
-                        <HealthCheckStatus handleOpen={openLogView} status={healthCheckStatus}/> 
-                            <Dropzone onDrop={handleDrop} >
-                                {({ getRootProps, getInputProps }) => (
-                                <div {...getRootProps()} className={classes.dropzone}>
-                                    <input {...getInputProps()} />
-                                        <div className={classes.dropField}>
-                                        <p>Drag and drop files</p>
-                                        <img src={DropIcon} className={classes.icons}/> 
-                                        <button className={classes.selectFileBtn}>Select files</button>
-                                    </div>
-                                </div>
-                            )}
-                            </Dropzone>
-                    <div className={classes.errMsg}> Failed to upload </div>
-                    <div className={classes.successMsg}>File uploaded successuly </div>
                     <div className={classes.tableContainer}>
                    
                         <div>
-                            {showAlertBox && 
-                                <div className={classes.alertContainer}>
-                                    <div className={classes.alertModel}>              
-                                        <h3>Please Select Target Directory</h3>               
-                                        <button className={classes.submitBtn} onClick={closeAlertBox}>ok</button>
-                                    </div>
-                                </div>   
-                            }                       
-                            
-                            
                                 <div className={classes.tableField}>
                                     <div className={classes.settings}>  
                                         <div className={classes.btnHeading}>                                                                           
                                         <div className={classes.headingGroup}>                                                                         
-                                                <h4>Select Directory Path  <span>*</span> </h4>
+                                                <h4>Session History  <span>*</span> </h4>
                                                
                                                 <div className={classes.toggleContainer}>
-                                                    <FormControlLabel className={classes.toggleToolTip}
-                                                        //title={flat ? "Flat" : "Hierarchy"}
-                                                        value={flat ? "Flat" : "Hierarchy"}
-                                                        control={<Switch color="primary" checked={flat} onChange={changeDownloadmode}/>} 
-                                                        label={flat ? " Flat   " : "Hierarchy"} />
-                                                        <div className={classes.toggleToolTipTitle}>
-                                                        The hierarchical filesystems option to save processed files in a tree structure of directories,
-                                flat filesystem option to saves in a single directory that contains all files with no subdirectories
-                                                        </div>
-                                                    </div>
+                                                </div>
                                                     <div className={classes.toggleContainer}>
-                                                    <FormControlLabel className={classes.toggleToolTip}
-                                                        value={parallel ? Utils.TEXT_PARALLEL : Utils.TEXT_SEQUENTIAL}
-                                                        control={<Switch color="primary" checked={parallel} 
-                                                        onChange={changeProcessingMode}/>} 
-                                                        label={parallel ? Utils.TEXT_PARALLEL : Utils.TEXT_SEQUENTIAL} />
-                                                        <div className={classes.toggleToolTipTitle}>
-                                                        Parallel or Sequential processing
-                                                        </div>
-                                                    </div>
+                                                   
+                                                 </div>
                                             </div>   
-                                            <div className={classes.saveFileBtn}>
-                                                <input 
-                                                    readOnly        = {true} 
-                                                    type            = "text"
-                                                    placeholder     = "Directory Path"
-                                                    defaultValue    = {userTargetDir}
-                                                />
-                                                <button onClick={selectUserTargetDir}>
-                                                    <FolderIcon className={classes.btnIcon}/> 
-                                                    Select Target Directory
-                                                </button>
-                                            </div>
+                                           
                                         </div>                                        
                                     </div>
                                     {rebuildFileNames.length>0 && 
@@ -909,9 +794,7 @@ function DockerRebuildFiles(){
                                         <TableRow>
                                             <TableCell className={classes.texttBold}>Status</TableCell>
                                             <TableCell align="left" className={classes.texttBold}>Original</TableCell>
-                                            <TableCell align="left" className={classes.texttBold}>Threat Level</TableCell>
                                             <TableCell align="left" className={classes.texttBold}>Rebuilt</TableCell>
-                                            <TableCell align="left" className={classes.texttBold}>Threat Level</TableCell>
                                             <TableCell align="left" className={classes.texttBold}>XML</TableCell>
                                         </TableRow>
                                         </TableHead>
@@ -920,14 +803,11 @@ function DockerRebuildFiles(){
                                             <TableRow key={row.id}>
                                             <TableCell align="left" className={classes.status}>{row.isError == true? <span>Failed</span>:<p>Success</p>}</TableCell>
                                             <TableCell align="left"><a id="download_link" href={row.sourceFileUrl} download={row.name} className={classes.downloadLink} title={row.name}><FileCopyIcon className={classes.fileIcon}/> {row.name}</a></TableCell>
-                                            
                                             {
                                                 !row.isError ?
                                                     <TableCell align="left"><a id="download_link" href={row.url} download={row.name} className={classes.downloadLink} title={row.name}><FileCopyIcon className={classes.fileIcon}/>{row.name}</a></TableCell>
                                                     : <TableCell align="left">{row.msg}</TableCell>
                                             }
-                                            
-                                            <TableCell align="left" >{getFormattedThreatValue(row.threat, row.threat_level)}</TableCell>
                                             {
                                                 !row.isError ?
                                                 <TableCell align="left"><button  onClick={() => viewXML(row.id)} className={classes.viewBtn}>{!row.isError?'View Report':''}</button></TableCell>
@@ -973,4 +853,4 @@ function DockerRebuildFiles(){
     )
 }
 
-export default DockerRebuildFiles;
+export default Sessions;
