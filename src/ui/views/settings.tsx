@@ -86,14 +86,15 @@ const useStyles = makeStyles((theme) => ({
 function Settings(){
     const classes = useStyles(); 
     const [hide, setHide] = useState(true);
-    const [rebuildUrl, setRebuildUrl] = useState("");
-    const [analysisUrl, setAnalysisUrl] = useState("");
-    const [apiKey, setApiKey] = useState("");
+    const [rebuildUrl, setRebuildUrl] = useState(Utils.getRebuildEngineUrl());
+    const [analysisUrl, setAnalysisUrl] = useState(Utils.getRebuildAnalysisUrl());
+    const [apiKey, setApiKey] = useState(Utils.getRebuildApiKey());
 
     React.useEffect(() => {
-        setRebuildUrl(Utils.REBUILD_ENGINE_URL?Utils.REBUILD_ENGINE_URL:"");
-        setAnalysisUrl(Utils.REBUILD_ANALYSIS_URL?Utils.REBUILD_ANALYSIS_URL:"");
-        setApiKey(Utils.REBUILD_API_KEY?Utils.REBUILD_API_KEY:"");
+        console.log("settings1" + Utils.getRebuildEngineUrl())
+        setRebuildUrl(Utils.getRebuildEngineUrl());
+        setAnalysisUrl(Utils.getRebuildAnalysisUrl());
+        setApiKey(Utils.getRebuildApiKey());
        
         
     }, []);
@@ -103,7 +104,7 @@ function Settings(){
    }
 
    const handleRebuildUrlChange =(e:any)=>{
-    console.log(e.target.value);
+    console.log("settings2" + e.target.value);
     setRebuildUrl(e.target.value)
     localStorage.setItem(Utils.REBUILD_URL_KEY, e.target.value )
    }
