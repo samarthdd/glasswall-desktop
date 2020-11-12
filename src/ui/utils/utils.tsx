@@ -87,8 +87,8 @@ export const RELEAE_NOTES           =[
 
 
 export const cleanRawLogger = () => {
-  localStorage.removeItem("rawlogs")
-  localStorage.setItem("rawlogs","")
+  let logFile = getLogsPath()
+  fs.open(logFile, 'w+')
 }
 
 export const getRawLogs = () => { 
@@ -111,27 +111,7 @@ export const addRawLogLine = (level:number, filename:string, sentence:string) =>
   }    
   else{
     log.error(" - File-Name - "+filename+" --> "+sentence+"\n")
-  }
-  /*const logs  = localStorage.getItem("rawlogs");
-  let levelStr : string;
-  levelStr = "ERROR"
-  if(level == 0){
-    levelStr = "DEBUG"
-  }
-  else if (level == 1){
-    levelStr = "INFO"
   }  
-  if(logs != null){
-    var logsCopy = logs;
-    logsCopy +=  "\n"+getLogTime()+" - "+levelStr+" - File-Name - "+filename+" --> "+sentence+"\n" 
-    localStorage.setItem("rawlogs",logsCopy)
-  }
-  else{
-    localStorage.setItem("rawlogs","")
-    var logsCopy = "\n"+getLogTime()+" - "+levelStr+" - File-Name - "+filename+" --> "+sentence+"\n" 
-    console.log('adding log '+logsCopy)
-    localStorage.setItem("rawlogs",logsCopy)
-  }*/
 }
 
 export const initLogger = () => {  

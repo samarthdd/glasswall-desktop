@@ -108,7 +108,7 @@ function LoggerView(){
     const [logView, setLogView]                     = useState(true);  
 
     const clearLogs =()=>{
-        localStorage.removeItem("rawlogs");
+        Utils.cleanRawLogger()
         setLogView(!logView)
     }
 
@@ -120,8 +120,7 @@ function LoggerView(){
                 <div className={classes.toolbar} />  
                 <div className={classes.contentArea}>             
                     <div> 
-                    <h3>Raw Logs </h3>
-                    <button disabled={!localStorage.getItem("rawlogs") }  onClick={() =>clearLogs()}className={localStorage.getItem("rawlogs")?classes.logButton:classes.disabledLogButton}>Clear Logs</button>
+                    <h3>Raw Logs </h3>                    
                     <Highlight language='javascript'>{Utils.getRawLogs() || ""}</Highlight>
                     </div>
                    
