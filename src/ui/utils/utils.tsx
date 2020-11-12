@@ -1,6 +1,8 @@
 var child_process               = require("child_process");
 const path                      = require('path');
 var fs                          = require('fs');
+const log                       = require('electron-log');
+log.transports.file.level       = 'debug';
 
 export const GW_DOCKER_IMG_NAME         = 'glasswallsolutions/evaluationsdk:1';
 export const GW_DOCKER_IMG_NAME_WO_TAG  = 'glasswallsolutions/evaluationsdk';
@@ -17,6 +19,8 @@ export const REPO_GIT_ISSUE_URL         = "https://github.com/k8-proxy/glasswall
 
 export const VERSION                    = '0.1.5'
 export const _PROCESSED_FOLDER          = "processed"
+export const _LOGS_FOLDER               = "gwlogs"
+export const _LOGS_FILE                 = "desktop.log"
 export const _CLEAN_FOLDER              = "clean"
 export const _ORIGINAL_FOLDER           = "original"
 export const _REPORT_FOLDER             = "report"
@@ -45,7 +49,7 @@ export const REBUILD_ENGINE_URL         =  !localStorage.getItem(REBUILD_URL_KEY
 export const REBUILD_ANALYSIS_URL       =  !localStorage.getItem(ANALYSIS_URL_KEY)?'https://o7ymnow6vf.execute-api.us-west-2.amazonaws.com/Prod/api/Analyse/base64':localStorage.getItem(ANALYSIS_URL_KEY);
 export const REBUILD_API_KEY            =  !localStorage.getItem(APIKEY_KEY) ?'dp2Ug1jtEh4xxFHpJBfWn9V7fKB3yVcv60lhwOAG':  localStorage.getItem(APIKEY_KEY);
 
-export const DOCKER_RUNNING             =  9; // Docker running;
+export const DOCKER_RUNNING             =  0; // Docker running;
 export const DOCKER_NOT_INSTALLED       =  1; // Docker not installed;
 export const DOCKER_NOT_STARTED         =  2; // Docker not started;
 export const DOCKER_GW_IMAGE_NOT_PRESENT=  3; // Image not present;
@@ -87,8 +91,28 @@ export const cleanRawLogger = () => {
   localStorage.setItem("rawlogs","")
 }
 
-export const addRawLogLine = (level:number, filename:string, sentence:string) => {     
-  const logs  = localStorage.getItem("rawlogs");
+export const getRawLogs = () => { 
+  const data = fs.readFileSync(getLogsPath(), 
+            {encoding:'utf8', flag:'r'}); 
+  return data;
+}
+
+export const addRawLogLine = (level:number, filename:string, sentence:string) => { 
+  log.transports.file.file        = getLogsPath();
+  let levelStr : string;
+  levelStr = "ERROR"
+  if(level == 0){
+    levelStr = "DEBUG"
+    log.debug(" - File-Name - "+filename+" --> "+sentence+"\n")
+  }
+  else if (level == 1){
+    levelStr = "INFO"
+    log.info(" - File-Name - "+filename+" --> "+sentence+"\n")
+  }    
+  else{
+    log.error(" - File-Name - "+filename+" --> "+sentence+"\n")
+  }
+  /*const logs  = localStorage.getItem("rawlogs");
   let levelStr : string;
   levelStr = "ERROR"
   if(level == 0){
@@ -107,7 +131,7 @@ export const addRawLogLine = (level:number, filename:string, sentence:string) =>
     var logsCopy = "\n"+getLogTime()+" - "+levelStr+" - File-Name - "+filename+" --> "+sentence+"\n" 
     console.log('adding log '+logsCopy)
     localStorage.setItem("rawlogs",logsCopy)
-  }
+  }*/
 }
 
 export const initLogger = () => {  
@@ -268,6 +292,7 @@ export const getProcessedPath =()=>{
   return getAppDataPath() + getPathSep() + _PROCESSED_FOLDER
 }
 
+
 export const getAppDataPath =() =>{
   switch (process.platform) {
     case "darwin": {
@@ -335,4 +360,16 @@ export const sanitize_file_name = (file_name: string)=> {
       throw new Error(`[sanitize_file_name] provided value was now a string, it was ${typeof(file_name)}`)
   }
   return file_name.replace(REGEX_SAFE_FILE_NAME, '_')
+}
+
+
+export const getLogsPath = ()=>{
+  if(!fs.existsSync(getAppDataPath() + getPathSep() + _LOGS_FOLDER)){
+    fs.mkdirSync(getAppDataPath() + getPathSep() + _LOGS_FOLDER);
+  }  
+  if(!fs.existsSync(getAppDataPath() + getPathSep() + _LOGS_FOLDER+getPathSep()+_LOGS_FILE)){
+    fs.openSync(getAppDataPath() + getPathSep() + _LOGS_FOLDER+getPathSep()+_LOGS_FILE,'w');
+    fs.closeSync(getAppDataPath() + getPathSep() + _LOGS_FOLDER+getPathSep()+_LOGS_FILE,'w');
+  }
+  return getAppDataPath() + getPathSep() + _LOGS_FOLDER + getPathSep() + _LOGS_FILE
 }
