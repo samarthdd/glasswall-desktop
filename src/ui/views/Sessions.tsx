@@ -161,13 +161,15 @@ const useStyles = makeStyles((theme) => ({
     dropzoneArea:{
         pointerEvents:             'none'
     },
-     downloadLink:{
+     hlink:{
         maxWidth:                   '245px',
         display:                    'inline-block',
         textOverflow:               'ellipsis',
         whiteSpace:                 'nowrap',
         overflow:                   'hidden',
-        color:                      '#575757;'
+        cursor:                     'pointer',
+        color:                      'blue',
+        textDecoration:             'underline'
      },
      viewBtn:{
         color:                      '#fff',
@@ -615,12 +617,12 @@ function Sessions(){
                                         <TableBody>
                                         {sessionsPerPage.map((row) => (
                                             <TableRow key={row.id}>
-                                                <TableCell align="left"><a id="session_id" className={classes.downloadLink}>{row.id}</a></TableCell>
+                                                <TableCell align="left"><a onClick={()=>Utils.open_file_exp(Utils.getProcessedPath() + Utils.getPathSep() + row.id)} target="_blank" className={classes.hlink}>{row.id}</a></TableCell>
                                             <TableCell align="left" className={classes.status}>{row.type}</TableCell>
                                             <TableCell align="left"> {row.count}</TableCell>
                                             <TableCell align="left">{row.successCount}</TableCell>
                                             <TableCell align="left">{row.at}</TableCell>
-                                            <TableCell align="left">{row.location}</TableCell>
+                                            <TableCell align="left"><a onClick={()=>Utils.open_file_exp(row.location)} target="_blank" className={classes.hlink}>{row.location}</a></TableCell>
                                             </TableRow>
                                         ))}
                                         </TableBody>

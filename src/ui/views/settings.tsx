@@ -86,9 +86,17 @@ const useStyles = makeStyles((theme) => ({
 function Settings(){
     const classes = useStyles(); 
     const [hide, setHide] = useState(true);
-    const [rebuildUrl, setRebuildUrl] = useState(Utils.REBUILD_ENGINE_URL?Utils.REBUILD_ENGINE_URL:"");
-    const [analysisUrl, setAnalysisUrl] = useState(Utils.REBUILD_ANALYSIS_URL?Utils.REBUILD_ANALYSIS_URL:"");
-    const [apiKey, setApiKey] = useState(Utils.REBUILD_API_KEY?Utils.REBUILD_API_KEY:"");
+    const [rebuildUrl, setRebuildUrl] = useState("");
+    const [analysisUrl, setAnalysisUrl] = useState("");
+    const [apiKey, setApiKey] = useState("");
+
+    React.useEffect(() => {
+        setRebuildUrl(Utils.REBUILD_ENGINE_URL?Utils.REBUILD_ENGINE_URL:"");
+        setAnalysisUrl(Utils.REBUILD_ANALYSIS_URL?Utils.REBUILD_ANALYSIS_URL:"");
+        setApiKey(Utils.REBUILD_API_KEY?Utils.REBUILD_API_KEY:"");
+       
+        
+    }, []);
 
    const showApiKey = ()=> {
     setHide(!hide)
