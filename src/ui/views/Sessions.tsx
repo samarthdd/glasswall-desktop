@@ -463,25 +463,68 @@ function Sessions(){
         location        : string;
       }
    
+      interface DisplayInfo {
+        type            : string;
+        count           : number;
+        successCount   : number;
+        at              : string;
+        location        : string;
+      }
    
    
+    const getSessionDisplayInfo =(metadata: any)=>{
+        let successCount: number =0;
+        let createdAt = ''
+        let userTargetFolder = ''
+        let type ='unknow'
+        let info: DisplayInfo ={
+            type:'unknown', 
+            count:0,
+            successCount:0,
+            at:'',
+            location:''
+        };
+        info.successCount = 0;
+
+        metadata.map((data:any)=>{
+            if(data.status == "Success"){
+                info.successCount++;
+            }
+            info.at = data.time;
+            info.location = data.userTargetFolder;
+            info.type = data.rebuildSource
+        })
+        
+        return info;
+    }
     
     const readSessionResult =(result: any)=>{ 
 
-        let count = 0;
-        let metadata = result.metadata;
-        if(result.error){
-            count = metadata.length;
+        console.log("session result" + result)
+        let metadata:string[] = [];
+        let displayResult: DisplayInfo ={
+            type:'unknown', 
+            count:0,
+            successCount:0,
+            at:'',
+            location:''
+        };
+
+        console.log("session metadata" + metadata)
+        if(!result.error){
+            metadata = JSON.parse(result.metadata);
+            displayResult = getSessionDisplayInfo(metadata);
+           
         }
         setSessions(sessions =>[...sessions,  {
             id:result.id,
-            type: "Cloud",
-            count: count,
-            successCount: 10,
+            type:displayResult.type,
+            count: metadata.length,
+            successCount: displayResult.successCount,
             error: false,
             msg: '',
-            at: new Date().toLocaleDateString(),
-            location: Utils.getProcessedPath()
+            at: displayResult.at,
+            location: displayResult.location
             }]);
     
         setCounter(state=>state-1);
@@ -542,7 +585,7 @@ function Sessions(){
                                     <div className={classes.settings}>  
                                         <div className={classes.btnHeading}>                                                                           
                                         <div className={classes.headingGroup}>                                                                         
-                                                <h4>Session Hisotry  <span>*</span> </h4>
+                                                <h4>Session History  <span>*</span> </h4>
                                                
                                                 <div className={classes.toggleContainer}>
                                                 </div>
@@ -561,20 +604,23 @@ function Sessions(){
                                     <Table className={classes.table} size="small" aria-label="a dense table">
                                         <TableHead>
                                         <TableRow>
-                                            <TableCell className={classes.texttBold}>Status</TableCell>
-                                            <TableCell align="left" className={classes.texttBold}>Original</TableCell>
-                                            <TableCell align="left" className={classes.texttBold}>Rebuilt</TableCell>
-                                            <TableCell align="left" className={classes.texttBold}>XML</TableCell>
+                                            <TableCell className={classes.texttBold}>Id</TableCell>
+                                            <TableCell align="left" className={classes.texttBold}>Type</TableCell>
+                                            <TableCell align="left" className={classes.texttBold}>Total Rebuilt</TableCell>
+                                            <TableCell align="left" className={classes.texttBold}>Success</TableCell>
+                                            <TableCell align="left" className={classes.texttBold}>Created At</TableCell>
+                                            <TableCell align="left" className={classes.texttBold}>Output Folder</TableCell>
                                         </TableRow>
                                         </TableHead>
                                         <TableBody>
                                         {sessionsPerPage.map((row) => (
                                             <TableRow key={row.id}>
+                                                <TableCell align="left"><a id="session_id" className={classes.downloadLink}>{row.id}</a></TableCell>
                                             <TableCell align="left" className={classes.status}>{row.type}</TableCell>
                                             <TableCell align="left"> {row.count}</TableCell>
                                             <TableCell align="left">{row.successCount}</TableCell>
                                             <TableCell align="left">{row.at}</TableCell>
-                                            <TableCell align="left"></TableCell>
+                                            <TableCell align="left">{row.location}</TableCell>
                                             </TableRow>
                                         ))}
                                         </TableBody>
