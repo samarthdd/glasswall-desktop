@@ -909,7 +909,6 @@ function DockerRebuildFiles(){
                                         <TableRow>
                                             <TableCell className={classes.texttBold}>Status</TableCell>
                                             <TableCell align="left" className={classes.texttBold}>Original</TableCell>
-                                            <TableCell align="left" className={classes.texttBold}>Threat Level</TableCell>
                                             <TableCell align="left" className={classes.texttBold}>Rebuilt</TableCell>
                                             <TableCell align="left" className={classes.texttBold}>Threat Level</TableCell>
                                             <TableCell align="left" className={classes.texttBold}>XML</TableCell>
