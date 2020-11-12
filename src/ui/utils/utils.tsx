@@ -42,7 +42,7 @@ export const APIKEY_KEY                 = "apikey_key"
 
 
 export const REBUILD_TYPE_CLOUD         = "Cloud"
-export const REBUILD_TYPE_DOCKER        = "Docker Image"
+export const REBUILD_TYPE_DOCKER        = "Docker"
 
 
 export const REBUILD_ENGINE_URL         =  !localStorage.getItem(REBUILD_URL_KEY)? 'https://8oiyjy8w63.execute-api.us-west-2.amazonaws.com/Prod/api/rebuild/base64':localStorage.getItem(REBUILD_URL_KEY);
