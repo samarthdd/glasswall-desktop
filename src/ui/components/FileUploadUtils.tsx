@@ -90,7 +90,7 @@ export const makeRequest = async (request: any, sourceFileUrl: string, requestId
 
     let payload: string | any;
     let url : string| null;
-    url = Utils.REBUILD_ENGINE_URL;
+    url = Utils.getRebuildEngineUrl();
 
     payload = getPayload(request)
     var fileSize = payload.fileSize;
@@ -102,7 +102,7 @@ export const makeRequest = async (request: any, sourceFileUrl: string, requestId
 
         return url && await axios.post(url, payload, {
                 headers: {
-                    "x-api-key": Utils.REBUILD_API_KEY,
+                    "x-api-key": Utils.getRebuildApiKey(),
                     "Content-Type": "application/json"
                 }
             })
@@ -136,7 +136,7 @@ export const retry = async (request: any, sourceFileUrl: string, requestId: stri
 
     let payload: string | any;
     let url : string| null;
-    url = Utils.REBUILD_ENGINE_URL;
+    url = Utils.getRebuildEngineUrl();
 
     payload = getPayload(request)
     var fileSize = payload.fileSize;
@@ -147,7 +147,7 @@ export const retry = async (request: any, sourceFileUrl: string, requestId: stri
 
         return  url &&  await axios.post(url, payload, {
                 headers: {
-                    "x-api-key": Utils.REBUILD_API_KEY,
+                    "x-api-key": Utils.getRebuildApiKey(),
                     "Content-Type": "application/json"
                 }
             })
@@ -173,7 +173,7 @@ export const getAnalysisResult= async (isBinaryFile: boolean, reBuildResponse: a
 
     let payload: string | any;
     let url : string| null;
-    url = Utils.REBUILD_ANALYSIS_URL;
+    url = Utils.getRebuildAnalysisUrl();
 
     payload = getAnalysisPayload(request)
     var fileSize = payload.fileSize;
@@ -184,7 +184,7 @@ export const getAnalysisResult= async (isBinaryFile: boolean, reBuildResponse: a
     if(fileSize < 6){
         return url &&  await axios.post(url, payload, {
                 headers: {
-                    "x-api-key": Utils.REBUILD_API_KEY,
+                    "x-api-key": Utils.getRebuildApiKey(),
                     "Content-Type": "application/json"
                 }
             })

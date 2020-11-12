@@ -89,9 +89,7 @@ const getBase64 = (file: File) => {
 export const makeRequest = (request: any, sourceFileUrl: string, requestId: string, folderId: string,
       resultCallback: Function) => {
     let payload: string | any;
-    let url : string;
-    url = Utils.REBUILD_ENGINE_URL || "";
-
+   
     payload = getPayload(request)
     var fileSize = payload.fileSize;
 
@@ -145,9 +143,7 @@ export const getAnalysisResult = (isBinaryFile: boolean, reBuildResponse: any, r
      requestId: string, targetFolder: string, resultCallback: Function)=>{
 
     let payload: string | any;
-    let url : string;
-    url = Utils.REBUILD_ANALYSIS_URL || "";
-
+   
     payload = getAnalysisPayload(request)
     var fileSize = payload.fileSize;
     
