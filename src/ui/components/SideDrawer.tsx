@@ -193,7 +193,7 @@ function SideDrawer({ showBack }: headerOptions) {
 
     const handleDrawerOpen = () => {
         setOpen(true);
-        alert("handleDrawerOpen")
+       
     };
 
     const handleDrawerClose = () => {

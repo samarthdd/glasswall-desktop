@@ -24,9 +24,7 @@ import * as DockerUtils         from '../components/DockerUtils'
 import * as SerialDocker        from '../components/SerialDocker'
 import Loader                   from '../components/Loader';
 import * as Utils               from '../utils/utils'
-import RawXml                   from '../components/RawXml';
-import Logs                     from '../components/Logs';
-import HealthCheckStatus        from '../components/HealthCheckStatus'
+import * as SessionsUtils               from '../components/SessionsUtils'
 const { dialog }                = require('electron').remote
 
 
@@ -447,265 +445,71 @@ const useStyles = makeStyles((theme) => ({
 function Sessions(){
     
     const classes = useStyles(); 
-    const [fileNames, setFileNames]                 = useState<Array<string>>([]);
-    const [rebuildFileNames, setRebuildFileNames]   = useState<Array<DockerRebuildResult>>([]);
+    const [sessions, setSessions]                   = useState<Array<SessionInfo>>([]);
+    const [sessionsPerPage, setSessionsPerPage]     = useState<Array<SessionInfo>>([]);
     const [counter, setCounter]                     = useState(0);
     const [loader, setShowLoader]                   = useState(false);  
-    const [id, setId]                               = useState("");  
-    const [open, setOpen]                           = useState(false);  
-    const [xml, setXml]                             = useState("");  
-    const [logView, setLogView]                     = useState(false);      
     const [page, setPage]                           = useState(0); 
     const [rowsPerPage, setRowsPerPage]             = useState(10);  
-    const [folderId, setFolderId]                   = useState("");  
-    const [targetDir, setTargetDir]                 = useState("");  
-    const [userTargetDir, setUserTargetDir]         = useState(sessionStorage.getItem(Utils.DOCKER_OUPUT_DIR_KEY)||"");  
-    const [masterMetaFile, setMasterMetaFile]       = useState<Array<Metadata>>([]);
-    const [showAlertBox, setshowAlertBox]           = useState(false);  
-    const [files, setFiles]                         = useState<Array<DockerRebuildResult>>([]);
-    const [flat, setFlat]                           = React.useState(false);
-    const [parallel, setParallel]                   = React.useState(true);
-    const [healthCheckStatus, setHealthCheckStatus] = React.useState( Number(sessionStorage.getItem("docker_status")) || 0);    
-
-    interface DockerRebuildResult {
+    
+    interface SessionInfo {
         id              : string,
-        sourceFileUrl   : string;
-        url             : string;
-        name?           : string;
+        type            : string;
+        count           : number;
+        successCount   : number;
         msg?            : string;
-        isError?        : boolean;
-        xmlResultDocker : string;
-        path?           : string;
-        cleanFile?      : any;
+        error            : boolean;
+        at              : string;
+        location        : string;
       }
    
-    interface Metadata {
-        original_file       : string,
-        clean_file?         : string;
-        report?             : string;
-        status?             : string;
-        message?            : string;
-        time?               : string;
-        userTargetFolder?   : string;
-        rebuildSource       : string;
-    }
    
+   
+    
+    const readSessionResult =(result: any)=>{ 
 
-    React.useEffect(() => {
-       
-        console.log("health_chk" + sessionStorage.getItem(Utils.DOCKER_HEALTH_STATUS_KEY))
-        setShowLoader(true)
-        var status = healthCheckStatus;
-        if(sessionStorage.getItem(Utils.DOCKER_HEALTH_STATUS_KEY) == null){
-            const timer = setTimeout(() => {
-                status = DockerUtils.health_chk();
-                sessionStorage.setItem(Utils.DOCKER_HEALTH_STATUS_KEY, "" + status )
-                setHealthCheckStatus(status)
-                setShowLoader(false)
-               
-              }, 10);
-            
-        } else{
-            status = Number(sessionStorage.getItem(Utils.DOCKER_HEALTH_STATUS_KEY));
-            setHealthCheckStatus(status)
-            setShowLoader(false)
-            
+        let count = 0;
+        let metadata = result.metadata;
+        if(result.error){
+            count = metadata.length;
         }
+        setSessions(sessions =>[...sessions,  {
+            id:result.id,
+            type: "Cloud",
+            count: count,
+            successCount: 10,
+            error: false,
+            msg: '',
+            at: new Date().toLocaleDateString(),
+            location: Utils.getProcessedPath()
+            }]);
+    
+        setCounter(state=>state-1);
+    }
+    React.useEffect(() => {
+        const timer = setTimeout(() => {
+            SessionsUtils.getSessionList(Utils.getProcessedPath()).then(function(results:any){
+            console.log("getSessionList" + results);
+            setCounter(results.length);
+            if(results.length>0){
+                SessionsUtils.readSessions(results, readSessionResult);
+            }
+
+        });
+           
+          }, 10);
+       
+       
+        
         
     }, []);
 
     React.useEffect(() => {
-        if(folderId!=''){
-            var rootFolder = Utils.getProcessedPath() + Utils.getPathSep() +folderId
-            if (!fs.existsSync(rootFolder)){
-                fs.promises.mkdir(rootFolder, { recursive: true });
-            }
-       
-            setTargetDir(rootFolder);
-        }
-    }, [folderId]);
-
-    React.useEffect(() => {
-        if (counter == 0 && loader == true) {
-            setShowLoader(false);
-            Utils.saveTextFile(JSON.stringify(masterMetaFile),  targetDir , 'metadata.json');
-
-            if(userTargetDir !="" && !flat){
-                let PATHS: string[];
-                PATHS=[]
-                rebuildFileNames.map(rebuild=>{
-                    if(rebuild.path)
-                        PATHS.push(rebuild.path);
-                });
-                const common = commonPath(PATHS);
-                common.parsedPaths.map((cPath:any)=>{
-                    Utils.saveBase64File( getRebuildFileContent(cPath.original), userTargetDir +  Utils.getPathSep() + cPath.subdir, cPath.basePart );
-            });
-        }
-        }
-      }, [counter]);
-    
-    React.useEffect(() => {
-        let rebuildFile: DockerRebuildResult| undefined;
-        rebuildFile = rebuildFileNames.find((rebuildFile) => rebuildFile.id ==id);
-        if(rebuildFile){            
-            setXml(rebuildFile.xmlResultDocker);
-          }
-         }, [id, xml, open]);
-
-    React.useEffect(() => {
-        let rebuildFileReverse = rebuildFileNames.slice().reverse()
-        let rebuildResultsPerPage = rebuildFileReverse && rebuildFileReverse.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
-        setFiles(rebuildResultsPerPage)
-        }, [rowsPerPage, page, rebuildFileNames]);
-
-    //callback for rebuild and analysis
-    const downloadResult =(result: any)=>{    
-        setRebuildFileNames(rebuildFileNames =>[...rebuildFileNames,  {
-                id:result.id,
-                url: result.url,
-                name: result.filename,
-                sourceFileUrl: result.source,
-                isError: result.isError,
-                msg: result.msg,
-                xmlResultDocker:result.xmlResult,
-                path: result.path,
-                cleanFile: result.cleanFile
-                }]);
-
-        setCounter(state=>state-1);
-        let fileHash: string;
-        fileHash = Utils.getFileHash(result.original)
-          
-        if(!result.isError){
-            var cleanFilePath = Utils.getProcessedPath() + Utils.getPathSep()
-                                 + result.targetDir + Utils.getPathSep() + fileHash
-                                  + Utils.getPathSep() + Utils._CLEAN_FOLDER;
-            Utils.saveBase64File(result.cleanFile, cleanFilePath, result.filename );
-
-            var OriginalFilePath = Utils.getProcessedPath()  +  Utils.getPathSep()
-                                    + result.targetDir +  Utils.getPathSep()
-                                     + fileHash +  Utils.getPathSep() + Utils._ORIGINAL_FOLDER;
-            Utils.saveBase64File(result.original, OriginalFilePath, result.filename);  
-
-            var reportFilePath =  Utils.getProcessedPath() +  Utils.getPathSep()
-                                 + result.targetDir +  Utils.getPathSep()
-                                  + fileHash +   Utils.getPathSep() + Utils._REPORT_FOLDER;
-            Utils.saveTextFile(result.xmlResult, reportFilePath, Utils.stipFileExt(result.filename)+'.xml');
-
-            var metadataFilePath =  Utils.getProcessedPath() + Utils.getPathSep() + 
-                                    result.targetDir + Utils.getPathSep() + fileHash;
-            let content: Metadata;
-            content ={
-                original_file       : Utils._ORIGINAL_FOLDER + Utils.getPathSep() + result.filename,
-                clean_file          : Utils._CLEAN_FOLDER + Utils.getPathSep()+ result.filename,
-                report              : Utils._REPORT_FOLDER + Utils.getPathSep() + Utils.stipFileExt(result.filename)+'.xml',
-                status              : "Success",
-                time                : new Date().toLocaleDateString(),
-                userTargetFolder    : userTargetDir,
-                rebuildSource       : Utils.REBUILD_TYPE_DOCKER
-            }
-            Utils.saveTextFile(JSON.stringify(content), metadataFilePath, 'metadata.json');
-        
-            content.original_file = fileHash + Utils.getPathSep() + Utils._ORIGINAL_FOLDER + Utils.getPathSep() + result.filename
-            content.clean_file = fileHash +Utils.getPathSep() + Utils._CLEAN_FOLDER + Utils.getPathSep() + result.filename
-            content.report = fileHash + Utils.getPathSep() + Utils._REPORT_FOLDER + Utils.getPathSep() + Utils.stipFileExt(result.filename)+'.xml'
-            content.userTargetFolder = userTargetDir;
-            
-            masterMetaFile.push(content);
-            if(userTargetDir !=""){
-                var filepath = userTargetDir;
-                if(flat){
-                    Utils.saveBase64File(result.cleanFile, filepath, result.filename );
-                }
-            }
- 
-        }else{
-            var OriginalFilePath =Utils.getProcessedPath() +  Utils.getPathSep()
-                                + result.targetDir + Utils.getPathSep() + fileHash +  Utils.getPathSep() + 
-                                    Utils._ORIGINAL_FOLDER;
-            console.log("Error case:" +OriginalFilePath + ", result.targetDir:" + result.targetDir)
-            Utils.saveBase64File(result.original, OriginalFilePath, result.filename);
-            let content: Metadata;
-            content ={
-                original_file       : fileHash + Utils.getPathSep() + Utils._ORIGINAL_FOLDER + Utils.getPathSep() + result.filename,
-                clean_file          : '',
-                report              : '',
-                status              : "Failure",
-                time                : new Date().toLocaleDateString(),
-                userTargetFolder    : userTargetDir,
-                message             : result.msg,
-                rebuildSource       : Utils.REBUILD_TYPE_DOCKER
-            }
-            masterMetaFile.push(content);
-        }        
-    }
-
-    const getRebuildFileContent =(filePath: string)=>{
-        var rebuild = rebuildFileNames.find(rebuild=>rebuild.path === filePath);
-        if(rebuild)
-            return rebuild.cleanFile;
-        else    
-            return null;
-    }
-     
-     const renderRedirect = () => {
-        if (healthCheckStatus) {
-          return <Redirect to='/configure' />
-        }
-      }
-    //Multi file drop callback 
-    const handleDrop = async (acceptedFiles:any) =>{
-        Utils.initLogger();
-        let outputDirId: string;
-        if(userTargetDir ==""){
-            setshowAlertBox(true);
-        }
-        else {            
-            setCounter((state: any)=>state + acceptedFiles.length)
-            setRebuildFileNames([]);
-            setPage(0);
-            masterMetaFile.length =0;
-            outputDirId = Utils.guid()
-            setFolderId(outputDirId);
-            setShowLoader(true);            
-            acceptedFiles.map((file: File) => {
-                if(parallel){
-                    DockerUtils.getFile(file).then(async (data: any) => {
-                        Utils.addLogLine(file.name,"Starting rebuild");
-                        setFileNames((fileNames: any) =>[...fileNames, file.name]);
-                        var url = window.webkitURL.createObjectURL(file);
-                        let guid: string;
-                        guid =  Utils.guid();                                    
-                        DockerUtils.makeRequest(data, url, guid, outputDirId, downloadResult);
-                    })
-                }
-                else{
-                    SerialDocker.getFile(file).then(async (data: any) => {
-                        Utils.addLogLine(file.name,"Starting rebuild");
-                        setFileNames((fileNames: any) =>[...fileNames, file.name]);
-                        var url = window.webkitURL.createObjectURL(file);
-                        let guid: string;
-                        guid =  Utils.guid();                                    
-                        SerialDocker.makeRequest(data, url, guid, outputDirId, downloadResult);
-                    })
-                }
-            })
-        }        
-
-    }  
-
-    //view XML
-    const viewXML =(id: string)=>{
-        setId(id);
-        setOpen(!open);
-    }
-    const openXml =(open:boolean)=>{
-        setOpen(open);
-    }
-    const openLogView =()=>{
-        setLogView(!logView);
-    }
+        let sessionsReverse = sessions.slice().reverse()
+        let sessionsPerPage = sessionsReverse && sessionsReverse.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+        setSessionsPerPage(sessionsPerPage)
+        }, [rowsPerPage, page, sessions]);
+      
     const handleChangePage = (event: any, newPage: number) => {
         setPage(newPage);
     };
@@ -716,46 +520,11 @@ function Sessions(){
     };
 
     const clearAll =()=>{
-        setRebuildFileNames([])
-        setMasterMetaFile([]);
+        setSessions([]);
         setCounter(0);
     }
 
-    const closeAlertBox = () => {
-        setshowAlertBox(false);
-    }
-
-    const successCallback =(result: any)=>{
-        console.log(result.filePaths)
-        if(result.filePaths != undefined){
-            console.log(result.filePaths[0])
-            setUserTargetDir(result.filePaths[0])
-            sessionStorage.setItem(Utils.DOCKER_OUPUT_DIR_KEY, result.filePaths[0]);
-        }        
-    }
-    const failureCallback =(error: any)=>{
-        alert(`An error ocurred selecting the directory :${error.message}`) 
-    }
-
-    const selectUserTargetDir =()=>{
-        let options = {
-            title : "Rebuild Folder", 
-            buttonLabel : "Select Rebuild Folder",
-            properties:["openDirectory"]
-        };
-        let promise: any;
-        promise = dialog.showOpenDialog(options)
-        promise.then(successCallback, failureCallback);
-    }
    
-    
-    const changeDownloadmode = (event:any) => {
-        setFlat((prev) => !prev);
-    };
-
-    const changeProcessingMode = (event:any) => {
-        setParallel((prev) => !prev);
-    };   
 
     return(
         <div>   
@@ -773,7 +542,7 @@ function Sessions(){
                                     <div className={classes.settings}>  
                                         <div className={classes.btnHeading}>                                                                           
                                         <div className={classes.headingGroup}>                                                                         
-                                                <h4>Session History  <span>*</span> </h4>
+                                                <h4>Session Hisotry  <span>*</span> </h4>
                                                
                                                 <div className={classes.toggleContainer}>
                                                 </div>
@@ -784,10 +553,10 @@ function Sessions(){
                                            
                                         </div>                                        
                                     </div>
-                                    {rebuildFileNames.length>0 && 
+                                    {sessions.length>0 && 
                                     <div> 
-                                    <h3>Rebuild Files  With Docker
-                                        <button onClick={()=>Utils.open_file_exp(targetDir)} className={rebuildFileNames.length>0? classes.outFolderBtn:classes.outFolderBtnDissabled}><FolderIcon className={classes.btnIcon}/> Browse Output Folder</button>
+                                    <h3>Sessions 
+                                        <button onClick={()=>Utils.open_file_exp(Utils.getProcessedPath())} className={sessions.length>0? classes.outFolderBtn:classes.outFolderBtnDissabled}><FolderIcon className={classes.btnIcon}/> Browse Sessions Folder</button>
                                     </h3>
                                     <Table className={classes.table} size="small" aria-label="a dense table">
                                         <TableHead>
@@ -799,39 +568,31 @@ function Sessions(){
                                         </TableRow>
                                         </TableHead>
                                         <TableBody>
-                                        {files.map((row) => (
+                                        {sessionsPerPage.map((row) => (
                                             <TableRow key={row.id}>
-                                            <TableCell align="left" className={classes.status}>{row.isError == true? <span>Failed</span>:<p>Success</p>}</TableCell>
-                                            <TableCell align="left"><a id="download_link" href={row.sourceFileUrl} download={row.name} className={classes.downloadLink} title={row.name}><FileCopyIcon className={classes.fileIcon}/> {row.name}</a></TableCell>
-                                            {
-                                                !row.isError ?
-                                                    <TableCell align="left"><a id="download_link" href={row.url} download={row.name} className={classes.downloadLink} title={row.name}><FileCopyIcon className={classes.fileIcon}/>{row.name}</a></TableCell>
-                                                    : <TableCell align="left">{row.msg}</TableCell>
-                                            }
-                                            {
-                                                !row.isError ?
-                                                <TableCell align="left"><button  onClick={() => viewXML(row.id)} className={classes.viewBtn}>{!row.isError?'View Report':''}</button></TableCell>
-                                                    : <TableCell align="left"></TableCell>
-                                            }
-                                                
+                                            <TableCell align="left" className={classes.status}>{row.type}</TableCell>
+                                            <TableCell align="left"> {row.count}</TableCell>
+                                            <TableCell align="left">{row.successCount}</TableCell>
+                                            <TableCell align="left">{row.at}</TableCell>
+                                            <TableCell align="left"></TableCell>
                                             </TableRow>
                                         ))}
                                         </TableBody>
                                     </Table>
-                                    <button onClick={clearAll} className={files.length>0?classes.deleteBtn:classes.deleteBtnDisabled}><DeleteIcon className={classes.btnIcon}/> Clear All</button>
+                                    <button onClick={clearAll} className={sessionsPerPage.length>0?classes.deleteBtn:classes.deleteBtnDisabled}><DeleteIcon className={classes.btnIcon}/> Clear All</button>
                                     </div>
                                     }
                                 </div>
                                 </div>
                         
                             {
-                            files.length>0 &&
+                            sessionsPerPage.length>0 &&
                             <CardActions className={classes.actions}>
                                 <TablePagination
                                     onChangePage        ={handleChangePage }
                                     onChangeRowsPerPage ={handleChangeRowsPerPage}
                                     component           ="div"
-                                    count               ={rebuildFileNames.length                   }
+                                    count               ={sessions.length                   }
                                     page                ={page                           }
                                     rowsPerPage         ={rowsPerPage                    }
                                     rowsPerPageOptions  ={[5, 10, 25, { label: 'All', value: -1 }]     }               
