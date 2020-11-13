@@ -3,6 +3,7 @@ const path                      = require('path');
 var fs                          = require('fs');
 const log                       = require('electron-log');
 log.transports.file.level       = 'debug';
+const MAX_LOG_FILE_SIZE         = 3000000;
 
 export const GW_DOCKER_IMG_NAME         = 'glasswallsolutions/evaluationsdk:1';
 export const GW_DOCKER_IMG_NAME_WO_TAG  = 'glasswallsolutions/evaluationsdk';
@@ -20,7 +21,7 @@ export const REPO_GIT_ISSUE_URL         = "https://github.com/k8-proxy/glasswall
 export const VERSION                    = '0.1.6'
 export const _PROCESSED_FOLDER          = "processed"
 export const _LOGS_FOLDER               = "gwlogs"
-export const _LOGS_FILE                 = "desktop.log"
+export const _LOGS_FILE                 = "glasswall.log"
 export const _CLEAN_FOLDER              = "clean"
 export const _ORIGINAL_FOLDER           = "original"
 export const _REPORT_FOLDER             = "report"
@@ -62,29 +63,39 @@ export const TEXT_SEQUENTIAL            =  "Sequential"
 
 const REGEX_SAFE_FILE_NAME              = /[^a-zA-Z0-9-_\.]/g
 
-export const RELEAE_NOTES           =[
-                                        {
-                                          "date":"November 13th 2020",
-                                          "desc":"Fixed left panel logo icons and performance issue."
-                                        }, 
-                                        {
-                                          "date":"November 12th 2020",
-                                          "desc":"Added session history tab which list all the rebuild sessions (Cloud and Local)."
-                                        },
-                                        {
-                                          "date":"November 11th  2020",
-                                          "desc":"Added Threat Intelligence to the application, Displayed threat level on the UI"
-                                        }, 
-                                        {
-                                          "date":"November 10th  2020",
-                                          "desc":"Added RAW Logger events and tab to view it & Made server configuration configurable."
-                                        },
-                                         {
-                                          "date":"November 8th  2020",
-                                          "desc":"Parallel execution of requests with docker."
-                                        }
-                                      ]
+export const RELEAE_NOTES               =[
+                                            {
+                                              "date":"November 13th 2020",
+                                              "desc":"Fixed left panel logo icons and performance issue."
+                                            }, 
+                                            {
+                                              "date":"November 12th 2020",
+                                              "desc":"Added session history tab which list all the rebuild sessions (Cloud and Local)."
+                                            },
+                                            {
+                                              "date":"November 11th  2020",
+                                              "desc":"Added Threat Intelligence to the application, Displayed threat level on the UI"
+                                            }, 
+                                            {
+                                              "date":"November 10th  2020",
+                                              "desc":"Added RAW Logger events and tab to view it & Made server configuration configurable."
+                                            },
+                                            {
+                                              "date":"November 8th  2020",
+                                              "desc":"Parallel execution of requests with docker."
+                                            }
+                                        ]
 
+
+const archiveLog = (file:string) => {
+  file = file.toString();
+  const info = path.parse(file);
+  try {
+    fs.renameSync(file, path.join(info.dir, info.name + '.old' + info.ext));
+  } catch (e) {
+    console.warn('Could not rotate log', e);
+  }
+}                                      
 
 export const cleanRawLogger = () => {
   let logFile = getLogsPath()
@@ -92,12 +103,15 @@ export const cleanRawLogger = () => {
 }
 
 export const getRawLogs = () => { 
-  const data = fs.readFileSync(getLogsPath(), 
+  let data = fs.readFileSync(getLogsPath(), 
             {encoding:'utf8', flag:'r'}); 
+  if(data.length > MAX_LOG_FILE_SIZE){
+    data = data.substring((data.length-MAX_LOG_FILE_SIZE),MAX_LOG_FILE_SIZE)
+  }
   return data;
 }
 
-export const addRawLogLine = (level:number, filename:string, sentence:string) => { 
+export const addRawLogLine = (level:number, filename:string, sentence:string) => {   
   log.transports.file.file        = getLogsPath();
   let levelStr : string;
   levelStr = "ERROR"

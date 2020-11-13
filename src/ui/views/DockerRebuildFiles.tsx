@@ -879,9 +879,7 @@ function DockerRebuildFiles(){
                                                         control={<Switch color="primary" checked={parallel} 
                                                         onChange={changeProcessingMode}/>} 
                                                         label={parallel ? Utils.TEXT_PARALLEL : Utils.TEXT_SEQUENTIAL} />
-                                                        <div className={classes.toggleToolTipTitle}>
-                                                        Parallel or Sequential processing
-                                                        </div>
+                                                        
                                                     </div>
                                             </div>   
                                             <div className={classes.saveFileBtn}>
