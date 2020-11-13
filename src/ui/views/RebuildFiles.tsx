@@ -448,7 +448,7 @@ function RebuildFiles(){
     const [rowsPerPage, setRowsPerPage]             = useState(10);  
     const [folderId, setFolderId]                   = useState("");  
     const [targetDir, setTargetDir]                 = useState("");  
-    const [userTargetDir, setUserTargetDir]         = useState(sessionStorage.getItem(Utils.CLOUD_OUPUT_DIR_KEY)||"");  
+    const [userTargetDir, setUserTargetDir]         = useState("");  
     const [masterMetaFile, setMasterMetaFile]       = useState<Array<Metadata>>([]);
     const [outputDirType, setOutputDirType]         = useState(Utils.OUTPUT_DIR_FLAT)
     const [showAlertBox, setshowAlertBox]           = useState(false);
@@ -479,6 +479,9 @@ function RebuildFiles(){
         rebuildSource       : string;
     }
 
+    React.useEffect(()=>{
+        setUserTargetDir(Utils.getCloudDefaultOutputFOlder()||"");
+    },[]);
    
     React.useEffect(() => {
         if(folderId!=''){
@@ -528,6 +531,7 @@ function RebuildFiles(){
         let rebuildResultsPerPage = rebuildFileReverse && rebuildFileReverse.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
         setFiles(rebuildResultsPerPage)
         }, [rowsPerPage, page, rebuildFileNames]);
+
 
 
 //callback for rebuild and analysis
@@ -689,8 +693,12 @@ const downloadResult =(result: any)=>{
 
     const successCallback =(result: any)=>{
      
-        setUserTargetDir(result.filePaths[0])
-        sessionStorage.setItem(Utils.CLOUD_OUPUT_DIR_KEY, result.filePaths[0]);
+        if(result.filePaths != undefined && result.filePaths.length>0){
+            console.log(result.filePaths[0])
+            setUserTargetDir(result.filePaths[0])
+            localStorage.setItem(Utils.CLOUD_OUPUT_DIR_KEY, result.filePaths[0]);
+        } 
+       
     }
     const failureCallback =(error: any)=>{
         alert(`An error ocurred selecting the directory :${error.message}`) 

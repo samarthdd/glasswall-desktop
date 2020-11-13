@@ -476,7 +476,7 @@ function DockerRebuildFiles(){
     const [rowsPerPage, setRowsPerPage]             = useState(10);  
     const [folderId, setFolderId]                   = useState("");  
     const [targetDir, setTargetDir]                 = useState("");  
-    const [userTargetDir, setUserTargetDir]         = useState(sessionStorage.getItem(Utils.DOCKER_OUPUT_DIR_KEY)||"");  
+    const [userTargetDir, setUserTargetDir]         = useState("");  
     const [masterMetaFile, setMasterMetaFile]       = useState<Array<Metadata>>([]);
     const [showAlertBox, setshowAlertBox]           = useState(false);  
     const [files, setFiles]                         = useState<Array<DockerRebuildResult>>([]);
@@ -509,11 +509,11 @@ function DockerRebuildFiles(){
         rebuildSource       : string;
     }
    
-
+    
     React.useEffect(() => {
-       
         console.log("health_chk" + sessionStorage.getItem(Utils.DOCKER_HEALTH_STATUS_KEY))
         setShowLoader(true)
+        setUserTargetDir(Utils.getDockerDefaultOutputFOlder()||"");
         var status = healthCheckStatus;
         if(sessionStorage.getItem(Utils.DOCKER_HEALTH_STATUS_KEY) == null){
             const timer = setTimeout(() => {
@@ -528,7 +528,6 @@ function DockerRebuildFiles(){
             status = Number(sessionStorage.getItem(Utils.DOCKER_HEALTH_STATUS_KEY));
             setHealthCheckStatus(status)
             setShowLoader(false)
-            
         }
         
     }, []);
@@ -763,11 +762,11 @@ function DockerRebuildFiles(){
 
     const successCallback =(result: any)=>{
         console.log(result.filePaths)
-        if(result.filePaths != undefined){
+        if(result.filePaths != undefined && result.filePaths.length>0){
             console.log(result.filePaths[0])
             setUserTargetDir(result.filePaths[0])
-            sessionStorage.setItem(Utils.DOCKER_OUPUT_DIR_KEY, result.filePaths[0]);
-        }        
+            localStorage.setItem(Utils.DOCKER_OUPUT_DIR_KEY, result.filePaths[0]);
+        }
     }
     const failureCallback =(error: any)=>{
         alert(`An error ocurred selecting the directory :${error.message}`) 

@@ -17,7 +17,7 @@ export const FILE_DROP_URL              = 'https://file-drop.co.uk/';
 export const REPO_GIT_ISSUE_URL         = "https://github.com/k8-proxy/glasswall-desktop/issues/new";
 
 
-export const VERSION                    = '0.1.5'
+export const VERSION                    = '0.1.6'
 export const _PROCESSED_FOLDER          = "processed"
 export const _LOGS_FOLDER               = "gwlogs"
 export const _LOGS_FILE                 = "desktop.log"
@@ -381,4 +381,17 @@ export const getLogsPath = ()=>{
     fs.closeSync(getAppDataPath() + getPathSep() + _LOGS_FOLDER+getPathSep()+_LOGS_FILE,'w');
   }
   return getAppDataPath() + getPathSep() + _LOGS_FOLDER + getPathSep() + _LOGS_FILE
+}
+
+export const getDockerDefaultOutputFOlder =()=>{
+  return localStorage.getItem(DOCKER_OUPUT_DIR_KEY)?
+    localStorage.getItem(DOCKER_OUPUT_DIR_KEY):
+    getProcessedPath()+ getPathSep()+ "00x88888" 
+
+   
+}
+export const getCloudDefaultOutputFOlder=()=>{
+  return localStorage.getItem(CLOUD_OUPUT_DIR_KEY)?
+    localStorage.getItem(CLOUD_OUPUT_DIR_KEY):
+    getProcessedPath()+ getPathSep()+ "00x7777" 
 }
