@@ -32,8 +32,8 @@ export const OUTPUT_DIR_HIERARCY        = "hierarcy";
 export const WELCOME_PAGE_VISTIED_KEY   = "visited"
 export const WELCOME_PAGE_VISTIED_VAL   = "yes"
 
-export const DOCKER_OUPUT_DIR_KEY       = "DOCKER_OUPUT_DIR112"
-export const CLOUD_OUPUT_DIR_KEY        = "CLOUD_OUPUT_DIR112"
+export const DOCKER_OUPUT_DIR_KEY       = "DOCKER_OUPUT_DIR"
+export const CLOUD_OUPUT_DIR_KEY        = "CLOUD_OUPUT_DIR"
 export const DOCKER_HEALTH_STATUS_KEY   = "docker_health_status"
 export const REBUILD_URL_KEY            = "rebuild_url"
 export const ANALYSIS_URL_KEY           = "anaylsis_url"
