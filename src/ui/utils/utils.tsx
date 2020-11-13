@@ -64,24 +64,24 @@ const REGEX_SAFE_FILE_NAME              = /[^a-zA-Z0-9-_\.]/g
 
 export const RELEAE_NOTES           =[
                                         {
-                                          "date":"November 6th 2020",
-                                          "desc":"Local rebuild health check : To check the local rebuild configuration and it state"
+                                          "date":"November 13th 2020",
+                                          "desc":"Fixed left panel logo icons and performance issue."
                                         }, 
                                         {
-                                          "date":"November 5th 2020",
-                                          "desc":"Health check event logging:  Added the event logs for docker health check."
+                                          "date":"November 12th 2020",
+                                          "desc":"Added session history tab which list all the rebuild sessions (Cloud and Local)."
                                         },
                                         {
-                                          "date":"November 4th  2020",
-                                          "desc":"Rebuild & File analysis event logging:  Added the event logs for local Rebuild and file analysis."
+                                          "date":"November 11th  2020",
+                                          "desc":"Added Threat Intelligence to the application, Displayed threat level on the UI"
                                         }, 
                                         {
-                                          "date":"November 3rd  2020",
-                                          "desc":"Added health check functionality on UI."
+                                          "date":"November 10th  2020",
+                                          "desc":"Added RAW Logger events and tab to view it & Made server configuration configurable."
                                         },
                                          {
-                                          "date":"November 2nd  2020",
-                                          "desc":"Made output path persistent across rebuilds."
+                                          "date":"November 8th  2020",
+                                          "desc":"Parallel execution of requests with docker."
                                         }
                                       ]
 
