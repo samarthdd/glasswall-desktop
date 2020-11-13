@@ -315,6 +315,10 @@ export const getProcessedPath =()=>{
   return getAppDataPath() + getPathSep() + _PROCESSED_FOLDER
 }
 
+export const getDefaultOuputCleanPath =()=>{
+  return getAppDataPath() + getPathSep() + _CLEAN_FOLDER
+}
+
 
 export const getAppDataPath =() =>{
   switch (process.platform) {
@@ -397,15 +401,21 @@ export const getLogsPath = ()=>{
   return getAppDataPath() + getPathSep() + _LOGS_FOLDER + getPathSep() + _LOGS_FILE
 }
 
-export const getDockerDefaultOutputFOlder =()=>{
+ export const getDockerDefaultOutputFOlder =()=>{
+  if(!fs.existsSync(getDefaultOuputCleanPath())){
+      fs.mkdirSync(getDefaultOuputCleanPath());
+  }
   return localStorage.getItem(DOCKER_OUPUT_DIR_KEY)?
     localStorage.getItem(DOCKER_OUPUT_DIR_KEY):
-    getProcessedPath()+ getPathSep()+ "00x88888" 
+    getDefaultOuputCleanPath()
 
    
 }
-export const getCloudDefaultOutputFOlder=()=>{
+ export const getCloudDefaultOutputFOlder=()=>{
+  if(!fs.existsSync(getDefaultOuputCleanPath())){
+    fs.mkdirSync(getDefaultOuputCleanPath());
+  }
   return localStorage.getItem(CLOUD_OUPUT_DIR_KEY)?
     localStorage.getItem(CLOUD_OUPUT_DIR_KEY):
-    getProcessedPath()+ getPathSep()+ "00x7777" 
+    getDefaultOuputCleanPath()
 }

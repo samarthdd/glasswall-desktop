@@ -504,10 +504,12 @@ function RebuildFiles(){
             if(userTargetDir !="" && !flat){
                 let PATHS: string[];
                 PATHS=[]
+
                 rebuildFileNames.map(rebuild=>{
                     if(rebuild.path)
                         PATHS.push(rebuild.path);
                 });
+
                 const common = commonPath(PATHS);
                 common.parsedPaths.map((cPath:any)=>{
                     Utils.saveBase64File( getRebuildFileContent(cPath.original), userTargetDir + Utils.getPathSep() + cPath.subdir, cPath.basePart );
@@ -571,6 +573,7 @@ const downloadResult =(result: any)=>{
 
         var metadataFilePath =  Utils.getProcessedPath() + Utils.getPathSep()  + 
                                 result.targetDir + Utils.getPathSep() + fileHash;
+
         let content: Metadata;
         content ={
             original_file       : Utils._ORIGINAL_FOLDER + Utils.getPathSep() + result.filename,
@@ -589,6 +592,7 @@ const downloadResult =(result: any)=>{
         content.userTargetFolder = userTargetDir;
         
         masterMetaFile.push(content);
+
         if(userTargetDir !=""){
             var filepath = userTargetDir;
             if(flat){
