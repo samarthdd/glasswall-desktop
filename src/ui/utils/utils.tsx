@@ -382,3 +382,16 @@ export const getLogsPath = ()=>{
   }
   return getAppDataPath() + getPathSep() + _LOGS_FOLDER + getPathSep() + _LOGS_FILE
 }
+
+export const getDockerDefaultOutputFOlder =()=>{
+  return localStorage.getItem(DOCKER_OUPUT_DIR_KEY)?
+    localStorage.getItem(DOCKER_OUPUT_DIR_KEY):
+    getProcessedPath()+ getPathSep()+ "00x88888" 
+
+   
+}
+export const getCloudDefaultOutputFOlder=()=>{
+  return localStorage.getItem(CLOUD_OUPUT_DIR_KEY)?
+    localStorage.getItem(CLOUD_OUPUT_DIR_KEY):
+    getProcessedPath()+ getPathSep()+ "00x7777" 
+}
