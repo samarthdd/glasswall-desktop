@@ -190,7 +190,7 @@ export const docker_exec_rebuild = (payload: any,fileName:string) => {
     shell.mkdir('-p', directory);    
     fs.mkdirSync(inputDir);
     fs.mkdirSync(outputDir);
-    Utils.addRawLogLine(0,fileName,"payload "+JSON.stringify(payload));    
+  //  Utils.addRawLogLine(0,fileName,"payload "+JSON.stringify(payload));    
     Utils.addRawLogLine(0,fileName,'fileName '+fileName);
     Utils.addRawLogLine(0,fileName,'inputDir '+inputDir);
     Utils.addRawLogLine(0,fileName,'outputDir '+outputDir);
@@ -207,7 +207,7 @@ export const docker_exec_rebuild = (payload: any,fileName:string) => {
                                         '-v', resolve(inputDir)+':/input',
                                         '-v', resolve(outputDir)+':/output',
                                         Utils.GW_DOCKER_IMG_NAME], options);
-    Utils.addRawLogLine(0,fileName," Rebuild spawned response "+String(spawned))             
+//    Utils.addRawLogLine(0,fileName," Rebuild spawned response "+String(spawned))             
      if(spawned.hasOwnProperty("output")){        
         for(var i=0;i<spawned["output"].length;i++){
             var output = spawned["output"][i];            
@@ -215,7 +215,7 @@ export const docker_exec_rebuild = (payload: any,fileName:string) => {
                 totalOutput = totalOutput+output;
             }            
         }
-        Utils.addRawLogLine(0,fileName,"Rebuild output = "+totalOutput);
+ //       Utils.addRawLogLine(0,fileName,"Rebuild output = "+totalOutput);
         if(totalOutput.indexOf("error during connect") > -1){
             return -1;
         }
@@ -250,7 +250,7 @@ export const docker_exec_analysis = (payload: any,fileName:string) => {
     shell.mkdir('-p', directory);    
     fs.mkdirSync(inputDir);
     fs.mkdirSync(outputDir);
-    Utils.addRawLogLine(0,fileName,'<docker_exec_analysis> payload '+JSON.stringify(payload));    
+ //   Utils.addRawLogLine(0,fileName,'<docker_exec_analysis> payload '+JSON.stringify(payload));    
     Utils.addRawLogLine(1,fileName,'<docker_exec_analysis> fileName '+fileName);
     Utils.addRawLogLine(1,fileName,'<docker_exec_analysis> inputDir '+inputDir);
     Utils.addRawLogLine(1,fileName,'<docker_exec_analysis> outputDir '+outputDir);
@@ -277,7 +277,7 @@ export const docker_exec_analysis = (payload: any,fileName:string) => {
                                         '-v', resolve(inputDir)+':/input',
                                         '-v', resolve(outputDir)+':/output',
                                         Utils.GW_DOCKER_IMG_NAME], options);
-    Utils.addRawLogLine(1,fileName,"<docker_exec_analysis> Spawned response "+String(spawned))             
+ //   Utils.addRawLogLine(1,fileName,"<docker_exec_analysis> Spawned response "+String(spawned))             
      if(spawned.hasOwnProperty("output")){        
         for(var i=0;i<spawned["output"].length;i++){
             var output = spawned["output"][i];            
@@ -285,12 +285,12 @@ export const docker_exec_analysis = (payload: any,fileName:string) => {
                 totalOutput = totalOutput+output;
             }            
         }
-        Utils.addRawLogLine(1,fileName,"<docker_exec_analysis> Analysis output = "+totalOutput);
+ //       Utils.addRawLogLine(1,fileName,"<docker_exec_analysis> Analysis output = "+totalOutput);
         if (fs.existsSync(path.join(outputDir,'Managed'))) {
             const outFile = path.join(outputDir,'Managed',fileName+'.xml');
             if(fs.existsSync(outFile)){
                 const contents = fs.readFileSync(outFile);    
-                Utils.addRawLogLine(1,fileName,'<docker_exec_analysis> XML content - '+contents); 
+ //               Utils.addRawLogLine(1,fileName,'<docker_exec_analysis> XML content - '+contents); 
                 Utils.addLogLine(fileName,"Analysis successful.");
                 return contents;
             }

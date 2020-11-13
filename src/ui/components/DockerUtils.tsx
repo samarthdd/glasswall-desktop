@@ -123,8 +123,7 @@ export const docker_exec_rebuild = async (payload: any,request:any,requestId:str
     const outputDir = path.join(directory,'output');
     shell.mkdir('-p', directory);    
     fs.mkdirSync(inputDir);
-    fs.mkdirSync(outputDir);
-    Utils.addRawLogLine(0,request.filename,"payload "+JSON.stringify(payload));    
+    fs.mkdirSync(outputDir);    
     Utils.addRawLogLine(0,request.filename,'fileName '+request.filename);
     Utils.addRawLogLine(0,request.filename,'inputDir '+inputDir);
     Utils.addRawLogLine(0,request.filename,'outputDir '+outputDir);
@@ -150,7 +149,7 @@ export const docker_exec_rebuild = async (payload: any,request:any,requestId:str
 
   export const analyseRebuilt = async (stdout:string, stderr:string, cmd:string, payload:any,request:any,
     requestId:string,folderId:string,sourceFileUrl:string,inputDir:string,outputDir:string,resultCallback:any) => {
-        Utils.addRawLogLine(0,request.filename,"Rebuild stdout -> "+String(stdout))             
+ //       Utils.addRawLogLine(0,request.filename,"Rebuild stdout -> "+String(stdout))             
         Utils.addRawLogLine(0,request.filename,"Rebuild stderr -> "+String(stderr))             
         if(stdout.indexOf("error during connect") > -1){
             Utils.addLogLine(request.filename,"Docker Daemon is not started");
@@ -204,7 +203,7 @@ export const docker_exec_analysis = async (payload:any,request:any,requestId:str
     shell.mkdir('-p', directory);    
     fs.mkdirSync(inputDir);
     fs.mkdirSync(outputDir);
-    Utils.addRawLogLine(0,request.filename,'<docker_exec_analysis> payload '+JSON.stringify(payload));    
+   // Utils.addRawLogLine(0,request.filename,'<docker_exec_analysis> payload '+JSON.stringify(payload));    
     Utils.addRawLogLine(1,request.filename,'<docker_exec_analysis> fileName '+request.filename);
     Utils.addRawLogLine(1,request.filename,'<docker_exec_analysis> inputDir '+inputDir);
     Utils.addRawLogLine(1,request.filename,'<docker_exec_analysis> outputDir '+outputDir);
@@ -243,7 +242,7 @@ export const docker_exec_analysis = async (payload:any,request:any,requestId:str
 
 export const analyseAnalyzed = async (stdout:string, stderr:string, cmd:string, payload:any,request:any,
     requestId:string,folderId:string,sourceFileUrl:string,inputDir:string,outputDir:string,resultCallback:any) => {
-        Utils.addRawLogLine(0,request.filename,"Analysis stdout -> "+String(stdout))             
+ //       Utils.addRawLogLine(0,request.filename,"Analysis stdout -> "+String(stdout))             
         Utils.addRawLogLine(1,request.filename,"Analysis stderr -> "+String(stderr))             
         if(stdout.indexOf("error during connect") > -1){
             Utils.addLogLine(request.filename,"Docker Daemon is not started");
@@ -359,7 +358,7 @@ export const health_chk = () => {
     else{
         oldLogs += "\n"+Utils.getLogTime()+" - INFO \n GW IMAGE PRESENT"
     }
-    Utils.addRawLogLine(0,"-", "<health_chk> Image check ouput \n"+totalOutput); 
+  //  Utils.addRawLogLine(0,"-", "<health_chk> Image check ouput \n"+totalOutput); 
     totalOutput = "";
     // Run container 
     options={"timeout":10000, "shell":false};   
@@ -376,7 +375,7 @@ export const health_chk = () => {
                 totalOutput = totalOutput+output;
             }            
         }
-        Utils.addRawLogLine(0,"-", "<health_chk> License check response \n "+String(totalOutput))             
+//        Utils.addRawLogLine(0,"-", "<health_chk> License check response \n "+String(totalOutput))             
         if(totalOutput.indexOf("error during connect") > -1){
             // Docker not started
             oldLogs += "\n"+Utils.getLogTime()+" - ERROR \n DOCKER NOT RUNNING - "+totalOutput;
@@ -482,7 +481,7 @@ export const check_license = () =>{
                 totalOutput = totalOutput+output;
             }            
         }
-        Utils.addRawLogLine(1,"-", "License check output = "+totalOutput);        
+ //       Utils.addRawLogLine(1,"-", "License check output = "+totalOutput);        
         if (fs.existsSync(path.join(outputDir,'Managed'))) {
             const outFile = path.join(outputDir,'Managed',fileName);
             if(fs.existsSync(outFile)){
