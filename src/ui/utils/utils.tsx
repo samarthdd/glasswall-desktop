@@ -32,8 +32,8 @@ export const OUTPUT_DIR_HIERARCY        = "hierarcy";
 export const WELCOME_PAGE_VISTIED_KEY   = "visited"
 export const WELCOME_PAGE_VISTIED_VAL   = "yes"
 
-export const DOCKER_OUPUT_DIR_KEY       = "DOCKER_OUPUT_DIR"
-export const CLOUD_OUPUT_DIR_KEY        = "CLOUD_OUPUT_DIR"
+export const DOCKER_OUPUT_DIR_KEY       = "DOCKER_OUPUT_DIR112"
+export const CLOUD_OUPUT_DIR_KEY        = "CLOUD_OUPUT_DIR112"
 export const DOCKER_HEALTH_STATUS_KEY   = "docker_health_status"
 export const REBUILD_URL_KEY            = "rebuild_url"
 export const ANALYSIS_URL_KEY           = "anaylsis_url"
@@ -301,6 +301,10 @@ export const getProcessedPath =()=>{
   return getAppDataPath() + getPathSep() + _PROCESSED_FOLDER
 }
 
+export const getDefaultOuputCleanPath =()=>{
+  return getAppDataPath() + getPathSep() + _CLEAN_FOLDER
+}
+
 
 export const getAppDataPath =() =>{
   switch (process.platform) {
@@ -383,15 +387,21 @@ export const getLogsPath = ()=>{
   return getAppDataPath() + getPathSep() + _LOGS_FOLDER + getPathSep() + _LOGS_FILE
 }
 
-export const getDockerDefaultOutputFOlder =()=>{
+ export const getDockerDefaultOutputFOlder =()=>{
+  if(!fs.existsSync(getDefaultOuputCleanPath())){
+      fs.mkdirSync(getDefaultOuputCleanPath());
+  }
   return localStorage.getItem(DOCKER_OUPUT_DIR_KEY)?
     localStorage.getItem(DOCKER_OUPUT_DIR_KEY):
-    getProcessedPath()+ getPathSep()+ "00x88888" 
+    getDefaultOuputCleanPath()
 
    
 }
-export const getCloudDefaultOutputFOlder=()=>{
+ export const getCloudDefaultOutputFOlder=()=>{
+  if(!fs.existsSync(getDefaultOuputCleanPath())){
+    fs.mkdirSync(getDefaultOuputCleanPath());
+  }
   return localStorage.getItem(CLOUD_OUPUT_DIR_KEY)?
     localStorage.getItem(CLOUD_OUPUT_DIR_KEY):
-    getProcessedPath()+ getPathSep()+ "00x7777" 
+    getDefaultOuputCleanPath()
 }

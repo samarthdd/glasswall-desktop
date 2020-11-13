@@ -556,6 +556,7 @@ function DockerRebuildFiles(){
                     if(rebuild.path)
                         PATHS.push(rebuild.path);
                 });
+
                 const common = commonPath(PATHS);
                 common.parsedPaths.map((cPath:any)=>{
                     Utils.saveBase64File( getRebuildFileContent(cPath.original), userTargetDir +  Utils.getPathSep() + cPath.subdir, cPath.basePart );
@@ -580,7 +581,7 @@ function DockerRebuildFiles(){
 
     //callback for rebuild and analysis
     const downloadResult = async (result: any)=>{            
-        setCounter(state=>state-1);
+        
         let fileHash: string;
         fileHash = Utils.getFileHash(result.original)
         let isThreat = false
@@ -671,6 +672,7 @@ function DockerRebuildFiles(){
             threat: isThreat,
             threat_level: threatLevel
             }]);
+        setCounter(state=>state-1);
 
     }
 
@@ -879,9 +881,7 @@ function DockerRebuildFiles(){
                                                         control={<Switch color="primary" checked={parallel} 
                                                         onChange={changeProcessingMode}/>} 
                                                         label={parallel ? Utils.TEXT_PARALLEL : Utils.TEXT_SEQUENTIAL} />
-                                                        <div className={classes.toggleToolTipTitle}>
-                                                        Parallel or Sequential processing
-                                                        </div>
+                                                      
                                                     </div>
                                             </div>   
                                             <div className={classes.saveFileBtn}>
