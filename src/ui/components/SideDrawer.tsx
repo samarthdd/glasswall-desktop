@@ -27,6 +27,8 @@ import dockerIcon               from '../assets/images/docker.png'
 import HealthCheck              from '../assets/images/healthcheck.png';
 import LOGICON                  from '../assets/images/log.png';
 import SessionIcon              from '../assets/images/session.jpg';
+import PolicyIcon              from '../assets/images/policyFlag.png';
+
 import { useLocation }          from 'react-router-dom'
 
 const drawerWidth = 280;
@@ -221,6 +223,11 @@ function SideDrawer({ showBack }: headerOptions) {
         navName:    'Rebuild Files With Docker',
         navIcon:    DockerIcon,
         anchLink:   '/dockerrebuildFiles'
+    },
+    {
+        navName:    'Rebuild Policy',
+        navIcon:    PolicyIcon,
+        anchLink:   '/policy'
     },
     {
         navName:    'Rebuilt Sessions',
