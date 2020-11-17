@@ -496,6 +496,7 @@ function DockerRebuildFiles(){
         cleanFile?      : any;
         threat?         : boolean;
         threat_level?   : string;
+        threat_analysis?: string;
       }
    
     interface Metadata {
@@ -637,6 +638,9 @@ function DockerRebuildFiles(){
             let xml = result.xmlResult   
             let reportPath = Utils.stipFileExt(result.filename)+'.xml'
             let threat = await preceiveThreats(xml,reportFilePath, reportPath, cleanFilePath, result.filename,basePath)
+            console.log('threat level '+threat.threat_level)
+            console.log('threats '+JSON.stringify(threat.threats))
+            console.log('threats analysis '+JSON.stringify(threat.threat_analysis))
             if(threat){                
                 threatLevel = threat.threat_level.toUpperCase() 
                 if(threatLevel != "OK" && threatLevel != "UNKNOWN"){
