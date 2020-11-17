@@ -45,10 +45,12 @@ const create_metadata_file = async (xmlReport:string, xmlFilePath:string, xmlFil
         let threat_levels = apply_rules(raw_analysis)
         let file_threats = basePath+'/analysed/'+rebuiltFileName+"_threat_levels.json"
         fs.writeJsonSync(file_threats, threat_levels, {spaces: 2}) 
-        fs.writeJsonSync(file_metadata, metadata, {spaces: 2})    
-        return threat_levels;
+        fs.writeJsonSync(file_metadata, metadata, {spaces: 2})
+        //let threatsRet : Threat | undefined         
+        let threatsRet = {threat_level:threat_levels.threat_level, threats:threat_levels.threats, threat_analysis: raw_analysis}
+        return threatsRet;
     }    
-    return {"threat_level" : "Unknown", "threats" : []}
+    return {"threat_level" : "Unknown", "threats" : [],"threat_analysis":""}
 }
 
 const raw_analysis_create = async (xml_report:string,xmlFilePath:string,xmlFileName:string,rebuiltFileName:string,basePath:string) => {    
