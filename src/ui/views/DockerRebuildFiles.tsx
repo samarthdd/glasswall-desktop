@@ -504,9 +504,11 @@ function DockerRebuildFiles(){
         report?             : string;
         status?             : string;
         message?            : string;
-        time?               : string;
+        time?               : number;
         userTargetFolder?   : string;
         rebuildSource       : string;
+        isThreat            : boolean;
+        threatLevel         : string;
     }
    
     
@@ -610,11 +612,13 @@ function DockerRebuildFiles(){
                 clean_file          : Utils._CLEAN_FOLDER + Utils.getPathSep()+ result.filename,
                 report              : Utils._REPORT_FOLDER + Utils.getPathSep() + Utils.stipFileExt(result.filename)+'.xml',
                 status              : "Success",
-                time                : new Date().toLocaleDateString(),
+                time                : new Date().getTime(),
                 userTargetFolder    : userTargetDir,
-                rebuildSource       : Utils.REBUILD_TYPE_DOCKER
+                rebuildSource       : Utils.REBUILD_TYPE_DOCKER,
+                isThreat            : isThreat,
+                threatLevel         : threatLevel
             }
-            Utils.saveTextFile(JSON.stringify(content), metadataFilePath, 'metadata.json');
+            let metaContentCopy = content            
         
             content.original_file = fileHash + Utils.getPathSep() + Utils._ORIGINAL_FOLDER + Utils.getPathSep() + result.filename
             content.clean_file = fileHash +Utils.getPathSep() + Utils._CLEAN_FOLDER + Utils.getPathSep() + result.filename
@@ -639,6 +643,9 @@ function DockerRebuildFiles(){
                     isThreat = true
                 }
             }
+            metaContentCopy.isThreat    = isThreat
+            metaContentCopy.threatLevel = threatLevel
+            Utils.saveTextFile(JSON.stringify(metaContentCopy), metadataFilePath, 'metadata.json');
         } 
         else{
             var OriginalFilePath =Utils.getProcessedPath() +  Utils.getPathSep()
@@ -647,15 +654,17 @@ function DockerRebuildFiles(){
             console.log("Error case:" +OriginalFilePath + ", result.targetDir:" + result.targetDir)
             Utils.saveBase64File(result.original, OriginalFilePath, result.filename);
             let content: Metadata;
-            content ={
+            content = {
                 original_file       : fileHash + Utils.getPathSep() + Utils._ORIGINAL_FOLDER + Utils.getPathSep() + result.filename,
                 clean_file          : '',
                 report              : '',
                 status              : "Failure",
-                time                : new Date().toLocaleDateString(),
+                time                : new Date().getTime(),
                 userTargetFolder    : userTargetDir,
                 message             : result.msg,
-                rebuildSource       : Utils.REBUILD_TYPE_DOCKER
+                rebuildSource       : Utils.REBUILD_TYPE_DOCKER,
+                isThreat            : isThreat,
+                threatLevel         : threatLevel
             }
             masterMetaFile.push(content);
         }        

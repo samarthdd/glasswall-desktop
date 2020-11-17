@@ -621,7 +621,8 @@ function Sessions(){
                                             <TableCell align="left" className={classes.status}>{row.type}</TableCell>
                                             <TableCell align="left"> {row.count}</TableCell>
                                             <TableCell align="left">{row.successCount}</TableCell>
-                                            <TableCell align="left">{row.at}</TableCell>
+                                            <TableCell align="left">{new Date(row.at).toLocaleString('en-us')
+                                            }</TableCell>
                                             <TableCell align="left"><a onClick={()=>Utils.open_file_exp(row.location)} target="_blank" className={classes.hlink}>{row.location}</a></TableCell>
                                             </TableRow>
                                         ))}
