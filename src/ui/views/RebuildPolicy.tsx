@@ -204,6 +204,7 @@ const purpleColor = {
 
 function RebuildPolicy(){
     const classes = useStyles(); 
+    const [readyForRender, setReadyForRender]   = useState(false)
     const [policy, setPolicy]   = useState<Policy>( {
       policyName               :'sample policy',
       pdfWatermark             :'Watermark',
@@ -281,7 +282,19 @@ function RebuildPolicy(){
 
     }
    
+
+    React.useEffect(()=>{
+      console.log("value React.useEffect called")
+      
+  },[policy, readyForRender]);
+ 
+
+   const handleChange =(event: any)=>{
+     let name: string;
+    
+    }
    
+    console.log(policy.zip);
     return(
         <div className={classes.root}> 
             <SideDrawer showBack={false}/>
@@ -313,7 +326,12 @@ function RebuildPolicy(){
                                         <InputLabel htmlFor="archive-manager" className={classes.inputLabel} style={greenColor}>Tag files on upload</InputLabel>
                                         <Select className={classes.selectBox}
                                                 value={policy.zip}
-                                                onChange={(event: any) => {policy.zip= event.target.value}}
+                                                name ="zip"
+                                                onChange={(event: any)=>{
+                                                  policy.zip = event.target.value;
+                                                  setPolicy(policy); 
+                                                  setReadyForRender(!readyForRender)
+                                                }}
                                                 inputProps={{ name: 'zip',  id: 'archive-manager'}}
                                         >
                                             <MenuItem value="process">Yes</MenuItem>
@@ -337,7 +355,10 @@ function RebuildPolicy(){
                                     <Select
                                       className={classes.selectBox}
                                       value={policy.pdfAcroform}
-                                      onChange={(event: any) => {policy.pdfAcroform= event.target.value}}
+                                      onChange={(event: any) => {
+                                                                  policy.pdfAcroform= event.target.value
+                                                                  setReadyForRender(!readyForRender)
+                                                                }}
                                       inputProps={{
                                         name: "pdfAcroform",
                                         id: 'pdf-acroform'
@@ -355,7 +376,9 @@ function RebuildPolicy(){
                                     <Select
                                       className={classes.selectBox}
                                       value={policy.pdfMetadata}
-                                      onChange={(event: any) => {policy.pdfMetadata= event.target.value}}
+                                      onChange={(event: any) => {policy.pdfMetadata= event.target.value
+                                                                 setReadyForRender(!readyForRender)
+                                                                }}
                                       inputProps={{
                                         name: 'pdfMetadata',
                                         id: 'pdf-metadata',
@@ -374,7 +397,10 @@ function RebuildPolicy(){
                                     <Select
                                       className={classes.selectBox}
                                       value={policy.pdfJavascript}
-                                      onChange={(event: any) => {policy.pdfJavascript= event.target.value}}
+                                      onChange={(event: any) => {
+                                                                policy.pdfJavascript= event.target.value
+                                                                setReadyForRender(!readyForRender)
+                                                              }}
                                       inputProps={{
                                         name: 'pdfJavascript',
                                         id: 'pdf-javascript',
@@ -393,7 +419,10 @@ function RebuildPolicy(){
                                     <Select
                                      className={classes.selectBox}
                                       value={policy.pdfActionsAll}
-                                      onChange={(event: any) => {policy.pdfActionsAll= event.target.value}}
+                                      onChange={(event: any) => {
+                                                                  policy.pdfActionsAll= event.target.value
+                                                                  setReadyForRender(!readyForRender)
+                                                                }}
                                       inputProps={{
                                         name: 'pdfActionsAll',
                                         id: 'pdf-actions-all',
@@ -412,7 +441,10 @@ function RebuildPolicy(){
                                     <Select
                                       className={classes.selectBox}
                                       value={policy.pdfEmbeddedFiles}
-                                      onChange={(event: any) => {policy.pdfEmbeddedFiles= event.target.value}}
+                                      onChange={(event: any) => {
+                                        policy.pdfEmbeddedFiles= event.target.value
+                                        setReadyForRender(!readyForRender)
+                                      }}
                                       inputProps={{
                                         name: 'pdfEmbeddedFiles',
                                         id: 'pdf-embedded-files',
@@ -431,7 +463,10 @@ function RebuildPolicy(){
                                     <Select
                                       className={classes.selectBox}
                                       value={policy.pdfInternalHyperlinks}
-                                      onChange={(event: any) => {policy.pdfInternalHyperlinks= event.target.value}}
+                                      onChange={(event: any) => {
+                                        policy.pdfInternalHyperlinks= event.target.value
+                                        setReadyForRender(!readyForRender)
+                                      }}
                                       inputProps={{
                                         name: 'pdfInternalHyperlinks',
                                         id: 'pdf-internal-hyperlinks',
@@ -450,7 +485,10 @@ function RebuildPolicy(){
                                     <Select
                                       className={classes.selectBox}
                                       value={policy.pdfExternalHyperlinks}
-                                      onChange={(event: any) => {policy.pdfExternalHyperlinks= event.target.value}}
+                                      onChange={(event: any) => {
+                                        policy.pdfExternalHyperlinks= event.target.value
+                                        setReadyForRender(!readyForRender)
+                                      }}
                                       inputProps={{
                                         name: 'pdfExternalHyperlinks',
                                         id: 'pdf-external-hyperlinks',
@@ -469,7 +507,10 @@ function RebuildPolicy(){
                                     <Select
                                       className={classes.selectBox}
                                       value={policy.pdfEmbeddedImages}
-                                      onChange={(event: any) => {policy.pdfEmbeddedImages= event.target.value}}
+                                      onChange={(event: any) => {
+                                        policy.pdfEmbeddedImages= event.target.value
+                                        setReadyForRender(!readyForRender)
+                                      }}
                                       inputProps={{
                                         name: 'pdfEmbeddedImages',
                                         id: 'pdf-embedded-images',
@@ -493,7 +534,10 @@ function RebuildPolicy(){
                                     <Select
                                       className={classes.selectBox}
                                       value={policy.wordMacros}
-                                      onChange={(event: any) => {policy.wordMacros= event.target.value}}
+                                      onChange={(event: any) => {
+                                        policy.wordMacros= event.target.value
+                                        setReadyForRender(!readyForRender)
+                                      }}
                                       inputProps={{
                                         name: 'wordMacros',
                                         id: 'word-macros',
@@ -512,7 +556,10 @@ function RebuildPolicy(){
                                     <Select
                                       className={classes.selectBox}
                                       value={policy.wordMetadata}
-                                      onChange={(event: any) => {policy.wordMetadata= event.target.value}}
+                                      onChange={(event: any) => {
+                                        policy.wordMetadata= event.target.value
+                                        setReadyForRender(!readyForRender)
+                                      }}
                                       inputProps={{
                                         name: 'wordMetadata',
                                         id: 'word-metadata',
@@ -531,7 +578,10 @@ function RebuildPolicy(){
                                     <Select
                                       className={classes.selectBox}
                                       value={policy.wordReviewComments}
-                                      onChange={(event: any) => {policy.wordReviewComments= event.target.value}}
+                                      onChange={(event: any) => {
+                                        policy.wordReviewComments= event.target.value
+                                        setReadyForRender(!readyForRender)
+                                      }}
                                       inputProps={{
                                         name: 'wordReviewComments',
                                         id: 'word-review-comments',
@@ -550,7 +600,10 @@ function RebuildPolicy(){
                                     <Select
                                       className={classes.selectBox}
                                       value={policy.wordEmbeddedFiles}
-                                      onChange={(event: any) => {policy.wordEmbeddedFiles= event.target.value}}
+                                      onChange={(event: any) => {
+                                        policy.wordEmbeddedFiles= event.target.value
+                                        setReadyForRender(!readyForRender)
+                                      }}
                                       inputProps={{
                                         name: 'wordEmbeddedFiles',
                                         id: 'word-embedded-files',
@@ -569,7 +622,10 @@ function RebuildPolicy(){
                                     <Select
                                       className={classes.selectBox}
                                       value={policy.wordInternalHyperlinks}
-                                      onChange={(event: any) => {policy.wordInternalHyperlinks= event.target.value}}
+                                      onChange={(event: any) => {
+                                        policy.wordInternalHyperlinks= event.target.value
+                                        setReadyForRender(!readyForRender)
+                                      }}
                                       inputProps={{
                                         name: 'wordInternalHyperlinks',
                                         id: 'word-internal-hyperlinks',
@@ -588,7 +644,10 @@ function RebuildPolicy(){
                                     <Select
                                       className={classes.selectBox}
                                       value={policy.wordExternalHyperlinks}
-                                      onChange={(event: any) => {policy.wordExternalHyperlinks= event.target.value}}
+                                      onChange={(event: any) => {
+                                        policy.wordExternalHyperlinks= event.target.value
+                                        setReadyForRender(!readyForRender)
+                                      }}
                                       inputProps={{
                                         name: 'wordExternalHyperlinks',
                                         id: 'word-external-hyperlinks',
@@ -607,7 +666,10 @@ function RebuildPolicy(){
                                     <Select
                                       className={classes.selectBox}
                                       value={policy.wordDynamicDataExchange}
-                                      onChange={(event: any) => {policy.wordDynamicDataExchange= event.target.value}}
+                                      onChange={(event: any) => {
+                                        policy.wordDynamicDataExchange= event.target.value
+                                        setReadyForRender(!readyForRender)
+                                      }}
                                       inputProps={{
                                         name: 'wordDynamicDataExchange',
                                         id: 'word-dynamic-data-exchange',
@@ -637,10 +699,7 @@ function RebuildPolicy(){
                                       <MenuItem value="allow">Allow</MenuItem>
                                       <MenuItem value="disallow">Disallow</MenuItem>
                                     </Select>
-                                    <FormHelperText className={classes.readOnlyText}>
-                                      <LibraryBooksIcon className={classes.readOnlyIcon}/> Read only
-                                      </FormHelperText>
-                                  </FormControl>
+                                   </FormControl>
                                   </form>
                                   <h3>Excel Config</h3>
                                   <form className={classes.root} autoComplete="off">
@@ -649,7 +708,10 @@ function RebuildPolicy(){
                                     <Select
                                       className={classes.selectBox}
                                       value={policy.excelMacros}
-                                      onChange={(event: any) => {policy.excelMacros= event.target.value}}
+                                      onChange={(event: any) => {
+                                        policy.excelMacros= event.target.value
+                                        setReadyForRender(!readyForRender)
+                                      }}
                                       inputProps={{
                                         name: 'excelMacros',
                                         id: 'excel-macros',
@@ -668,7 +730,10 @@ function RebuildPolicy(){
                                     <Select
                                       className={classes.selectBox}
                                       value={policy.excelMetadata}
-                                      onChange={(event: any) => {policy.excelMetadata= event.target.value}}
+                                      onChange={(event: any) => {
+                                        policy.excelMetadata= event.target.value
+                                        setReadyForRender(!readyForRender)
+                                      }}
                                       inputProps={{
                                         name: 'excelMetadata',
                                         id: 'excel-metadata',
@@ -687,7 +752,10 @@ function RebuildPolicy(){
                                     <Select
                                       className={classes.selectBox}
                                       value={policy.excelReviewComments}
-                                      onChange={(event: any) => {policy.excelReviewComments= event.target.value}}
+                                      onChange={(event: any) => {
+                                        policy.excelReviewComments= event.target.value
+                                        setReadyForRender(!readyForRender)
+                                      }}
                                       inputProps={{
                                         name: 'excelReviewComments',
                                         id: 'excel-review-comments',
@@ -706,7 +774,10 @@ function RebuildPolicy(){
                                     <Select
                                       className={classes.selectBox}
                                       value={policy.excelEmbeddedFiles}
-                                      onChange={(event: any) => {policy.excelEmbeddedFiles= event.target.value}}
+                                      onChange={(event: any) => {
+                                        policy.excelEmbeddedFiles= event.target.value
+                                        setReadyForRender(!readyForRender)
+                                      }}
                                       inputProps={{
                                         name: 'excelEmbeddedFiles',
                                         id: 'excel-embedded-files',
@@ -725,7 +796,10 @@ function RebuildPolicy(){
                                     <Select
                                       className={classes.selectBox}
                                       value={policy.excelInternalHyperlinks}
-                                      onChange={(event: any) => {policy.excelInternalHyperlinks= event.target.value}}
+                                      onChange={(event: any) => {
+                                        policy.excelInternalHyperlinks= event.target.value
+                                        setReadyForRender(!readyForRender)
+                                      }}
                                       inputProps={{
                                         name: 'excelInternalHyperlinks',
                                         id: 'excel-internal-hyperlinks',
@@ -744,7 +818,10 @@ function RebuildPolicy(){
                                     <Select
                                       className={classes.selectBox}
                                       value={policy.excelExternalHyperlinks}
-                                      onChange={(event: any) => {policy.excelExternalHyperlinks= event.target.value}}
+                                      onChange={(event: any) => {
+                                        policy.excelExternalHyperlinks= event.target.value
+                                        setReadyForRender(!readyForRender)
+                                      }}
                                       inputProps={{
                                         name: 'excelExternalHyperlinks',
                                         id: 'excel-external-hyperlinks',
@@ -763,7 +840,10 @@ function RebuildPolicy(){
                                     <Select
                                       className={classes.selectBox}
                                       value={policy.excelDynamicDataExchange}
-                                      onChange={(event: any) => {policy.excelDynamicDataExchange= event.target.value}}
+                                      onChange={(event: any) => {
+                                        policy.excelDynamicDataExchange= event.target.value
+                                        setReadyForRender(!readyForRender)
+                                      }}
                                       inputProps={{
                                         name: 'excelDynamicDataExchange',
                                         id: 'excel-dynamic-data-exchange',
@@ -782,7 +862,10 @@ function RebuildPolicy(){
                                     <Select
                                       className={classes.selectBox}
                                       value={policy.excelEmbeddedImages}
-                                      onChange={(event: any) => {policy.excelEmbeddedImages= event.target.value}}
+                                      onChange={(event: any) => {
+                                        policy.excelEmbeddedImages= event.target.value
+                                        setReadyForRender(!readyForRender)
+                                      }}
                                       inputProps={{
                                         name: 'excelEmbeddedImages',
                                         id: 'excel-embedded-images',
@@ -804,7 +887,10 @@ function RebuildPolicy(){
                                     <Select
                                       className={classes.selectBox}
                                       value={policy.pptMacros}
-                                      onChange={(event: any) => {policy.pptMacros= event.target.value}}
+                                      onChange={(event: any) => {
+                                        policy.pptMacros= event.target.value
+                                        setReadyForRender(!readyForRender)
+                                      }}
                                       inputProps={{
                                         name: 'pptMacros',
                                         id: 'ppt-macros',
@@ -823,7 +909,10 @@ function RebuildPolicy(){
                                     <Select
                                       className={classes.selectBox}
                                       value={policy.pptMetadata}
-                                      onChange={(event: any) => {policy.pptMetadata= event.target.value}}
+                                      onChange={(event: any) => {
+                                        policy.pptMetadata= event.target.value
+                                        setReadyForRender(!readyForRender)
+                                      }}
                                       inputProps={{
                                         name: 'pptMetadata',
                                         id: 'ppt-metadata',
@@ -842,7 +931,10 @@ function RebuildPolicy(){
                                     <Select
                                       className={classes.selectBox}
                                       value={policy.pptReviewComments}
-                                      onChange={(event: any) => {policy.pptReviewComments= event.target.value}}
+                                      onChange={(event: any) => {
+                                        policy.pptReviewComments= event.target.value
+                                        setReadyForRender(!readyForRender)
+                                      }}
                                       inputProps={{
                                         name: 'pptReviewComments',
                                         id: 'ppt-review-comments',
@@ -861,7 +953,10 @@ function RebuildPolicy(){
                                     <Select
                                       className={classes.selectBox}
                                       value={policy.pptEmbeddedFiles}
-                                      onChange={(event: any) => {policy.pptEmbeddedFiles= event.target.value}}
+                                      onChange={(event: any) => {
+                                        policy.pptEmbeddedFiles= event.target.value
+                                        setReadyForRender(!readyForRender)
+                                      }}
                                       inputProps={{
                                         name: 'pptEmbeddedFiles',
                                         id: 'ppt-embedded-files',
@@ -880,7 +975,10 @@ function RebuildPolicy(){
                                     <Select
                                       className={classes.selectBox}
                                       value={policy.pptInternalHyperlinks}
-                                      onChange={(event: any) => {policy.pptInternalHyperlinks= event.target.value}}
+                                      onChange={(event: any) => {
+                                        policy.pptInternalHyperlinks= event.target.value
+                                        setReadyForRender(!readyForRender)
+                                      }}
                                       inputProps={{
                                         name: 'pptInternalHyperlinks',
                                         id: 'ppt-internal-hyperlinks',
@@ -899,7 +997,10 @@ function RebuildPolicy(){
                                     <Select
                                       className={classes.selectBox}
                                       value={policy.pptExternalHyperlinks}
-                                      onChange={(event: any) => {policy.pptExternalHyperlinks= event.target.value}}
+                                      onChange={(event: any) => {
+                                        policy.pptExternalHyperlinks= event.target.value
+                                        setReadyForRender(!readyForRender)
+                                      }}
                                       inputProps={{
                                         name: 'pptExternalHyperlinks',
                                         id: 'ppt-external-hyperlinks',
@@ -918,7 +1019,10 @@ function RebuildPolicy(){
                                     <Select
                                       className={classes.selectBox}
                                       value={policy.pptEmbeddedImages}
-                                      onChange={(event: any) => {policy.pptEmbeddedImages= event.target.value}}
+                                      onChange={(event: any) => {
+                                        policy.pptEmbeddedImages= event.target.value
+                                        setReadyForRender(!readyForRender)
+                                      }}
                                       inputProps={{
                                         name: 'pptEmbeddedImages',
                                         id: 'ppt-embedded-images',
