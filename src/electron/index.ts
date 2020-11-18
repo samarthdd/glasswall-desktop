@@ -102,8 +102,8 @@ function makeWindow(): typeof BrowserWindow {
     const tray = new Tray(path.resolve(dir, `assets`, `IconTemplate.png`))
     let window = new BrowserWindow({
         title: `Glasswall Desktop`,
-        width: 1200,
-        height: 800,
+        width: 1500,
+        height: 1000,
         fullscreenable: false,
         icon:tray,
         trafficLightPosition: { x: 8, y: 18 },
