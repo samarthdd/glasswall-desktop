@@ -24,7 +24,7 @@ export const REPO_GIT_ISSUE_URL         = "https://github.com/k8-proxy/glasswall
 export const VERSION                    = '0.1.6'
 export const _PROCESSED_FOLDER          = "processed"
 export const _LOGS_FOLDER               = "gwlogs"
-export const _LOGS_FILE                 = "glasswall.log"
+export const _LOGS_FILE                 = "glasswall_0_1_6.log"
 export const _CLEAN_FOLDER              = "clean"
 export const _ORIGINAL_FOLDER           = "original"
 export const _REPORT_FOLDER             = "report"
@@ -120,14 +120,14 @@ export const addRawLogLine = (level:number, filename:string, sentence:string) =>
   levelStr = "ERROR"
   if(level == 0){
     levelStr = "DEBUG"
-    log.debug(" - File-Name - "+filename+" --> "+sentence+"\n")
+    log.debug(" - File-Name - "+filename+" --> "+sentence)
   }
   else if (level == 1){
     levelStr = "INFO"
-    log.info(" - File-Name - "+filename+" --> "+sentence+"\n")
+    log.info(" - File-Name - "+filename+" --> "+sentence)
   }    
   else{
-    log.error(" - File-Name - "+filename+" --> "+sentence+"\n")
+    log.error(" - File-Name - "+filename+" --> "+sentence)
   }  
 }
 
