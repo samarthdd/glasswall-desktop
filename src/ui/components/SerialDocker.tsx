@@ -91,52 +91,43 @@ export const makeRequest = (request: any, sourceFileUrl: string, requestId: stri
     let payload: string | any;
    
     payload = getPayload(request)
-    var fileSize = payload.fileSize;
-
-    
-    if(fileSize < 6){
-        const rebuiltBase64 = docker_exec_rebuild(payload,request.filename);
-        if(rebuiltBase64 == -1 ){
-            Utils.addLogLine(request.filename,"Docker Daemon is not started");
-            resultCallback({'source':sourceFileUrl, 'url':'TBD', 'filename':request.filename, isError:true,
-                msg:'Docker Daemon is not started', id:requestId, targetDir:folderId, original:request.content});
-                return;
-        }
-        if(rebuiltBase64 == -2 ){
-            Utils.addLogLine(request.filename,"Docker not installed");
-            resultCallback({'source':sourceFileUrl, 'url':'TBD', 'filename':request.filename, isError:true,
-                msg:'Docker not installed', id:requestId, targetDir:folderId, original:request.content});
-                return;
-        }
-        if(rebuiltBase64 == null){
-            Utils.addLogLine(request.filename,"File rebuild failed");
-            resultCallback({'source':sourceFileUrl, 'url':'TBD', 'filename':request.filename, isError:true,
-                msg:'File could not be rebuilt', id:requestId, targetDir:folderId, original:request.content});
-                return;
-        }
-        
-        try{
-            Utils.addLogLine(request.filename,"Rebuild succesfull. Starting analysis");
-            getAnalysisResult(false, rebuiltBase64, request, sourceFileUrl, requestId, folderId, resultCallback);
-        }
-        catch(err:any){
-            Utils.addRawLogLine(2,request.filename,"3:" + JSON.stringify(err));
-            Utils.addLogLine(request.filename,"Analysis Error "+err.message);
-            if(err.message.indexOf('422') > -1){
-                resultCallback({'source':sourceFileUrl, 'url':'TBD', 'filename':request.filename, isError:true,
-             msg:'File of this type cannot be processed - '+err.message, id:requestId, targetDir:folderId, original:request.content})
-            }
-            else{
-                resultCallback({'source':sourceFileUrl, 'url':'TBD', 'filename':request.filename, isError:true,
-                  msg:err.message, id:requestId, targetDir:folderId, original:request.content})
-            }
-        }        
-    }
-    else{
-        Utils.addLogLine(request.filename,"File size > 6 MB. Unprocessable");
+    var fileSize = payload.fileSize;        
+    const rebuiltBase64 = docker_exec_rebuild(payload,request.filename);
+    if(rebuiltBase64 == -1 ){
+        Utils.addLogLine(request.filename,"Docker Daemon is not started");
         resultCallback({'source':sourceFileUrl, 'url':'TBD', 'filename':request.filename, isError:true,
-             msg:'File too big. 4 bytes to 6 MB file size bracket', id:requestId, targetDir:folderId, original:request.content})
+            msg:'Docker Daemon is not started', id:requestId, targetDir:folderId, original:request.content});
+            return;
     }
+    if(rebuiltBase64 == -2 ){
+        Utils.addLogLine(request.filename,"Docker not installed");
+        resultCallback({'source':sourceFileUrl, 'url':'TBD', 'filename':request.filename, isError:true,
+            msg:'Docker not installed', id:requestId, targetDir:folderId, original:request.content});
+            return;
+    }
+    if(rebuiltBase64 == null){
+        Utils.addLogLine(request.filename,"File rebuild failed");
+        resultCallback({'source':sourceFileUrl, 'url':'TBD', 'filename':request.filename, isError:true,
+            msg:'File could not be rebuilt', id:requestId, targetDir:folderId, original:request.content});
+            return;
+    }
+    
+    try{
+        Utils.addLogLine(request.filename,"Rebuild succesfull. Starting analysis");
+        getAnalysisResult(false, rebuiltBase64, request, sourceFileUrl, requestId, folderId, resultCallback);
+    }
+    catch(err:any){
+        Utils.addRawLogLine(2,request.filename,"3:" + JSON.stringify(err));
+        Utils.addLogLine(request.filename,"Analysis Error "+err.message);
+        if(err.message.indexOf('422') > -1){
+            resultCallback({'source':sourceFileUrl, 'url':'TBD', 'filename':request.filename, isError:true,
+            msg:'File of this type cannot be processed - '+err.message, id:requestId, targetDir:folderId, original:request.content})
+        }
+        else{
+            resultCallback({'source':sourceFileUrl, 'url':'TBD', 'filename':request.filename, isError:true,
+                msg:err.message, id:requestId, targetDir:folderId, original:request.content})
+        }
+    }            
 }
 
 export const getAnalysisResult = (isBinaryFile: boolean, reBuildResponse: any, request: any, sourceFile: string,
@@ -200,10 +191,12 @@ export const docker_exec_rebuild = (payload: any,fileName:string) => {
     var options={"timeout":5000, "shell":false};
     var totalOutput : any;    
     totalOutput = "";
+    let configDir = resolve(Utils.getAppDataPath() + Utils.getPathSep() + 'configR');        
     // Run container 
     options={"timeout":10000, "shell":false};   
     var spawned = spawnSync('docker', [ 'run',
                                         '--rm',
+                                        '-v', configDir+':/home/glasswall',
                                         '-v', resolve(inputDir)+':/input',
                                         '-v', resolve(outputDir)+':/output',
                                         Utils.GW_DOCKER_IMG_NAME], options);
@@ -261,14 +254,7 @@ export const docker_exec_analysis = (payload: any,fileName:string) => {
     var totalOutput : any;    
     totalOutput = "";
     // Run container        
-    let configDir = resolve(Utils.getAppDataPath() + Utils.getPathSep() + 'config');
-    if (!fs.existsSync(configDir)){
-        fs.mkdirSync(configDir);
-    }
-    fs.openSync(path.join(configDir,"config.ini"),'w');
-    fs.openSync(path.join(configDir,"config.xml"),'w');
-    fs.writeFileSync(path.join(configDir,"config.ini"),Utils.CONFIG_INI);
-    fs.writeFileSync(path.join(configDir,"config.xml"),Utils.CONFIG_XML);    
+    let configDir = resolve(Utils.getAppDataPath() + Utils.getPathSep() + 'config');    
     Utils.addRawLogLine(1,fileName,'Config dir - '+(configDir));
     options={"timeout":10000, "shell":false};
     var spawned = spawnSync('docker', [ 'run',

@@ -66,7 +66,7 @@ const raw_analysis = async (xml_data:string) => {
     if (!xml_data)
         return
 
-    const json_data = await xml_parser(xml_data)    
+    const json_data = await Utils.xml_parser(xml_data)    
     const sanitisations = xpath.find(json_data, "//gw:SanitisationItem").map((match:any) => match['gw:TechnicalDescription'].pop())
     const remediations  = xpath.find(json_data, "//gw:RemedyItem"      ).map((match:any) => match['gw:TechnicalDescription'].pop())
     const issue_items   = xpath.find(json_data, "//gw:IssueItem"       ).map((match:any) => match['gw:TechnicalDescription'].pop())
@@ -176,19 +176,6 @@ const rule_metadata_detected= (file_data:any) =>  {
         }
     })
     return { name , value , level}
-}
-
-const xml_parser = async (xml_data:string) =>{
-    return new Promise(function (resolve, reject) {
-        const parser = new xml2js.Parser();
-        parser.parseString(xml_data, function (err:Error, result:any) {
-            if (err) {
-                reject(err);
-            } else {
-                resolve(result);
-            }
-        });
-    });
 }
 
 export default create_metadata_file;

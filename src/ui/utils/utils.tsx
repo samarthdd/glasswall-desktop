@@ -4,11 +4,14 @@ var fs                          = require('fs');
 const log                       = require('electron-log');
 log.transports.file.level       = 'debug';
 const MAX_LOG_FILE_SIZE         = 3000000;
+const resolve                   = require('path').resolve
+const xml2js                    = require('xml2js');
 
-export const GW_DOCKER_IMG_NAME         = 'glasswallsolutions/evaluationsdk:1';
-export const GW_DOCKER_IMG_NAME_WO_TAG  = 'glasswallsolutions/evaluationsdk';
-export const GW_DOCKER_PULL_IMG_OUTPUT  = 'Downloaded newer image for glasswallsolutions/evaluationsdk';
-export const GW_DOCKER_PULL_IMG_OUTPUT_2 = 'Image is up to date for glasswallsolutions/evaluationsdk';
+export const GW_DOCKER_IMG_NAME             = 'glasswallsolutions/evaluationsdk:1';
+export const GW_DOCKER_IMG_NAME_WO_TAG      = 'glasswallsolutions/evaluationsdk';
+export const GW_DOCKER_PULL_IMG_OUTPUT      = 'Downloaded newer image for glasswallsolutions/evaluationsdk';
+export const GW_DOCKER_PULL_IMG_OUTPUT_2    = 'Image is up to date for glasswallsolutions/evaluationsdk';
+export const GW_DOCKER_EXTRACT_IMG_OUTPUT   = 'Loaded image ID'
 
 export const WEBSITE_URL                = 'https://glasswall-desktop.com';
 export const RELEASE_URL                = 'https://github.com/k8-proxy/glasswall-desktop/releases';
@@ -230,6 +233,69 @@ export const getFileHash=(content: string)=> {
   return sha1sum;
 }
 
+// For rebuid
+export const CONFIG_INI_REBUILD   = 
+"[GWConfig]\n\
+processMode=1\n\
+reportMode=0\n\
+fileStorageMode=2\n\
+fileType=*\n\
+inputLocation=/input\n\
+useSubfolders=1\n\
+outputLocation=/output\n\
+createOutputFolders=1\n\
+nonConformingDirName= NonConforming\n\
+managedDirName= Managed\n\
+quarantineNonconforming= 1\n\
+writeOutput= 1\n";
+
+export const CONFIG_XML_REBUILD   = 
+"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\
+<config>\n\
+<pdfConfig>\n\
+<metadata>sanitise</metadata>\n\
+<javascript>sanitise</javascript>\n\
+<acroform>sanitise</acroform>\n\
+<actions_all>sanitise</actions_all>\n\
+<embedded_files>sanitise</embedded_files>\n\
+<external_hyperlinks>sanitise</external_hyperlinks>\n\
+<internal_hyperlinks>sanitise</internal_hyperlinks>\n\
+<embedded_images>sanitise</embedded_images>\n\
+</pdfConfig>\n\
+<wordConfig>\n\
+<metadata>sanitise</metadata>\n\
+<macros>sanitise</macros>\n\
+<embedded_files>sanitise</embedded_files>\n\
+<review_comments>sanitise</review_comments>\n\
+<internal_hyperlinks>sanitise</internal_hyperlinks>\n\
+<external_hyperlinks>sanitise</external_hyperlinks>\n\
+<dynamic_data_exchange>sanitise</dynamic_data_exchange>\n\
+<embedded_images>sanitise</embedded_images>\n\
+</wordConfig>\n\
+<pptConfig>\n\
+<metadata>sanitise</metadata>\n\
+<macros>sanitise</macros>\n\
+<embedded_files>sanitise</embedded_files>\n\
+<review_comments>sanitise</review_comments>\n\
+<internal_hyperlinks>sanitise</internal_hyperlinks>\n\
+<external_hyperlinks>sanitise</external_hyperlinks>\n\
+<embedded_images>sanitise</embedded_images>\n\
+</pptConfig>\n\
+<xlsConfig>\n\
+<metadata>sanitise</metadata>\n\
+<macros>sanitise</macros>\n\
+<embedded_files>sanitise</embedded_files>\n\
+<internal_hyperlinks>sanitise</internal_hyperlinks>\n\
+<external_hyperlinks>sanitise</external_hyperlinks>\n\
+<review_comments>sanitise</review_comments>\n\
+<dynamic_data_exchange>sanitise</dynamic_data_exchange>\n\
+<embedded_images>sanitise</embedded_images>\n\
+</xlsConfig>	\n\
+<tiffConfig>\n\
+<geotiff>sanitise</geotiff>\n\
+</tiffConfig>\n\
+</config>"; 
+// For analysis
 export const CONFIG_INI   = 
 "[GWConfig]\n\
 processMode=0\n\
@@ -319,6 +385,65 @@ export const getDefaultOuputCleanPath =()=>{
   return getAppDataPath() + getPathSep() + _CLEAN_FOLDER
 }
 
+export const xml_parser = async (xml_data:string) =>{
+  return new Promise(function (resolve, reject) {
+      const parser = new xml2js.Parser();
+      console.log('xml_data = '+xml_data)
+      parser.parseString(xml_data, function (err:Error, result:any) {
+          if (err) {
+            console.log('xml_data err = '+err.stack)
+              reject(err);
+          } else {
+            console.log('xml_data jsonresult = '+JSON.stringify(result))
+              resolve(result);
+          }
+      });
+  });
+}
+
+export const getPolicyFlag = (action:string) => {
+  if(action == "allow"){
+    return 0
+  }
+  else if(action == "sanitise"){
+    return 1
+  }
+  else if(action == "disallow"){
+    return 2
+  }
+}
+
+
+export const getPolicy = async () =>{
+  let configDir = resolve(getAppDataPath() + getPathSep() + 'config');
+    if (!fs.existsSync(configDir)){
+        fs.mkdirSync(configDir);
+    }
+    if (fs.existsSync(configDir+"/config.xml")){        
+      const xml = fs.readFileSync(configDir+"/config.xml",{encoding:'utf8', flag:'r'});    
+      console.log('File = '+(configDir+"/config.xml"))     
+      console.log('xml = '+xml)     
+      const json_data = await xml_parser(xml)
+      console.log('json out = '+JSON.stringify(json_data))     
+      return json_data    
+    }
+    return null;
+  }
+
+  export const savePolicy = async (json:any) =>{
+    let configDir = resolve(getAppDataPath() + getPathSep() + 'config');
+    let configDirR = resolve(getAppDataPath() + getPathSep() + 'configR');
+      if (!fs.existsSync(configDir)){
+          fs.mkdirSync(configDir);
+      }      
+      if (!fs.existsSync(configDirR)){
+        fs.mkdirSync(configDirR);
+    }      
+      var builder = new xml2js.Builder();
+      var xml = builder.buildObject(json);
+      fs.writeFileSync(path.join(configDir,"config.xml"),xml);            
+      fs.writeFileSync(path.join(configDirR,"config.xml"),xml);            
+    }
 
 export const getAppDataPath =() =>{
   switch (process.platform) {
