@@ -26,7 +26,7 @@ import Tooltip                  from '@material-ui/core/Tooltip';
 import dockerIcon               from '../assets/images/docker.png'
 import HealthCheck              from '../assets/images/healthcheck.png';
 import LOGICON                  from '../assets/images/log.png';
-import SessionIcon              from '../assets/images/session.jpg';
+import SessionIcon              from '../assets/images/session.png';
 import PolicyIcon              from '../assets/images/policyFlag.png';
 
 import { useLocation }          from 'react-router-dom'

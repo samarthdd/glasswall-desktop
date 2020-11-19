@@ -104,102 +104,103 @@ const useStyles = makeStyles((theme) => ({
         }
    }, 
   readOnlyIcon: {
-      fontSize: '13px',
-      float: 'left',
-      margin: '3px 5px 0px 0 '
+      fontSize:                   '13px',
+      float:                      'left',
+      margin:                     '3px 5px 0px 0 '
   },
   selectBox: {
-    color: '#656565'
+    color:                        '#656565'
   },
   inputLabel: {
-      width: '80%',
-      position: 'absolute',
-      padding: '15px',
-      margin: '-24px 10%',
-      color: '#fff!important',
-      borderRadius: '3px',
-      fontSize: '13px',
-      transform: 'none'
+      width:                      '80%',
+      position:                   'absolute',
+      padding:                    '15px',
+      margin:                     '-24px 10%',
+      color:                      '#fff!important',
+      borderRadius:               '3px',
+      fontSize:                   '13px',
+      transform:                  'none'
   },
   readOnlyText: {
-    marginTop: '5px',
-    float: 'left',
+    marginTop:                    '5px',
+    float:                        'left',
     [theme.breakpoints.down('xs')]: {
-      width: '100%',
-      marginLeft: 0,
+      width:                      '100%',
+      marginLeft:                 0,
     },
   },
   formControl: {
-    margin: '20px 1% 30px 1%',
-    width: '23%',
-    backgroundColor: '#fff',
-    boxShadow: '0px 3px 13px #ccc',
-    borderRadius: '5px',
-    padding: '15px',
-    position: 'relative',
+    margin:                       '20px 1% 30px 1%',
+    width:                        '23%',
+    backgroundColor:              '#fff',
+    boxShadow:                    '0px 3px 13px #ccc',
+    borderRadius:                 '5px',
+    padding:                      '15px',
+    position:                     'relative',
     [theme.breakpoints.down(1199)]: {
-      width: '31.3%',
+      width:                      '31.3%',
     },
     [theme.breakpoints.down('xs')]: {
-      width: '100%',
-      marginLeft: 0,
+      width:                      '100%',
+      marginLeft:                 0,
     },
 },
 saveBtn:{
-  backgroundColor:"#26a61a",
-  color:"#fff",
-  margin:'0 10px',
-  marginBottom:'20px',
-  textTransform:"capitalize",
+  backgroundColor:                "#26a61a",
+  color:                          "#fff",
+  margin:                         '0 10px',
+  textTransform:                  "capitalize",
   '&:hover':{
-    backgroundColor:'#1a8110'
-  }
+    backgroundColor:              '#1a8110'
+  } 
 },
 saveAsBtn:{
-  backgroundColor:"#09a573",
-  color:"#fff",
-  margin:'0 10px',
-  textTransform:"capitalize",
+  backgroundColor:                "#09a573",
+  color:                          "#fff",
+  margin:                         '0 10px',
+  textTransform:                  "capitalize",
   '&:hover':{
-    backgroundColor:'#096347'
+    backgroundColor:              '#096347'
   }
 },
 divStyle:{
-  float: "right",
-}
-   
+  float:                          "right",
+},
+heading:{
+  marginBottom:                   '50px'
+} 
  }));
 
 
  const ColorTheme = createMuiTheme({
   palette: {
   primary: {
-          main: '#498FA7'
+          main:                   '#498FA7'
       },
       secondary: {
-          main: '#D47779'
+          main:                   '#D47779'
       }
     },
 });
 
  
 const disabledColor = {
-  backgroundColor: '#999',
+  backgroundColor:                '#999',
 }
 const orangeColor = {
-  background: 'linear-gradient(to right, #f4910d , #d57b03)',
+  background:                     'linear-gradient(to right, #f4910d , #d57b03)',
 };
 const greenColor = {
-  background: 'linear-gradient(to right, #44a748 , #19931f)',
+  background:                     'linear-gradient(to right, #44a748 , #19931f)',
 };
 const redColor = {
-  background: 'linear-gradient(to right, #de423f , #c4201c)',
+  background:                     'linear-gradient(to right, #de423f , #c4201c)',
 };
 const blueColor = {
-  background: 'linear-gradient(to right, #13a3b5 , #0a8494)',
+  background:                     'linear-gradient(to right, #13a3b5 , #0a8494)',
 };
 const purpleColor = {
-  background: 'linear-gradient(to right, #7d158e , #630673)',
+  background:                     'linear-gradient(to right, #7d158e , #630673)',
 };
 
 
@@ -384,14 +385,14 @@ function RebuildPolicy(){
                                
                                 <div className={classes.divStyle}>
                                 <MuiThemeProvider theme={ColorTheme}>
-                                    <Button  onClick={savePolicy} className={classes.saveBtn}>
+                                    <Button onClick={savePolicy} className={classes.saveBtn}>
                                         Save
                                     </Button>
                                     
                                 </MuiThemeProvider>
                             </div>
 
-                                <h3 >PDF Config</h3>
+                                <h3 className={classes.heading}>PDF Config</h3>
                                 <form className={classes.root} autoComplete="off">                                  
                                 <FormControl className={classes.formControl}>
                                     <InputLabel htmlFor="pdf-metadata" className={classes.inputLabel} style={greenColor}>Metadata</InputLabel>
