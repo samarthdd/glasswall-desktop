@@ -374,14 +374,14 @@ function RebuildPolicy(){
                 <div className={classes.toolbar} />  
                 <div className={classes.contentArea}>             
                     <div> 
-                    <h3>Draft Policy </h3>                    
+                    <h2 >Current Rebuild Policy</h2>               
                     <Grid container>
                       <Grid item  xs={12}>
                           <div id='current-policy'>
                               {/* <TitleBar title="Current Policy"></TitleBar> */}
 
                                 {/* <div className={classes.toolbar} /> */}
-                                <h2 >Current Configuration</h2>
+                               
                                 <div className={classes.divStyle}>
                                 <MuiThemeProvider theme={ColorTheme}>
                                     <Button  onClick={savePolicy} className={classes.saveBtn}>
