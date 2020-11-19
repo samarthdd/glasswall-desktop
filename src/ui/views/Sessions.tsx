@@ -26,6 +26,9 @@ import Loader                   from '../components/Loader';
 import * as Utils               from '../utils/utils'
 import * as SessionsUtils               from '../components/SessionsUtils'
 const { dialog }                = require('electron').remote
+import RebuildIcon              from '../assets/images/rebuildIcon.png'
+import DockerIcon               from '../assets/images/dockerColored.png'
+
 
 
 var fs                          = require('fs');
@@ -440,7 +443,10 @@ const useStyles = makeStyles((theme) => ({
 
         }
     },
-
+    dockerImage:{
+        height:                     '60px',
+        margin:                     '10px 0'
+    }
  }));
 
 
@@ -618,7 +624,7 @@ function Sessions(){
                                         {sessionsPerPage.map((row) => (
                                             <TableRow key={row.id}>
                                                 <TableCell align="left"><a onClick={()=>Utils.open_file_exp(Utils.getProcessedPath() + Utils.getPathSep() + row.id)} target="_blank" className={classes.hlink}>{row.id}</a></TableCell>
-                                            <TableCell align="left" className={classes.status}>{row.type}</TableCell>
+                                            <TableCell align="left" className={classes.status}><img className={classes.dockerImage} src={row.type =="Docker"?DockerIcon:RebuildIcon}></img></TableCell>
                                             <TableCell align="left"> {row.count}</TableCell>
                                             <TableCell align="left">{row.successCount}</TableCell>
                                             <TableCell align="left">{new Date(row.at).toLocaleString('en-us')
