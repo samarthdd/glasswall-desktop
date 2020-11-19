@@ -3,7 +3,7 @@ import { makeStyles }           from '@material-ui/core/styles';
 
 import Table                    from '@material-ui/core/Table';
 import TableBody                from '@material-ui/core/TableBody';
-import TableCell                from '@material-ui/core/TableCell';
+import TableCell, { SortDirection }                from '@material-ui/core/TableCell';
 import TableHead                from '@material-ui/core/TableHead';
 import TableRow                 from '@material-ui/core/TableRow';
 import DeleteIcon               from '@material-ui/icons/Delete';
@@ -13,7 +13,8 @@ import { CardActions,
         TablePagination,
         Switch,
         FormControlLabel,
-        Tooltip 
+        Tooltip, 
+        TableSortLabel
     }                           from '@material-ui/core';
 import Footer                   from '../components/Footer';
 import Dropzone                 from "react-dropzone";
@@ -28,6 +29,7 @@ import * as SessionsUtils               from '../components/SessionsUtils'
 const { dialog }                = require('electron').remote
 import RebuildIcon              from '../assets/images/rebuildIcon.png'
 import DockerIcon               from '../assets/images/dockerColored.png'
+import { FormatListBulletedOutlined } from '@material-ui/icons';
 
 
 
@@ -104,12 +106,6 @@ const useStyles = makeStyles((theme) => ({
                 }
             }
         }
-   },
-   icons:{
-        fontSize:                   '100px',
-        color:                      '#ccc',
-        width:                      '80px',
-        margin:                     '20px 0 30px 0',
    },
    fileIcon:{
         fontSize:                   '15px',
@@ -443,13 +439,37 @@ const useStyles = makeStyles((theme) => ({
 
         }
     },
-    dockerImage:{
-        height:                     '60px',
-        margin:                     '10px 0'
-    }
+    visuallyHidden: {
+        border: 0,
+        clip: 'rect(0 0 0 0)',
+        height: 1,
+        margin: -1,
+        overflow: 'hidden',
+        padding: 0,
+        position: 'absolute',
+        top: 20,
+        width: 1,
+      },
+      icons:{
+        fontSize:                   '100px',
+        color:                      '#ccc',
+        width:                      '80px',
+        margin:                     '20px 0 30px 0',
+   },
+   dockerImage:{
+    height:                     '60px',
+    margin:                     '10px 0'
+}
+
  }));
 
 
+//  icons:{
+//     fontSize:                   '100px',
+//     color:                      '#ccc',
+//     width:                      '80px',
+//     margin:                     '20px 0 30px 0',
+// },
 function Sessions(){
     
     const classes = useStyles(); 
@@ -459,6 +479,8 @@ function Sessions(){
     const [loader, setShowLoader]                   = useState(false);  
     const [page, setPage]                           = useState(0); 
     const [rowsPerPage, setRowsPerPage]             = useState(10);  
+    const [orderBy, setOrderBy]                     = React.useState('Created At');
+    const [order, setOrder]                         = React.useState<any>('desc');
     
     interface SessionInfo {
         id              : string,
@@ -534,18 +556,20 @@ function Sessions(){
             at: displayResult.at,
             location: displayResult.location
             }]);
-    
+        
+        //setSessions(sessions.sort(function(a:any, b:any){return b.at - a.at}));
+
         setCounter(state=>state-1);
     }
     React.useEffect(() => {
         const timer = setTimeout(() => {
             SessionsUtils.getSessionList(Utils.getProcessedPath()).then(function(results:any){
-            console.log("getSessionList" + results);
+            console.log("getSessilengthonList" + results);
             setCounter(results.length);
+            setShowLoader(true);
             if(results.length>0){
                 SessionsUtils.readSessions(results, readSessionResult);
             }
-
         });
            
           }, 10);
@@ -555,10 +579,24 @@ function Sessions(){
         
     }, []);
 
+
+    
+
     React.useEffect(() => {
+        if(counter == 0)
+            setShowLoader(false);
+        }, [counter]);
+
+    React.useEffect(() => {
+        
+        
         let sessionsReverse = sessions.slice().reverse()
         let sessionsPerPage = sessionsReverse && sessionsReverse.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
-        setSessionsPerPage(sessionsPerPage)
+        if(order === 'asc')
+            setSessionsPerPage(sessionsPerPage.sort(function(a:any, b:any){return a.at - b.at}))
+        else
+            setSessionsPerPage(sessionsPerPage.sort(function(a:any, b:any){return b.at - a.at}))
+        
         }, [rowsPerPage, page, sessions]);
       
     const handleChangePage = (event: any, newPage: number) => {
@@ -575,6 +613,15 @@ function Sessions(){
         setCounter(0);
     }
 
+   const createSortHandler =()=>{
+        const isAsc = order === 'asc';
+        //asc
+        if(order === 'asc')
+            setSessionsPerPage(sessionsPerPage.sort(function(a:any, b:any){return a.at - b.at}))
+        else
+            setSessionsPerPage(sessionsPerPage.sort(function(a:any, b:any){return b.at - a.at}))
+        setOrder(isAsc ? 'desc' : 'asc');
+   }
    
 
     return(
@@ -616,7 +663,22 @@ function Sessions(){
                                             <TableCell align="left" className={classes.texttBold}>Type</TableCell>
                                             <TableCell align="left" className={classes.texttBold}>Total Rebuilt</TableCell>
                                             <TableCell align="left" className={classes.texttBold}>Success</TableCell>
-                                            <TableCell align="left" className={classes.texttBold}>Created At</TableCell>
+                                            <TableCell align="left" 
+                                                       className={classes.texttBold}
+                                                       sortDirection={orderBy === "Created At" ? order:false}>
+                                            <TableSortLabel
+                                                active={orderBy === "Created At"}
+                                                direction={orderBy === "Created At" ? order : 'asc'}
+                                                onClick={createSortHandler}
+                                                >
+                                                     Created At
+                                                <span className={classes.visuallyHidden}>
+                                                {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
+                                                </span>
+           
+                                             </TableSortLabel>
+                                               
+                                            </TableCell>
                                             <TableCell align="left" className={classes.texttBold}>Output Folder</TableCell>
                                         </TableRow>
                                         </TableHead>
