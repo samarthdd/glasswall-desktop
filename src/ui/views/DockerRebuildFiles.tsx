@@ -29,6 +29,7 @@ import Logs                     from '../components/Logs';
 import HealthCheckStatus        from '../components/HealthCheckStatus'
 const { dialog }                = require('electron').remote
 import preceiveThreats          from '../components/ThreatIntelligence'
+import ThreatAnalysisDialog     from '../components/ThreatAnalysisDialog'
 
 
 var fs                          = require('fs');
@@ -482,6 +483,8 @@ function DockerRebuildFiles(){
     const [files, setFiles]                         = useState<Array<DockerRebuildResult>>([]);
     const [flat, setFlat]                           = React.useState(false);
     const [parallel, setParallel]                   = React.useState(true);
+    const [openThreatDialog, setOpenThreatDialog]   = React.useState(false);
+    const [threatAnalysis, setThreatAnalysis]       = useState(null);  
     const [healthCheckStatus, setHealthCheckStatus] = React.useState( Number(sessionStorage.getItem("docker_status")) || 0);    
 
     interface DockerRebuildResult {
@@ -496,7 +499,7 @@ function DockerRebuildFiles(){
         cleanFile?      : any;
         threat?         : boolean;
         threat_level?   : string;
-        threat_analysis?: string;
+        threat_analysis?: any;
       }
    
     interface Metadata {
@@ -573,6 +576,7 @@ function DockerRebuildFiles(){
         rebuildFile = rebuildFileNames.find((rebuildFile) => rebuildFile.id ==id);
         if(rebuildFile){            
             setXml(rebuildFile.xmlResultDocker);
+            setThreatAnalysis(rebuildFile.threat_analysis)
           }
          }, [id, xml, open]);
 
@@ -588,7 +592,9 @@ function DockerRebuildFiles(){
         let fileHash: string;
         fileHash = Utils.getFileHash(result.original)
         let isThreat = false
-        let threatLevel = "Unknown"          
+        let threatLevel = "Unknown" 
+        let threat: any;
+
         if(!result.isError){
             var cleanFilePath = Utils.getProcessedPath() + Utils.getPathSep()
                                  + result.targetDir + Utils.getPathSep() + fileHash
@@ -637,7 +643,7 @@ function DockerRebuildFiles(){
             let basePath = Utils.getProcessedPath() + Utils.getPathSep() + result.targetDir + Utils.getPathSep() + fileHash + Utils.getPathSep()
             let xml = result.xmlResult   
             let reportPath = Utils.stipFileExt(result.filename)+'.xml'
-            let threat = await preceiveThreats(xml,reportFilePath, reportPath, cleanFilePath, result.filename,basePath)
+            threat = await preceiveThreats(xml,reportFilePath, reportPath, cleanFilePath, result.filename,basePath)
             console.log('threat level '+threat.threat_level)
             console.log('threats '+JSON.stringify(threat.threats))
             console.log('threats analysis '+JSON.stringify(threat.threat_analysis))
@@ -646,6 +652,8 @@ function DockerRebuildFiles(){
                 if(threatLevel != "OK" && threatLevel != "UNKNOWN"){
                     isThreat = true
                 }
+                threat.filename= result.filename;
+                threat.fileSize = result.original.length;
             }
             metaContentCopy.isThreat    = isThreat
             metaContentCopy.threatLevel = threatLevel
@@ -683,7 +691,8 @@ function DockerRebuildFiles(){
             path: result.path,
             cleanFile: result.cleanFile,
             threat: isThreat,
-            threat_level: threatLevel
+            threat_level: threatLevel,
+            threat_analysis: threat
             }]);
         setCounter(state=>state-1);
 
@@ -807,6 +816,16 @@ function DockerRebuildFiles(){
         setParallel((prev) => !prev);
     };   
 
+   
+    const handleThreadDialogOpen =(open:boolean)=>{
+        setOpenThreatDialog(open);
+    }
+
+    const viewThreadAnalysis=(id: string)=>{
+        setId(id);
+        setOpenThreatDialog(!openThreatDialog);
+    }
+
     const getFormattedThreatValue =(threat: boolean| undefined, threatValue: string| undefined)=>{
         console.log("threat" +threat)
         console.log("threatValue" +threatValue)
@@ -833,6 +852,7 @@ function DockerRebuildFiles(){
     return(
         <div>   
             {open && <RawXml content={'\'' + xml + '\''} isOpen={open} handleOpen={openXml}/>   }
+            {openThreatDialog && <ThreatAnalysisDialog threat ={threatAnalysis} isOpen={openThreatDialog} handleOpen={handleThreadDialogOpen}/>   }
             {logView && <Logs content={ localStorage.getItem("logs") || ""} isOpen={logView} handleOpen={openLogView}/>   }                
             <div className={classes.root}> 
                 <SideDrawer showBack={false}/>
@@ -924,6 +944,7 @@ function DockerRebuildFiles(){
                                             <TableCell align="left" className={classes.texttBold}>Rebuilt</TableCell>
                                             <TableCell align="left" className={classes.texttBold}>Threat Level</TableCell>
                                             <TableCell align="left" className={classes.texttBold}>XML</TableCell>
+                                            <TableCell align="left" className={classes.texttBold}>Analysis</TableCell>
                                         </TableRow>
                                         </TableHead>
                                         <TableBody>
@@ -944,7 +965,12 @@ function DockerRebuildFiles(){
                                                 <TableCell align="left"><button  onClick={() => viewXML(row.id)} className={classes.viewBtn}>{!row.isError?'View Report':''}</button></TableCell>
                                                     : <TableCell align="left"></TableCell>
                                             }
-                                                
+
+                                             {
+                                                !row.isError ?
+                                                <TableCell align="left"><button  onClick={() => viewThreadAnalysis(row.id)} className={classes.viewBtn}>{!row.isError?'File Analysis':''}</button></TableCell>
+                                                    : <TableCell align="left"></TableCell>
+                                            }   
                                             </TableRow>
                                         ))}
                                         </TableBody>

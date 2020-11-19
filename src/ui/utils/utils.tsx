@@ -544,3 +544,21 @@ export const getLogsPath = ()=>{
     localStorage.getItem(CLOUD_OUPUT_DIR_KEY):
     getDefaultOuputCleanPath()
 }
+
+export const file_size_as_string= (file_size: number)=> {
+    
+  //Found one bug: file_size type is coming as string to explicitly convert it to Number
+  file_size  = Number(file_size)
+  
+  if (typeof(file_size) !== 'number'){
+      return "0 KB"
+  }
+  if (Math.round(file_size / 1024) == 0) {
+      return "1 KB"
+  }
+  return (file_size / (1024 * 1024 * 1024 -1) <= 1)
+      ?  ((file_size / (1024 * 1024 -1) <= 1)
+          ? Math.round(file_size / 1024)    + " KB"
+          : Math.round(file_size / 1048576) + " MB" )
+      : Math.round(file_size / 1073741824)  + " GB"
+}

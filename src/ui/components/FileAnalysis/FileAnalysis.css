@@ -1,0 +1,53 @@
+
+.analysis-results {
+    padding-bottom: 4rem;  }
+
+.table-container {
+    min-width: 30rem;
+    margin: 10px;
+    border: 2px solid #a1b5bf;
+    border-radius: 1.0rem;
+    background-color: white;
+    overflow: hidden; }
+
+.table-body td {
+    padding:10px;
+    font-size:18px;
+}
+.table-header {
+    font-size:20px;
+    display: block;
+    background-color: #1f546f;
+    text-transform: uppercase;
+    /*letter-spacing: 0.1rem;*/
+    color: white;
+    padding: 1.2rem 1rem;
+    margin: 0; }
+
+.threat-high {
+    background-color: #CE8484;
+    color:black
+}
+.threat-medium {
+    background-color: #C6C558;
+    color:black
+}
+.threat-ok {
+    background-color: #75C16E;
+    color:black
+}
+
+.threat-item-high {
+    color: #CE8484;
+    font-weight: bold;
+}
+
+.threat-item-medium {
+    color: #C6C558;
+    font-weight: bold;
+}
+
+.threat-item-ok {
+    color: #75C16E;
+    font-weight: bold;
+}
