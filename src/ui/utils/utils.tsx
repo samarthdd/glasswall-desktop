@@ -233,6 +233,69 @@ export const getFileHash=(content: string)=> {
   return sha1sum;
 }
 
+// For rebuid
+export const CONFIG_INI_REBUILD   = 
+"[GWConfig]\n\
+processMode=1\n\
+reportMode=0\n\
+fileStorageMode=2\n\
+fileType=*\n\
+inputLocation=/input\n\
+useSubfolders=1\n\
+outputLocation=/output\n\
+createOutputFolders=1\n\
+nonConformingDirName= NonConforming\n\
+managedDirName= Managed\n\
+quarantineNonconforming= 1\n\
+writeOutput= 1\n";
+
+export const CONFIG_XML_REBUILD   = 
+"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\
+<config>\n\
+<pdfConfig>\n\
+<metadata>sanitise</metadata>\n\
+<javascript>sanitise</javascript>\n\
+<acroform>sanitise</acroform>\n\
+<actions_all>sanitise</actions_all>\n\
+<embedded_files>sanitise</embedded_files>\n\
+<external_hyperlinks>sanitise</external_hyperlinks>\n\
+<internal_hyperlinks>sanitise</internal_hyperlinks>\n\
+<embedded_images>sanitise</embedded_images>\n\
+</pdfConfig>\n\
+<wordConfig>\n\
+<metadata>sanitise</metadata>\n\
+<macros>sanitise</macros>\n\
+<embedded_files>sanitise</embedded_files>\n\
+<review_comments>sanitise</review_comments>\n\
+<internal_hyperlinks>sanitise</internal_hyperlinks>\n\
+<external_hyperlinks>sanitise</external_hyperlinks>\n\
+<dynamic_data_exchange>sanitise</dynamic_data_exchange>\n\
+<embedded_images>sanitise</embedded_images>\n\
+</wordConfig>\n\
+<pptConfig>\n\
+<metadata>sanitise</metadata>\n\
+<macros>sanitise</macros>\n\
+<embedded_files>sanitise</embedded_files>\n\
+<review_comments>sanitise</review_comments>\n\
+<internal_hyperlinks>sanitise</internal_hyperlinks>\n\
+<external_hyperlinks>sanitise</external_hyperlinks>\n\
+<embedded_images>sanitise</embedded_images>\n\
+</pptConfig>\n\
+<xlsConfig>\n\
+<metadata>sanitise</metadata>\n\
+<macros>sanitise</macros>\n\
+<embedded_files>sanitise</embedded_files>\n\
+<internal_hyperlinks>sanitise</internal_hyperlinks>\n\
+<external_hyperlinks>sanitise</external_hyperlinks>\n\
+<review_comments>sanitise</review_comments>\n\
+<dynamic_data_exchange>sanitise</dynamic_data_exchange>\n\
+<embedded_images>sanitise</embedded_images>\n\
+</xlsConfig>	\n\
+<tiffConfig>\n\
+<geotiff>sanitise</geotiff>\n\
+</tiffConfig>\n\
+</config>"; 
+// For analysis
 export const CONFIG_INI   = 
 "[GWConfig]\n\
 processMode=0\n\
@@ -369,12 +432,17 @@ export const getPolicy = async () =>{
 
   export const savePolicy = async (json:any) =>{
     let configDir = resolve(getAppDataPath() + getPathSep() + 'config');
+    let configDirR = resolve(getAppDataPath() + getPathSep() + 'configR');
       if (!fs.existsSync(configDir)){
           fs.mkdirSync(configDir);
       }      
+      if (!fs.existsSync(configDirR)){
+        fs.mkdirSync(configDirR);
+    }      
       var builder = new xml2js.Builder();
       var xml = builder.buildObject(json);
       fs.writeFileSync(path.join(configDir,"config.xml"),xml);            
+      fs.writeFileSync(path.join(configDirR,"config.xml"),xml);            
     }
 
 export const getAppDataPath =() =>{

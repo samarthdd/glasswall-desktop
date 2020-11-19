@@ -29,6 +29,19 @@ const create_config = () =>{
         fs.openSync(path.join(configDir,"config.xml"),'w');
         fs.writeFileSync(path.join(configDir,"config.xml"),Utils.CONFIG_XML);    
     }
+    //Rebuild
+    let configDirR = resolve(Utils.getAppDataPath() + Utils.getPathSep() + 'configR');
+    if (!fs.existsSync(configDirR)){
+        fs.mkdirSync(configDirR);
+    }
+    if (!fs.existsSync(configDirR+"/config.ini")){
+        fs.openSync(path.join(configDirR,"config.ini"),'w');
+        fs.writeFileSync(path.join(configDirR,"config.ini"),Utils.CONFIG_INI_REBUILD);        
+    }    
+    if (!fs.existsSync(configDirR+"/config.xml")){
+        fs.openSync(path.join(configDirR,"config.xml"),'w');
+        fs.writeFileSync(path.join(configDirR,"config.xml"),Utils.CONFIG_XML_REBUILD);    
+    }
 }
 
 const App = () => (    
