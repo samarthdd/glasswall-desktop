@@ -327,7 +327,7 @@ function RebuildPolicy(){
         internal_hyperlinks: policyJson.config.wordConfig[0].internal_hyperlinks[0],
         external_hyperlinks: policyJson.config.wordConfig[0].external_hyperlinks[0],
         dynamic_data_exchange: policyJson.config.wordConfig[0].dynamic_data_exchange[0],
-        embedded_images: policyJson.config.wordConfig[0].macros[0]
+        embedded_images: policyJson.config.wordConfig[0].embedded_images[0]
       }
       let excelPolicy = {
         macros: policyJson.config.xlsConfig[0].macros[0],
@@ -337,7 +337,7 @@ function RebuildPolicy(){
         internal_hyperlinks: policyJson.config.xlsConfig[0].internal_hyperlinks[0],
         external_hyperlinks: policyJson.config.xlsConfig[0].external_hyperlinks[0],
         dynamic_data_exchange: policyJson.config.xlsConfig[0].dynamic_data_exchange[0],
-        embedded_images: policyJson.config.xlsConfig[0].macros[0]
+        embedded_images: policyJson.config.xlsConfig[0].embedded_images[0]
       }
       let pptPolicy = {
         macros: policyJson.config.pptConfig[0].macros[0],
@@ -346,7 +346,7 @@ function RebuildPolicy(){
         embedded_files: policyJson.config.pptConfig[0].embedded_files[0],
         internal_hyperlinks: policyJson.config.pptConfig[0].internal_hyperlinks[0],
         external_hyperlinks: policyJson.config.pptConfig[0].external_hyperlinks[0],
-        embedded_images: policyJson.config.pptConfig[0].macros[0],
+        embedded_images: policyJson.config.pptConfig[0].embedded_images[0],
       }    
       if(policy){
         policy.pdfConfig = pdfPolicy  
@@ -857,7 +857,7 @@ function RebuildPolicy(){
                                       onChange={(event: any) => {
                                         let excelPol = policy?.xlsConfig || undefined
                                         if(excelPol){
-                                          excelPol.metadata = event.target.value
+                                          excelPol.macros = event.target.value
                                         }
                                         setReadyForRender(!readyForRender)
                                       }}
@@ -932,7 +932,7 @@ function RebuildPolicy(){
                                       onChange={(event: any) => {
                                         let excelPol = policy?.xlsConfig || undefined
                                         if(excelPol){
-                                          excelPol.embedded_images = event.target.value
+                                          excelPol.embedded_files = event.target.value
                                         }
                                         setReadyForRender(!readyForRender)
                                       }}
@@ -1003,7 +1003,7 @@ function RebuildPolicy(){
                                     <InputLabel htmlFor="excel-dynamic-data-exchange" className={classes.inputLabel} style={blueColor}>Dynamic Data Exchange</InputLabel>
                                     <Select
                                       className={classes.selectBox}
-                                      value={policy?.xlsConfig.embedded_files}
+                                      value={policy?.xlsConfig.dynamic_data_exchange}
                                       onChange={(event: any) => {
                                         let excelPol = policy?.xlsConfig || undefined
                                         if(excelPol){
@@ -1135,7 +1135,7 @@ function RebuildPolicy(){
                                       onChange={(event: any) => {
                                         let pptPol = policy?.pptConfig || undefined
                                         if(pptPol){
-                                          pptPol.embedded_images = event.target.value
+                                          pptPol.embedded_files = event.target.value
                                         }
                                         setReadyForRender(!readyForRender)
                                       }}

@@ -1,4 +1,4 @@
-var {spawnSync, exec, execSync}         = require('child_process');
+var {spawnSync, exec}                   = require('child_process');
 import * as Utils                       from '../utils/utils'
 const UUID                              = require('pure-uuid');
 const fs                                = require('fs-extra')
@@ -12,7 +12,7 @@ fixPath();
 const getPayload = (data: any) => {
     let buffer = Buffer.from(data.content, 'base64');
     let size_of_file = buffer.length / 1000000;
-    Utils.addRawLogLine(0,"-","Filef Size (MB) : " + size_of_file);
+    Utils.addRawLogLine(0,"-","File Size (MB) : " + size_of_file);
     var json = {
             fileSize : size_of_file,
             Base64 : data.content
@@ -89,16 +89,8 @@ export const makeRequest = async (request: any, sourceFileUrl: string, requestId
     let payload: string | any;
    
     payload = getPayload(request)
-    var fileSize = payload.fileSize;
-
-    if(fileSize < 50){
-        return docker_exec_rebuild(payload,request,requestId,folderId,sourceFileUrl,resultCallback);                
-    }
-    else{
-        Utils.addLogLine(request.filename,"File size > 6 MB. Unprocessable");
-        resultCallback({'source':sourceFileUrl, 'url':'TBD', 'filename':request.filename, isError:true,
-             msg:'File too big. 4 bytes to 50 MB file size bracket', id:requestId, targetDir:folderId, original:request.content})
-    }
+    var fileSize = payload.fileSize;    
+    return docker_exec_rebuild(payload,request,requestId,folderId,sourceFileUrl,resultCallback);                
 }
 
 export const getFile = (file: any) => {
@@ -129,9 +121,11 @@ export const docker_exec_rebuild = async (payload: any,request:any,requestId:str
     Utils.addRawLogLine(0,request.filename,'outputDir '+outputDir);
     var base64Data = payload.Base64.replace(/^data:image\/png;base64,/, "");
     fs.writeFileSync(path.join(inputDir,request.filename),base64Data,{encoding:"base64"});
-    Utils.addRawLogLine(0,request.filename,"Created rebuild dirs in "+directory+", inputDir "+inputDir+", outputDir"+outputDir);          
-    // Run container 
-    var cmd = 'docker run --rm -v '+'\"'+ resolve(inputDir)+'\"'+':/input -v '+ '\"'+resolve(outputDir)+ '\"'+':/output '+Utils.GW_DOCKER_IMG_NAME;
+    Utils.addRawLogLine(0,request.filename,"Created rebuild dirs in "+directory+", inputDir "+inputDir+", outputDir"+outputDir);  
+    let configDir = resolve(Utils.getAppDataPath() + Utils.getPathSep() + 'configR');    
+    Utils.addRawLogLine(1,request.filename,'Config dir - '+(configDir));
+    // Run container ]
+    var cmd = 'docker run --rm -v '+'\"'+ configDir+'\"'+ ':/home/glasswall -v '+'\"'+ resolve(inputDir)+'\"'+':/input -v '+ '\"'+resolve(outputDir)+ '\"'+':/output '+Utils.GW_DOCKER_IMG_NAME;
     console.log("cmd" +cmd)
     exec(cmd, function (err:Error, stdout:string, stderr:string) {      
         if(err){
@@ -172,7 +166,7 @@ export const docker_exec_rebuild = async (payload: any,request:any,requestId:str
                             }
                             Utils.addLogLine(request.filename,'File rebuild successful. Starting analysis');
                             return docker_exec_analysis(payload,request,requestId,folderId,
-                                sourceFileUrl,resultCallback)               
+                                sourceFileUrl,resultCallback,data)               
                           });
                     }
                     else{
@@ -195,7 +189,7 @@ export const docker_exec_rebuild = async (payload: any,request:any,requestId:str
     }
 
 export const docker_exec_analysis = async (payload:any,request:any,requestId:string,folderId:string,
-    sourceFileUrl:string,resultCallback:any) => {
+    sourceFileUrl:string,resultCallback:any,cleanData : any) => {
     const id = new UUID(4).format();
     const directory = path.join(Utils.getAppDataPath() + Utils.getPathSep() +  'temp', id);
     const inputDir = path.join(directory,'input');
@@ -209,17 +203,13 @@ export const docker_exec_analysis = async (payload:any,request:any,requestId:str
     Utils.addRawLogLine(1,request.filename,'<docker_exec_analysis> outputDir '+outputDir);
     var base64Data = payload.Base64.replace(/^data:image\/png;base64,/, "");
     fs.writeFileSync(path.join(inputDir,request.filename),base64Data,{encoding:"base64"});
-    Utils.addRawLogLine(1,request.filename,"<docker_exec_analysis> Created analysis dirs in "+directory+", inputDir "+inputDir+", outputDir"+outputDir);
-    var options={"timeout":5000, "shell":false};
-    var totalOutput : any;    
-    totalOutput = "";
+    Utils.addRawLogLine(1,request.filename,"<docker_exec_analysis> Created analysis dirs in "+directory+", inputDir "+inputDir+", outputDir"+outputDir);          
     // Run container        
     let configDir = resolve(Utils.getAppDataPath() + Utils.getPathSep() + 'config');    
     Utils.addRawLogLine(1,request.filename,'Config dir - '+(configDir));
     // Run container 
     var cmd = 'docker run --rm -v '+'\"'+ configDir+'\"'+ ':/home/glasswall -v '+
     '\"'+ resolve(inputDir)+'\"'+ ':/input -v '+'\"'+ resolve(outputDir)+'\"'+ ':/output '+Utils.GW_DOCKER_IMG_NAME;
-    console.log('anaysis cmd - '+cmd)
     exec(cmd, function (err:Error, stdout:string, stderr:string) {      
         if(err){
             Utils.addRawLogLine(2,request.filename,'Error during analysis -> \n '+err.stack+"\n")
@@ -229,13 +219,13 @@ export const docker_exec_analysis = async (payload:any,request:any,requestId:str
              return;
         }
         analyseAnalyzed(stdout, stderr, cmd, base64Data,request,requestId
-                ,folderId,sourceFileUrl,inputDir,outputDir,resultCallback) 
+                ,folderId,sourceFileUrl,inputDir,outputDir,resultCallback,cleanData) 
     })
 }
 
 
 export const analyseAnalyzed = async (stdout:string, stderr:string, cmd:string, payload:any,request:any,
-    requestId:string,folderId:string,sourceFileUrl:string,inputDir:string,outputDir:string,resultCallback:any) => {
+    requestId:string,folderId:string,sourceFileUrl:string,inputDir:string,outputDir:string,resultCallback:any,cleanData : any) => {
  //       Utils.addRawLogLine(0,request.filename,"Analysis stdout -> "+String(stdout))             
         Utils.addRawLogLine(1,request.filename,"Analysis stderr -> "+String(stderr))             
         if(stdout.indexOf("error during connect") > -1){
@@ -258,7 +248,7 @@ export const analyseAnalyzed = async (stdout:string, stderr:string, cmd:string, 
                                     return;
                             }
                             Utils.addLogLine(request.filename,'File analysis successful. Writing results');
-                            return writeDecodedBase64File(payload, data, request, sourceFileUrl, requestId,
+                            return writeDecodedBase64File(cleanData, data, request, sourceFileUrl, requestId,
                                 folderId, resultCallback);           
                           });
                     }
@@ -512,29 +502,4 @@ export const check_license = () =>{
         localStorage.setItem("healthLogs",oldLogs);            
         return 1;
     }         
-} 
-
-export const extract_image = () =>{
-    var oldLogs = localStorage.getItem("healthLogs") || "";    
-    var options={"timeout":5000, "shell":false};
-    var totalOutput : any;    
-    // Pull    
-    console.log(`Current directory: ${process.cwd()}`);
-    console.log(`_dirnme: ${__dirname}`);
-    totalOutput = "";    
-    let executorPath = resolve(path.dirname(__dirname), 'extraResources','glasswallsdk.tar')
-    console.log('executorPath - '+executorPath)
-    var pullResponse = execSync('docker load <  '+executorPath).toString();    
-    if(pullResponse.hasOwnProperty("output")){            
-        for(var i=0;i<pullResponse["output"].length;i++){
-            var output = pullResponse["output"][i];        
-            if(output != null && output != ""){
-                totalOutput = totalOutput+output;
-            }            
-        }
-        Utils.addRawLogLine(1,"-", "<pull_image> Pull Response  = "+totalOutput);        
-    }
-    oldLogs += "\n"+Utils.getLogTime()+" - INFO \n IMAGE EXTRACTION LOGS - "+totalOutput;
-    localStorage.setItem("healthLogs",oldLogs);  
-    return totalOutput; 
 } 
