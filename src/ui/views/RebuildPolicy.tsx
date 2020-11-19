@@ -5,6 +5,7 @@ import Highlight                from 'react-highlight.js';
 import * as Utils               from '../utils/utils'
 import { Button, FormControl, FormHelperText, Grid, Input, InputLabel, MenuItem, MuiThemeProvider, Select } from '@material-ui/core';
 import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
+import { render } from 'react-dom';
 
 const useStyles = makeStyles((theme) => ({
     root:       {   
@@ -148,6 +149,7 @@ saveBtn:{
   backgroundColor:"#26a61a",
   color:"#fff",
   margin:'0 10px',
+  marginBottom:'20px',
   textTransform:"capitalize",
   '&:hover':{
     backgroundColor:'#1a8110'
@@ -205,96 +207,166 @@ const purpleColor = {
 function RebuildPolicy(){
     const classes = useStyles(); 
     const [readyForRender, setReadyForRender]   = useState(false)
-    const [policy, setPolicy]   = useState<Policy>( {
-      policyName               :'sample policy',
-      pdfWatermark             :'Watermark',
-      pdfAcroform              :'sanitise',
-      pdfMetadata              :'sanitise',
-      pdfJavascript            :'sanitise',
-      pdfActionsAll            :'sanitise',
-      pdfEmbeddedFiles         :'sanitise',
-      pdfInternalHyperlinks    :'sanitise',
-      pdfExternalHyperlinks    :'sanitise',
-      pdfEmbeddedImages        :'sanitise',
-      wordMacros               :'sanitise',
-      wordMetadata             :'sanitise',
-      wordReviewComments       :'sanitise',
-      wordEmbeddedFiles        :'sanitise',
-      wordInternalHyperlinks   :'sanitise',
-      wordExternalHyperlinks   :'sanitise',
-      wordDynamicDataExchange  :'sanitise',
-      wordEmbeddedImages       :'sanitise',
-      excelMacros              :'sanitise',
-      excelMetadata            :'sanitise',
-      excelReviewComments      :'sanitise',
-      excelEmbeddedFiles       :'sanitise',
-      excelInternalHyperlinks  :'sanitise',
-      excelExternalHyperlinks  :'sanitise',
-      excelDynamicDataExchange :'sanitise',
-      excelEmbeddedImages      :'sanitise',
-      pptMacros                :'sanitise',
-      pptMetadata              :'sanitise',
-      pptReviewComments        :'sanitise',
-      pptEmbeddedFiles         :'sanitise',
-      pptInternalHyperlinks    :'sanitise',
-      pptExternalHyperlinks    :'sanitise',
-      pptEmbeddedImages        :'sanitise',
-      zip                      :'process',
-    
-    });
+    const [policy, setPolicy]   = useState<PolicyConfig>(
+      {
+        pdfConfig:{
+          metadata                : "sanitise",
+          javascript              : "sanitise",
+          acroform                : "sanitise",
+          actions_all             : "sanitise",
+          embedded_files          : "sanitise",
+          external_hyperlinks     : "sanitise",
+          internal_hyperlinks     : "sanitise",
+          embedded_images         : "sanitise",
+        },
+        wordConfig:{
+          metadata                : "sanitise",
+          macros                  : "sanitise",
+          embedded_files          : "sanitise",
+          review_comments         : "sanitise",
+          internal_hyperlinks     : "sanitise",
+          external_hyperlinks     : "sanitise",
+          dynamic_data_exchange   : "sanitise",
+          embedded_images         : "sanitise",
+        },
+        pptConfig:{
+          metadata                : "sanitise",
+          macros                  : "sanitise",
+          embedded_files          : "sanitise",
+          review_comments         : "sanitise",
+          internal_hyperlinks     : "sanitise",
+          external_hyperlinks     : "sanitise",
+          embedded_images         : "sanitise",
+        },
+        xlsConfig:{
+          metadata                : "sanitise",  
+          macros                  : "sanitise",  
+          embedded_files          : "sanitise",  
+          internal_hyperlinks     : "sanitise",  
+          external_hyperlinks     : "sanitise",  
+          review_comments         : "sanitise",  
+          dynamic_data_exchange   : "sanitise",  
+          embedded_images         : "sanitise",  
+        }});
 
-    interface Policy
-    {
-      policyName                : string,
-      pdfWatermark              : string,
-      pdfAcroform               : string,
-      pdfMetadata               : string,
-      pdfJavascript             : string,
-      pdfActionsAll             : string,
-      pdfEmbeddedFiles          : string,
-      pdfInternalHyperlinks     : string,
-      pdfExternalHyperlinks     : string,
-      pdfEmbeddedImages         : string,
-      wordMacros                : string,
-      wordMetadata              : string,
-      wordReviewComments        : string,
-      wordEmbeddedFiles         : string,
-      wordInternalHyperlinks    : string,
-      wordExternalHyperlinks    : string,
-      wordDynamicDataExchange   : string,
-      wordEmbeddedImages        : string,
-      excelMacros               : string,
-      excelMetadata             : string,
-      excelReviewComments       : string,
-      excelEmbeddedFiles        : string,
-      excelInternalHyperlinks   : string,
-      excelExternalHyperlinks   : string,
-      excelDynamicDataExchange  : string,
-      excelEmbeddedImages       : string,
-      pptMacros                 : string,
-      pptMetadata               : string,
-      pptReviewComments         : string,
-      pptEmbeddedFiles          : string,
-      pptInternalHyperlinks     : string,
-      pptExternalHyperlinks     : string,
-      pptEmbeddedImages         : string,
-      zip                       : string,
+    interface PdfPolicy{
+      metadata                : string,
+      javascript              : string,
+      acroform                : string,
+      actions_all             : string,
+      embedded_files          : string,
+      external_hyperlinks     : string,
+      internal_hyperlinks     : string,
+      embedded_images         : string,      
+    }
 
+    interface WordPolicy{
+      metadata                : string,
+      macros                  : string,
+      embedded_files          : string,
+      review_comments         : string,
+      internal_hyperlinks     : string,
+      external_hyperlinks     : string,
+      dynamic_data_exchange   : string,
+      embedded_images         : string,
+    }
+
+    interface PptPolicy{
+      metadata                : string,
+      macros                  : string,
+      embedded_files          : string,
+      review_comments         : string,
+      internal_hyperlinks     : string,
+      external_hyperlinks     : string,
+      embedded_images         : string,      
+    }
+
+    interface ExcelPolicy{
+      metadata                : string,
+      macros                  : string,
+      embedded_files          : string,
+      internal_hyperlinks     : string,
+      external_hyperlinks     : string,
+      review_comments         : string,
+      dynamic_data_exchange   : string,
+      embedded_images         : string,
+    }
+
+
+    interface PolicyConfig
+    {      
+      pdfConfig                 : PdfPolicy,
+      wordConfig                : WordPolicy,
+      xlsConfig                 : ExcelPolicy,
+      pptConfig                 : PptPolicy,      
     }
    
 
     React.useEffect(()=>{
-      console.log("value React.useEffect called")
-      
+      console.log("value React.useEffect called")      
   },[policy, readyForRender]);
  
+  React.useEffect(()=>{
+    Utils.getPolicy().then((policyJson:any) => {
+      console.log('policy - '+JSON.stringify(policyJson))
+      let pdfPolicy = {
+        external_hyperlinks: policyJson.config.pdfConfig[0].external_hyperlinks[0],
+        acroform: policyJson.config.pdfConfig[0].acroform[0],
+        metadata: policyJson.config.pdfConfig[0].metadata[0],
+        javascript: policyJson.config.pdfConfig[0].javascript[0],
+        actions_all: policyJson.config.pdfConfig[0].actions_all[0],
+        internal_hyperlinks: policyJson.config.pdfConfig[0].internal_hyperlinks[0],
+        embedded_files: policyJson.config.pdfConfig[0].embedded_files[0],
+        embedded_images: policyJson.config.pdfConfig[0].embedded_images[0]
+      }
+      let wordPolicy = {        
+        macros: policyJson.config.wordConfig[0].macros[0],
+        metadata: policyJson.config.wordConfig[0].metadata[0],
+        review_comments: policyJson.config.wordConfig[0].review_comments[0],
+        embedded_files: policyJson.config.wordConfig[0].embedded_files[0],
+        internal_hyperlinks: policyJson.config.wordConfig[0].internal_hyperlinks[0],
+        external_hyperlinks: policyJson.config.wordConfig[0].external_hyperlinks[0],
+        dynamic_data_exchange: policyJson.config.wordConfig[0].dynamic_data_exchange[0],
+        embedded_images: policyJson.config.wordConfig[0].macros[0]
+      }
+      let excelPolicy = {
+        macros: policyJson.config.xlsConfig[0].macros[0],
+        metadata: policyJson.config.xlsConfig[0].metadata[0],
+        review_comments: policyJson.config.xlsConfig[0].review_comments[0],
+        embedded_files: policyJson.config.xlsConfig[0].embedded_files[0],
+        internal_hyperlinks: policyJson.config.xlsConfig[0].internal_hyperlinks[0],
+        external_hyperlinks: policyJson.config.xlsConfig[0].external_hyperlinks[0],
+        dynamic_data_exchange: policyJson.config.xlsConfig[0].dynamic_data_exchange[0],
+        embedded_images: policyJson.config.xlsConfig[0].macros[0]
+      }
+      let pptPolicy = {
+        macros: policyJson.config.pptConfig[0].macros[0],
+        metadata: policyJson.config.pptConfig[0].metadata[0],
+        review_comments: policyJson.config.pptConfig[0].review_comments[0],
+        embedded_files: policyJson.config.pptConfig[0].embedded_files[0],
+        internal_hyperlinks: policyJson.config.pptConfig[0].internal_hyperlinks[0],
+        external_hyperlinks: policyJson.config.pptConfig[0].external_hyperlinks[0],
+        embedded_images: policyJson.config.pptConfig[0].macros[0],
+      }    
+      if(policy){
+        policy.pdfConfig = pdfPolicy  
+        policy.wordConfig = wordPolicy
+        policy.pptConfig = pptPolicy
+        policy.xlsConfig = excelPolicy
+      }
+      console.log('policy set-> '+policy)
+      setPolicy(policy)
+      setReadyForRender(!readyForRender)
+    })    
+    },[]);
 
-   const handleChange =(event: any)=>{
-     let name: string;
-    
+   const savePolicy =()=>{
+     console.log('Saving policy - '+JSON.stringify(policy))
+     Utils.savePolicy({"config":policy})
     }
-   
-    console.log(policy.zip);
+
+
+       
     return(
         <div className={classes.root}> 
             <SideDrawer showBack={false}/>
@@ -309,54 +381,52 @@ function RebuildPolicy(){
                               {/* <TitleBar title="Current Policy"></TitleBar> */}
 
                                 {/* <div className={classes.toolbar} /> */}
-                                <h2 >Current Configuration: {policy.policyName}</h2>
+                                <h2 >Current Configuration</h2>
                                 <div className={classes.divStyle}>
                                 <MuiThemeProvider theme={ColorTheme}>
-                                    <Button   className={classes.saveBtn}>
+                                    <Button  onClick={savePolicy} className={classes.saveBtn}>
                                         Save
                                     </Button>
                                     
                                 </MuiThemeProvider>
                             </div>
 
-                                <form>
-                                    {/*<h2>Archive Manager</h2>*/}
-                                    <h3 >Tagging</h3>
-                                    <FormControl className={classes.formControl}>
-                                        <InputLabel htmlFor="archive-manager" className={classes.inputLabel} style={greenColor}>Tag files on upload</InputLabel>
-                                        <Select className={classes.selectBox}
-                                                value={policy.zip}
-                                                name ="zip"
-                                                onChange={(event: any)=>{
-                                                  policy.zip = event.target.value;
-                                                  setPolicy(policy); 
-                                                  setReadyForRender(!readyForRender)
-                                                }}
-                                                inputProps={{ name: 'zip',  id: 'archive-manager'}}
-                                        >
-                                            <MenuItem value="process">Yes</MenuItem>
-                                            <MenuItem value="discard">No</MenuItem>
-                                            {/*<MenuItem value="no-action">No Action</MenuItem>*/}
-                                        </Select>
-                                        
-                                    </FormControl>
-                                </form>
-
-
                                 <h3 >PDF Config</h3>
-                                <form className={classes.root} autoComplete="off">
-                                  <FormControl className={classes.formControl} disabled>
-                                    <InputLabel htmlFor="pdf-watermark"  className={classes.inputLabel} style={disabledColor}>Security Tag</InputLabel>
-                                    <Input id="pdf-watermark" value={policy.pdfWatermark} onChange={(event: any) => {policy.pdfWatermark= event.target.value}} />
+                                <form className={classes.root} autoComplete="off">                                  
+                                <FormControl className={classes.formControl}>
+                                    <InputLabel htmlFor="pdf-metadata" className={classes.inputLabel} style={greenColor}>Metadata</InputLabel>
+                                    <Select
+                                      className={classes.selectBox}
+                                      value={policy?.pdfConfig.metadata}
+                                      onChange={(event: any) => {
+                                                                  let pdfPol = policy?.pdfConfig || undefined
+                                                                  if(pdfPol){
+                                                                    pdfPol.metadata = event.target.value
+                                                                  }
+                                                                  setReadyForRender(!readyForRender)
+                                                                }}
+                                      inputProps={{
+                                        name: "pdfMetadata",
+                                        id: 'pdf-metadata'
+                                      }}
+                                    >
+
+                                      <MenuItem value="sanitise">Sanitise</MenuItem>
+                                      <MenuItem value="allow">Allow</MenuItem>
+                                      <MenuItem value="disallow">Disallow</MenuItem>
+                                    </Select>
                                     
                                   </FormControl>
                                   <FormControl className={classes.formControl}>
                                     <InputLabel htmlFor="pdf-acroform" className={classes.inputLabel} style={greenColor}>Acroform</InputLabel>
                                     <Select
                                       className={classes.selectBox}
-                                      value={policy.pdfAcroform}
+                                      value={policy?.pdfConfig.acroform}
                                       onChange={(event: any) => {
-                                                                  policy.pdfAcroform= event.target.value
+                                                                  let pdfPol = policy?.pdfConfig || undefined
+                                                                  if(pdfPol){
+                                                                    pdfPol.acroform = event.target.value
+                                                                  }
                                                                   setReadyForRender(!readyForRender)
                                                                 }}
                                       inputProps={{
@@ -375,8 +445,12 @@ function RebuildPolicy(){
                                     <InputLabel htmlFor="pdf-metadata" className={classes.inputLabel} style={blueColor}>Metadata</InputLabel>
                                     <Select
                                       className={classes.selectBox}
-                                      value={policy.pdfMetadata}
-                                      onChange={(event: any) => {policy.pdfMetadata= event.target.value
+                                      value={policy?.pdfConfig.metadata}
+                                      onChange={(event: any) => {
+                                                                  let pdfPol = policy?.pdfConfig || undefined
+                                                                  if(pdfPol){
+                                                                    pdfPol.metadata = event.target.value
+                                                                  }
                                                                  setReadyForRender(!readyForRender)
                                                                 }}
                                       inputProps={{
@@ -396,9 +470,12 @@ function RebuildPolicy(){
                                     <InputLabel htmlFor="pdf-javascript" className={classes.inputLabel} style={purpleColor}>Javascript</InputLabel>
                                     <Select
                                       className={classes.selectBox}
-                                      value={policy.pdfJavascript}
+                                      value={policy?.pdfConfig.javascript}
                                       onChange={(event: any) => {
-                                                                policy.pdfJavascript= event.target.value
+                                                                let pdfPol = policy?.pdfConfig || undefined
+                                                                if(pdfPol){
+                                                                  pdfPol.javascript = event.target.value
+                                                                }
                                                                 setReadyForRender(!readyForRender)
                                                               }}
                                       inputProps={{
@@ -418,9 +495,12 @@ function RebuildPolicy(){
                                     <InputLabel htmlFor="pdf-actions-all" className={classes.inputLabel} style={greenColor}>Actions All</InputLabel>
                                     <Select
                                      className={classes.selectBox}
-                                      value={policy.pdfActionsAll}
+                                      value={policy?.pdfConfig.actions_all}
                                       onChange={(event: any) => {
-                                                                  policy.pdfActionsAll= event.target.value
+                                                                let pdfPol = policy?.pdfConfig || undefined
+                                                                if(pdfPol){
+                                                                  pdfPol.actions_all = event.target.value
+                                                                }                                                                  
                                                                   setReadyForRender(!readyForRender)
                                                                 }}
                                       inputProps={{
@@ -440,9 +520,12 @@ function RebuildPolicy(){
                                     <InputLabel htmlFor="pdf-embedded-files" className={classes.inputLabel} style={blueColor}>Embedded Files</InputLabel>
                                     <Select
                                       className={classes.selectBox}
-                                      value={policy.pdfEmbeddedFiles}
+                                      value={policy?.pdfConfig.embedded_files}
                                       onChange={(event: any) => {
-                                        policy.pdfEmbeddedFiles= event.target.value
+                                        let pdfPol = policy?.pdfConfig || undefined
+                                        if(pdfPol){
+                                          pdfPol.embedded_files = event.target.value
+                                        }
                                         setReadyForRender(!readyForRender)
                                       }}
                                       inputProps={{
@@ -462,9 +545,12 @@ function RebuildPolicy(){
                                     <InputLabel htmlFor="pdf-internal-hyperlinks" className={classes.inputLabel} style={purpleColor}>Internal Hyperlinks</InputLabel>
                                     <Select
                                       className={classes.selectBox}
-                                      value={policy.pdfInternalHyperlinks}
+                                      value={policy?.pdfConfig.internal_hyperlinks}
                                       onChange={(event: any) => {
-                                        policy.pdfInternalHyperlinks= event.target.value
+                                        let pdfPol = policy?.pdfConfig || undefined
+                                        if(pdfPol){
+                                          pdfPol.internal_hyperlinks = event.target.value
+                                        }
                                         setReadyForRender(!readyForRender)
                                       }}
                                       inputProps={{
@@ -484,9 +570,12 @@ function RebuildPolicy(){
                                     <InputLabel htmlFor="pdf-external-hyperlinks" className={classes.inputLabel} style={blueColor}>External Hyperlinks</InputLabel>
                                     <Select
                                       className={classes.selectBox}
-                                      value={policy.pdfExternalHyperlinks}
+                                      value={policy?.pdfConfig.external_hyperlinks}
                                       onChange={(event: any) => {
-                                        policy.pdfExternalHyperlinks= event.target.value
+                                        let pdfPol = policy?.pdfConfig || undefined
+                                        if(pdfPol){
+                                          pdfPol.external_hyperlinks = event.target.value
+                                        }
                                         setReadyForRender(!readyForRender)
                                       }}
                                       inputProps={{
@@ -506,14 +595,42 @@ function RebuildPolicy(){
                                     <InputLabel htmlFor="pdf-embedded-images" className={classes.inputLabel} style={purpleColor}>Embedded Images</InputLabel>
                                     <Select
                                       className={classes.selectBox}
-                                      value={policy.pdfEmbeddedImages}
+                                      value={policy?.pdfConfig.embedded_images}
                                       onChange={(event: any) => {
-                                        policy.pdfEmbeddedImages= event.target.value
+                                        let pdfPol = policy?.pdfConfig || undefined
+                                        if(pdfPol){
+                                          pdfPol.embedded_images = event.target.value
+                                        }
                                         setReadyForRender(!readyForRender)
                                       }}
                                       inputProps={{
                                         name: 'pdfEmbeddedImages',
                                         id: 'pdf-embedded-images',
+                                        readOnly: false,
+                                      }}
+                                    >
+
+                                      <MenuItem value="sanitise">Sanitise</MenuItem>
+                                      <MenuItem value="allow">Allow</MenuItem>
+                                      <MenuItem value="disallow">Disallow</MenuItem>
+                                    </Select>
+                                    
+                                  </FormControl>
+                                  <FormControl className={classes.formControl}>
+                                    <InputLabel htmlFor="pdf-embedded-images" className={classes.inputLabel} style={purpleColor}>Embedded Files</InputLabel>
+                                    <Select
+                                      className={classes.selectBox}
+                                      value={policy?.pdfConfig.embedded_files}
+                                      onChange={(event: any) => {
+                                        let pdfPol = policy?.pdfConfig || undefined
+                                        if(pdfPol){
+                                          pdfPol.embedded_files = event.target.value
+                                        }
+                                        setReadyForRender(!readyForRender)
+                                      }}
+                                      inputProps={{
+                                        name: 'pdfEmbeddedFiles',
+                                        id: 'pdf-embedded-files',
                                         readOnly: false,
                                       }}
                                     >
@@ -530,12 +647,15 @@ function RebuildPolicy(){
                                   <h3>Word Config</h3>
                                   <form className={classes.root} autoComplete="off">
                                   <FormControl className={classes.formControl}>
-                                    <InputLabel htmlFor="word-macros" className={classes.inputLabel} style={redColor}>Macros</InputLabel>
+                                    <InputLabel htmlFor="word-metadata" className={classes.inputLabel} style={redColor}>Metadata</InputLabel>
                                     <Select
                                       className={classes.selectBox}
-                                      value={policy.wordMacros}
+                                      value={policy?.wordConfig.metadata}
                                       onChange={(event: any) => {
-                                        policy.wordMacros= event.target.value
+                                        let wordPol = policy?.wordConfig || undefined
+                                        if(wordPol){
+                                          wordPol.metadata = event.target.value
+                                        }
                                         setReadyForRender(!readyForRender)
                                       }}
                                       inputProps={{
@@ -552,17 +672,20 @@ function RebuildPolicy(){
                                     
                                   </FormControl>
                                   <FormControl className={classes.formControl}>
-                                    <InputLabel htmlFor="word-metadata" className={classes.inputLabel} style={greenColor}>Metadata</InputLabel>
+                                    <InputLabel htmlFor="word-macros" className={classes.inputLabel} style={redColor}>Macros</InputLabel>
                                     <Select
                                       className={classes.selectBox}
-                                      value={policy.wordMetadata}
+                                      value={policy?.wordConfig.macros}
                                       onChange={(event: any) => {
-                                        policy.wordMetadata= event.target.value
+                                        let wordPol = policy?.wordConfig || undefined
+                                        if(wordPol){
+                                          wordPol.macros = event.target.value
+                                        }
                                         setReadyForRender(!readyForRender)
                                       }}
                                       inputProps={{
-                                        name: 'wordMetadata',
-                                        id: 'word-metadata',
+                                        name: 'wordMacros',
+                                        id: 'word-macros',
                                         readOnly: false,
                                       }}
                                     >
@@ -573,13 +696,17 @@ function RebuildPolicy(){
                                     </Select>
                                     
                                   </FormControl>
+                                  
                                   <FormControl className={classes.formControl}>
                                     <InputLabel htmlFor="word-review-comments" className={classes.inputLabel} style={orangeColor}>Review Comments</InputLabel>
                                     <Select
                                       className={classes.selectBox}
-                                      value={policy.wordReviewComments}
+                                      value={policy?.wordConfig.review_comments}
                                       onChange={(event: any) => {
-                                        policy.wordReviewComments= event.target.value
+                                        let wordPol = policy?.wordConfig || undefined
+                                        if(wordPol){
+                                          wordPol.review_comments = event.target.value
+                                        }
                                         setReadyForRender(!readyForRender)
                                       }}
                                       inputProps={{
@@ -599,9 +726,12 @@ function RebuildPolicy(){
                                     <InputLabel htmlFor="word-embedded-files" className={classes.inputLabel} style={blueColor}>Embedded Files</InputLabel>
                                     <Select
                                       className={classes.selectBox}
-                                      value={policy.wordEmbeddedFiles}
+                                      value={policy?.wordConfig.embedded_files}
                                       onChange={(event: any) => {
-                                        policy.wordEmbeddedFiles= event.target.value
+                                        let wordPol = policy?.wordConfig || undefined
+                                        if(wordPol){
+                                          wordPol.embedded_files = event.target.value
+                                        }
                                         setReadyForRender(!readyForRender)
                                       }}
                                       inputProps={{
@@ -621,9 +751,12 @@ function RebuildPolicy(){
                                     <InputLabel htmlFor="word-internal-hyperlinks" className={classes.inputLabel} style={purpleColor}>Internal Hyperlinks</InputLabel>
                                     <Select
                                       className={classes.selectBox}
-                                      value={policy.wordInternalHyperlinks}
+                                      value={policy?.wordConfig.internal_hyperlinks}
                                       onChange={(event: any) => {
-                                        policy.wordInternalHyperlinks= event.target.value
+                                        let wordPol = policy?.wordConfig || undefined
+                                        if(wordPol){
+                                          wordPol.internal_hyperlinks = event.target.value
+                                        }
                                         setReadyForRender(!readyForRender)
                                       }}
                                       inputProps={{
@@ -643,9 +776,12 @@ function RebuildPolicy(){
                                     <InputLabel htmlFor="word-external-hyperlinks" className={classes.inputLabel} style={blueColor}>External Hyperlinks</InputLabel>
                                     <Select
                                       className={classes.selectBox}
-                                      value={policy.wordExternalHyperlinks}
+                                      value={policy?.pdfConfig.external_hyperlinks}
                                       onChange={(event: any) => {
-                                        policy.wordExternalHyperlinks= event.target.value
+                                        let wordPol = policy?.wordConfig || undefined
+                                        if(wordPol){
+                                          wordPol.external_hyperlinks = event.target.value
+                                        }
                                         setReadyForRender(!readyForRender)
                                       }}
                                       inputProps={{
@@ -665,9 +801,12 @@ function RebuildPolicy(){
                                     <InputLabel htmlFor="word-dynamic-data-exchange" className={classes.inputLabel} style={purpleColor}>Dynamic Data Exchange</InputLabel>
                                     <Select
                                       className={classes.selectBox}
-                                      value={policy.wordDynamicDataExchange}
+                                      value={policy?.wordConfig.dynamic_data_exchange}
                                       onChange={(event: any) => {
-                                        policy.wordDynamicDataExchange= event.target.value
+                                        let wordPol = policy?.wordConfig || undefined
+                                        if(wordPol){
+                                          wordPol.dynamic_data_exchange = event.target.value
+                                        }
                                         setReadyForRender(!readyForRender)
                                       }}
                                       inputProps={{
@@ -687,7 +826,14 @@ function RebuildPolicy(){
                                     <InputLabel htmlFor="word-embedded-images" className={classes.inputLabel}  style={blueColor}>Embedded Images</InputLabel>
                                     <Select
                                       className={classes.selectBox}
-                                      value={policy.wordEmbeddedImages}
+                                      value={policy?.wordConfig.embedded_images}
+                                      onChange={(event: any) => {
+                                        let wordPol = policy?.wordConfig || undefined
+                                        if(wordPol){
+                                          wordPol.embedded_images = event.target.value
+                                        }
+                                        setReadyForRender(!readyForRender)
+                                      }}
                                       inputProps={{
                                         name: 'wordEmbeddedImages',
                                         id: 'word-embedded-images',
@@ -707,9 +853,12 @@ function RebuildPolicy(){
                                     <InputLabel htmlFor="excel-macros" className={classes.inputLabel} style={redColor}>Macros</InputLabel>
                                     <Select
                                       className={classes.selectBox}
-                                      value={policy.excelMacros}
+                                      value={policy?.xlsConfig.macros}
                                       onChange={(event: any) => {
-                                        policy.excelMacros= event.target.value
+                                        let excelPol = policy?.xlsConfig || undefined
+                                        if(excelPol){
+                                          excelPol.metadata = event.target.value
+                                        }
                                         setReadyForRender(!readyForRender)
                                       }}
                                       inputProps={{
@@ -729,9 +878,12 @@ function RebuildPolicy(){
                                     <InputLabel htmlFor="excel-metadata" className={classes.inputLabel} style={greenColor}>Metadata</InputLabel>
                                     <Select
                                       className={classes.selectBox}
-                                      value={policy.excelMetadata}
+                                      value={policy?.xlsConfig.metadata}
                                       onChange={(event: any) => {
-                                        policy.excelMetadata= event.target.value
+                                        let excelPol = policy?.xlsConfig || undefined
+                                        if(excelPol){
+                                          excelPol.metadata = event.target.value
+                                        }
                                         setReadyForRender(!readyForRender)
                                       }}
                                       inputProps={{
@@ -751,9 +903,12 @@ function RebuildPolicy(){
                                     <InputLabel htmlFor="excel-review-comments" className={classes.inputLabel} style={orangeColor}>Review Comments</InputLabel>
                                     <Select
                                       className={classes.selectBox}
-                                      value={policy.excelReviewComments}
+                                      value={policy?.xlsConfig.review_comments}
                                       onChange={(event: any) => {
-                                        policy.excelReviewComments= event.target.value
+                                        let excelPol = policy?.xlsConfig || undefined
+                                        if(excelPol){
+                                          excelPol.review_comments = event.target.value
+                                        }
                                         setReadyForRender(!readyForRender)
                                       }}
                                       inputProps={{
@@ -773,9 +928,12 @@ function RebuildPolicy(){
                                     <InputLabel htmlFor="excel-embedded-files" className={classes.inputLabel} style={blueColor}>Embedded Files</InputLabel>
                                     <Select
                                       className={classes.selectBox}
-                                      value={policy.excelEmbeddedFiles}
+                                      value={policy?.xlsConfig.embedded_files}
                                       onChange={(event: any) => {
-                                        policy.excelEmbeddedFiles= event.target.value
+                                        let excelPol = policy?.xlsConfig || undefined
+                                        if(excelPol){
+                                          excelPol.embedded_images = event.target.value
+                                        }
                                         setReadyForRender(!readyForRender)
                                       }}
                                       inputProps={{
@@ -795,13 +953,16 @@ function RebuildPolicy(){
                                     <InputLabel htmlFor="excel-internal-hyperlinks" className={classes.inputLabel} style={purpleColor}>Internal Hyperlinks</InputLabel>
                                     <Select
                                       className={classes.selectBox}
-                                      value={policy.excelInternalHyperlinks}
+                                      value={policy?.xlsConfig.internal_hyperlinks}
                                       onChange={(event: any) => {
-                                        policy.excelInternalHyperlinks= event.target.value
+                                        let excelPol = policy?.xlsConfig || undefined
+                                        if(excelPol){
+                                          excelPol.internal_hyperlinks = event.target.value
+                                        }
                                         setReadyForRender(!readyForRender)
                                       }}
                                       inputProps={{
-                                        name: 'excelInternalHyperlinks',
+                                        name: 'internalHyperlinks',
                                         id: 'excel-internal-hyperlinks',
                                         readOnly: false,
                                       }}
@@ -817,9 +978,12 @@ function RebuildPolicy(){
                                     <InputLabel htmlFor="excel-external-hyperlinks" className={classes.inputLabel} style={greenColor}>External Hyperlinks</InputLabel>
                                     <Select
                                       className={classes.selectBox}
-                                      value={policy.excelExternalHyperlinks}
+                                      value={policy?.xlsConfig.external_hyperlinks}
                                       onChange={(event: any) => {
-                                        policy.excelExternalHyperlinks= event.target.value
+                                        let excelPol = policy?.xlsConfig || undefined
+                                        if(excelPol){
+                                          excelPol.external_hyperlinks = event.target.value
+                                        }
                                         setReadyForRender(!readyForRender)
                                       }}
                                       inputProps={{
@@ -839,9 +1003,12 @@ function RebuildPolicy(){
                                     <InputLabel htmlFor="excel-dynamic-data-exchange" className={classes.inputLabel} style={blueColor}>Dynamic Data Exchange</InputLabel>
                                     <Select
                                       className={classes.selectBox}
-                                      value={policy.excelDynamicDataExchange}
+                                      value={policy?.xlsConfig.embedded_files}
                                       onChange={(event: any) => {
-                                        policy.excelDynamicDataExchange= event.target.value
+                                        let excelPol = policy?.xlsConfig || undefined
+                                        if(excelPol){
+                                          excelPol.dynamic_data_exchange = event.target.value
+                                        }
                                         setReadyForRender(!readyForRender)
                                       }}
                                       inputProps={{
@@ -861,9 +1028,12 @@ function RebuildPolicy(){
                                     <InputLabel htmlFor="excel-embedded-images" className={classes.inputLabel} style={purpleColor}>Embedded Images</InputLabel>
                                     <Select
                                       className={classes.selectBox}
-                                      value={policy.excelEmbeddedImages}
+                                      value={policy?.xlsConfig.embedded_images}
                                       onChange={(event: any) => {
-                                        policy.excelEmbeddedImages= event.target.value
+                                        let excelPol = policy?.xlsConfig || undefined
+                                        if(excelPol){
+                                          excelPol.embedded_images = event.target.value
+                                        }
                                         setReadyForRender(!readyForRender)
                                       }}
                                       inputProps={{
@@ -886,9 +1056,12 @@ function RebuildPolicy(){
                                     <InputLabel htmlFor="ppt-macros" className={classes.inputLabel} style={redColor}>Macros</InputLabel>
                                     <Select
                                       className={classes.selectBox}
-                                      value={policy.pptMacros}
+                                      value={policy?.pptConfig.macros}
                                       onChange={(event: any) => {
-                                        policy.pptMacros= event.target.value
+                                        let pptPol = policy?.pptConfig || undefined
+                                        if(pptPol){
+                                          pptPol.macros = event.target.value
+                                        }
                                         setReadyForRender(!readyForRender)
                                       }}
                                       inputProps={{
@@ -908,9 +1081,12 @@ function RebuildPolicy(){
                                     <InputLabel htmlFor="ppt-metadata" className={classes.inputLabel} style={greenColor}>Metadata</InputLabel>
                                     <Select
                                       className={classes.selectBox}
-                                      value={policy.pptMetadata}
+                                      value={policy?.pptConfig.metadata}
                                       onChange={(event: any) => {
-                                        policy.pptMetadata= event.target.value
+                                        let pptPol = policy?.pptConfig || undefined
+                                        if(pptPol){
+                                          pptPol.metadata = event.target.value
+                                        }
                                         setReadyForRender(!readyForRender)
                                       }}
                                       inputProps={{
@@ -930,9 +1106,12 @@ function RebuildPolicy(){
                                     <InputLabel htmlFor="ppt-review-comments" className={classes.inputLabel} style={orangeColor}>Review Comments</InputLabel>
                                     <Select
                                       className={classes.selectBox}
-                                      value={policy.pptReviewComments}
+                                      value={policy?.pptConfig.review_comments}
                                       onChange={(event: any) => {
-                                        policy.pptReviewComments= event.target.value
+                                        let pptPol = policy?.pptConfig || undefined
+                                        if(pptPol){
+                                          pptPol.review_comments = event.target.value
+                                        }
                                         setReadyForRender(!readyForRender)
                                       }}
                                       inputProps={{
@@ -952,9 +1131,12 @@ function RebuildPolicy(){
                                     <InputLabel htmlFor="ppt-embedded-files" className={classes.inputLabel} style={blueColor}>Embedded Files</InputLabel>
                                     <Select
                                       className={classes.selectBox}
-                                      value={policy.pptEmbeddedFiles}
+                                      value={policy?.pptConfig.embedded_files}
                                       onChange={(event: any) => {
-                                        policy.pptEmbeddedFiles= event.target.value
+                                        let pptPol = policy?.pptConfig || undefined
+                                        if(pptPol){
+                                          pptPol.embedded_images = event.target.value
+                                        }
                                         setReadyForRender(!readyForRender)
                                       }}
                                       inputProps={{
@@ -974,9 +1156,12 @@ function RebuildPolicy(){
                                     <InputLabel htmlFor="ppt-internal-hyperlinks" className={classes.inputLabel} style={purpleColor}>Internal Hyperlinks</InputLabel>
                                     <Select
                                       className={classes.selectBox}
-                                      value={policy.pptInternalHyperlinks}
+                                      value={policy?.pptConfig.internal_hyperlinks}
                                       onChange={(event: any) => {
-                                        policy.pptInternalHyperlinks= event.target.value
+                                        let pptPol = policy?.pptConfig || undefined
+                                        if(pptPol){
+                                          pptPol.internal_hyperlinks = event.target.value
+                                        }
                                         setReadyForRender(!readyForRender)
                                       }}
                                       inputProps={{
@@ -996,9 +1181,12 @@ function RebuildPolicy(){
                                     <InputLabel htmlFor="ppt-external-hyperlinks" className={classes.inputLabel} style={blueColor}>External Hyperlinks</InputLabel>
                                     <Select
                                       className={classes.selectBox}
-                                      value={policy.pptExternalHyperlinks}
+                                      value={policy?.pptConfig.external_hyperlinks}
                                       onChange={(event: any) => {
-                                        policy.pptExternalHyperlinks= event.target.value
+                                        let pptPol = policy?.pptConfig || undefined
+                                        if(pptPol){
+                                          pptPol.external_hyperlinks = event.target.value
+                                        }
                                         setReadyForRender(!readyForRender)
                                       }}
                                       inputProps={{
@@ -1018,9 +1206,12 @@ function RebuildPolicy(){
                                     <InputLabel htmlFor="ppt-embedded-images" className={classes.inputLabel} style={purpleColor}>Embedded Images</InputLabel>
                                     <Select
                                       className={classes.selectBox}
-                                      value={policy.pptEmbeddedImages}
+                                      value={policy?.pptConfig.embedded_images}
                                       onChange={(event: any) => {
-                                        policy.pptEmbeddedImages= event.target.value
+                                        let pptPol = policy?.pptConfig || undefined
+                                        if(pptPol){
+                                          pptPol.embedded_images = event.target.value
+                                        }
                                         setReadyForRender(!readyForRender)
                                       }}
                                       inputProps={{

@@ -1,4 +1,4 @@
-var {spawnSync, exec}                   = require('child_process');
+var {spawnSync, exec, execSync}         = require('child_process');
 import * as Utils                       from '../utils/utils'
 const UUID                              = require('pure-uuid');
 const fs                                = require('fs-extra')
@@ -12,7 +12,7 @@ fixPath();
 const getPayload = (data: any) => {
     let buffer = Buffer.from(data.content, 'base64');
     let size_of_file = buffer.length / 1000000;
-    Utils.addRawLogLine(0,"-","File Size (MB) : " + size_of_file);
+    Utils.addRawLogLine(0,"-","Filef Size (MB) : " + size_of_file);
     var json = {
             fileSize : size_of_file,
             Base64 : data.content
@@ -214,18 +214,12 @@ export const docker_exec_analysis = async (payload:any,request:any,requestId:str
     var totalOutput : any;    
     totalOutput = "";
     // Run container        
-    let configDir = resolve(Utils.getAppDataPath() + Utils.getPathSep() + 'config');
-    if (!fs.existsSync(configDir)){
-        fs.mkdirSync(configDir);
-    }
-    fs.openSync(path.join(configDir,"config.ini"),'w');
-    fs.openSync(path.join(configDir,"config.xml"),'w');
-    fs.writeFileSync(path.join(configDir,"config.ini"),Utils.CONFIG_INI);
-    fs.writeFileSync(path.join(configDir,"config.xml"),Utils.CONFIG_XML);    
+    let configDir = resolve(Utils.getAppDataPath() + Utils.getPathSep() + 'config');    
     Utils.addRawLogLine(1,request.filename,'Config dir - '+(configDir));
     // Run container 
     var cmd = 'docker run --rm -v '+'\"'+ configDir+'\"'+ ':/home/glasswall -v '+
     '\"'+ resolve(inputDir)+'\"'+ ':/input -v '+'\"'+ resolve(outputDir)+'\"'+ ':/output '+Utils.GW_DOCKER_IMG_NAME;
+    console.log('anaysis cmd - '+cmd)
     exec(cmd, function (err:Error, stdout:string, stderr:string) {      
         if(err){
             Utils.addRawLogLine(2,request.filename,'Error during analysis -> \n '+err.stack+"\n")
@@ -518,4 +512,29 @@ export const check_license = () =>{
         localStorage.setItem("healthLogs",oldLogs);            
         return 1;
     }         
+} 
+
+export const extract_image = () =>{
+    var oldLogs = localStorage.getItem("healthLogs") || "";    
+    var options={"timeout":5000, "shell":false};
+    var totalOutput : any;    
+    // Pull    
+    console.log(`Current directory: ${process.cwd()}`);
+    console.log(`_dirnme: ${__dirname}`);
+    totalOutput = "";    
+    let executorPath = resolve(path.dirname(__dirname), 'extraResources','glasswallsdk.tar')
+    console.log('executorPath - '+executorPath)
+    var pullResponse = execSync('docker load <  '+executorPath).toString();    
+    if(pullResponse.hasOwnProperty("output")){            
+        for(var i=0;i<pullResponse["output"].length;i++){
+            var output = pullResponse["output"][i];        
+            if(output != null && output != ""){
+                totalOutput = totalOutput+output;
+            }            
+        }
+        Utils.addRawLogLine(1,"-", "<pull_image> Pull Response  = "+totalOutput);        
+    }
+    oldLogs += "\n"+Utils.getLogTime()+" - INFO \n IMAGE EXTRACTION LOGS - "+totalOutput;
+    localStorage.setItem("healthLogs",oldLogs);  
+    return totalOutput; 
 } 

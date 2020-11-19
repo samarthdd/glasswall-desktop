@@ -10,19 +10,33 @@ import      LoggerView            from './views/LoggerView'
 import      DockerConfiguration   from './views/DockerConfiguration'
 import      Sessions              from './views/Sessions'
 import      RebuildPolicy         from './views/RebuildPolicy'
-
-
-
-
 import   * as Utils               from './utils/utils'
+const resolve                     = require('path').resolve
+const fs                          = require('fs-extra')
+const path                        = require('path')
 
-const App = () => (
 
+const create_config = () =>{
+  let configDir = resolve(Utils.getAppDataPath() + Utils.getPathSep() + 'config');
+    if (!fs.existsSync(configDir)){
+        fs.mkdirSync(configDir);
+    }
+    if (!fs.existsSync(configDir+"/config.ini")){
+        fs.openSync(path.join(configDir,"config.ini"),'w');
+        fs.writeFileSync(path.join(configDir,"config.ini"),Utils.CONFIG_INI);        
+    }    
+    if (!fs.existsSync(configDir+"/config.xml")){
+        fs.openSync(path.join(configDir,"config.xml"),'w');
+        fs.writeFileSync(path.join(configDir,"config.xml"),Utils.CONFIG_XML);    
+    }
+}
+
+const App = () => (    
     <HashRouter>      
       <div>
       {/* <Route path="/"                       exact component=  { localStorage.getItem(Utils.WELCOME_PAGE_VISTIED_KEY) != Utils.WELCOME_PAGE_VISTIED_VAL ? WelcomePage:DockerRebuildFiles} /> */}
        
-      
+      {create_config()}
       {
         localStorage.getItem(Utils.WELCOME_PAGE_VISTIED_KEY) != Utils.WELCOME_PAGE_VISTIED_VAL?
         <Redirect to="/home"               

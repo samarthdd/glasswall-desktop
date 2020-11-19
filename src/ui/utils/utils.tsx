@@ -4,11 +4,14 @@ var fs                          = require('fs');
 const log                       = require('electron-log');
 log.transports.file.level       = 'debug';
 const MAX_LOG_FILE_SIZE         = 3000000;
+const resolve                   = require('path').resolve
+const xml2js                    = require('xml2js');
 
-export const GW_DOCKER_IMG_NAME         = 'glasswallsolutions/evaluationsdk:1';
-export const GW_DOCKER_IMG_NAME_WO_TAG  = 'glasswallsolutions/evaluationsdk';
-export const GW_DOCKER_PULL_IMG_OUTPUT  = 'Downloaded newer image for glasswallsolutions/evaluationsdk';
-export const GW_DOCKER_PULL_IMG_OUTPUT_2 = 'Image is up to date for glasswallsolutions/evaluationsdk';
+export const GW_DOCKER_IMG_NAME             = 'glasswallsolutions/evaluationsdk:1';
+export const GW_DOCKER_IMG_NAME_WO_TAG      = 'glasswallsolutions/evaluationsdk';
+export const GW_DOCKER_PULL_IMG_OUTPUT      = 'Downloaded newer image for glasswallsolutions/evaluationsdk';
+export const GW_DOCKER_PULL_IMG_OUTPUT_2    = 'Image is up to date for glasswallsolutions/evaluationsdk';
+export const GW_DOCKER_EXTRACT_IMG_OUTPUT   = 'Loaded image ID'
 
 export const WEBSITE_URL                = 'https://glasswall-desktop.com';
 export const RELEASE_URL                = 'https://github.com/k8-proxy/glasswall-desktop/releases';
@@ -319,6 +322,60 @@ export const getDefaultOuputCleanPath =()=>{
   return getAppDataPath() + getPathSep() + _CLEAN_FOLDER
 }
 
+export const xml_parser = async (xml_data:string) =>{
+  return new Promise(function (resolve, reject) {
+      const parser = new xml2js.Parser();
+      console.log('xml_data = '+xml_data)
+      parser.parseString(xml_data, function (err:Error, result:any) {
+          if (err) {
+            console.log('xml_data err = '+err.stack)
+              reject(err);
+          } else {
+            console.log('xml_data jsonresult = '+JSON.stringify(result))
+              resolve(result);
+          }
+      });
+  });
+}
+
+export const getPolicyFlag = (action:string) => {
+  if(action == "allow"){
+    return 0
+  }
+  else if(action == "sanitise"){
+    return 1
+  }
+  else if(action == "disallow"){
+    return 2
+  }
+}
+
+
+export const getPolicy = async () =>{
+  let configDir = resolve(getAppDataPath() + getPathSep() + 'config');
+    if (!fs.existsSync(configDir)){
+        fs.mkdirSync(configDir);
+    }
+    if (fs.existsSync(configDir+"/config.xml")){        
+      const xml = fs.readFileSync(configDir+"/config.xml",{encoding:'utf8', flag:'r'});    
+      console.log('File = '+(configDir+"/config.xml"))     
+      console.log('xml = '+xml)     
+      const json_data = await xml_parser(xml)
+      console.log('json out = '+JSON.stringify(json_data))     
+      return json_data    
+    }
+    return null;
+  }
+
+  export const savePolicy = async (json:any) =>{
+    let configDir = resolve(getAppDataPath() + getPathSep() + 'config');
+      if (!fs.existsSync(configDir)){
+          fs.mkdirSync(configDir);
+      }      
+      var builder = new xml2js.Builder();
+      var xml = builder.buildObject(json);
+      fs.writeFileSync(path.join(configDir,"config.xml"),xml);            
+    }
 
 export const getAppDataPath =() =>{
   switch (process.platform) {

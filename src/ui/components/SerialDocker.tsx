@@ -261,14 +261,7 @@ export const docker_exec_analysis = (payload: any,fileName:string) => {
     var totalOutput : any;    
     totalOutput = "";
     // Run container        
-    let configDir = resolve(Utils.getAppDataPath() + Utils.getPathSep() + 'config');
-    if (!fs.existsSync(configDir)){
-        fs.mkdirSync(configDir);
-    }
-    fs.openSync(path.join(configDir,"config.ini"),'w');
-    fs.openSync(path.join(configDir,"config.xml"),'w');
-    fs.writeFileSync(path.join(configDir,"config.ini"),Utils.CONFIG_INI);
-    fs.writeFileSync(path.join(configDir,"config.xml"),Utils.CONFIG_XML);    
+    let configDir = resolve(Utils.getAppDataPath() + Utils.getPathSep() + 'config');    
     Utils.addRawLogLine(1,fileName,'Config dir - '+(configDir));
     options={"timeout":10000, "shell":false};
     var spawned = spawnSync('docker', [ 'run',
