@@ -68,24 +68,24 @@ const REGEX_SAFE_FILE_NAME              = /[^a-zA-Z0-9-_\.]/g
 
 export const RELEAE_NOTES               =[
                                             {
-                                              "date":"November 13th 2020",
-                                              "desc":"Fixed left panel logo icons and performance issue."
+                                              "date":"November 19th 2020",
+                                              "desc":"Fixed left panel logo icons and Added Sorting and Time on Session page."
                                             }, 
                                             {
-                                              "date":"November 12th 2020",
-                                              "desc":"Added session history tab which list all the rebuild sessions (Cloud and Local)."
+                                              "date":"November 18th 2020",
+                                              "desc":"Integrated processing target with rebuilt sessions metadata : Cloud/Docker."
                                             },
                                             {
-                                              "date":"November 11th  2020",
-                                              "desc":"Added Threat Intelligence to the application, Displayed threat level on the UI"
+                                              "date":"November 18th  2020",
+                                              "desc":"Threat Analysis : Integrated Threat analysis of files rebuilt with docker."
                                             }, 
                                             {
-                                              "date":"November 10th  2020",
-                                              "desc":"Added RAW Logger events and tab to view it & Made server configuration configurable."
+                                              "date":"November 17th  2020",
+                                              "desc":"Integrated the Policy Management UI with backend."
                                             },
                                             {
-                                              "date":"November 8th  2020",
-                                              "desc":"Parallel execution of requests with docker."
+                                              "date":"November 16th  2020",
+                                              "desc":"Policy Management UI."
                                             }
                                         ]
 
