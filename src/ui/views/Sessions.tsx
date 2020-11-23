@@ -566,8 +566,8 @@ function Sessions(){
             SessionsUtils.getSessionList(Utils.getProcessedPath()).then(function(results:any){
             console.log("getSessilengthonList" + results);
             setCounter(results.length);
-            setShowLoader(true);
             if(results.length>0){
+                setShowLoader(true);
                 SessionsUtils.readSessions(results, readSessionResult);
             }
         });
@@ -590,12 +590,19 @@ function Sessions(){
     React.useEffect(() => {
         
         
-        let sessionsReverse = sessions.slice().reverse()
-        let sessionsPerPage = sessionsReverse && sessionsReverse.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+        let sessionsReverse = []
         if(order === 'asc')
-            setSessionsPerPage(sessionsPerPage.sort(function(a:any, b:any){return a.at - b.at}))
+            sessionsReverse = (sessions.sort(function(a:any, b:any){return a.at - b.at}))
         else
-            setSessionsPerPage(sessionsPerPage.sort(function(a:any, b:any){return b.at - a.at}))
+            sessionsReverse = (sessions.sort(function(a:any, b:any){return b.at - a.at}))
+
+        //sessionsPerPage.sort(function(a:any, b:any){return a.at - b.at})
+        let sessionsPerPage = sessionsReverse && sessionsReverse.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+        setSessionsPerPage(sessionsPerPage);
+        // if(order === 'asc')
+        //     setSessionsPerPage(sessionsPerPage.sort(function(a:any, b:any){return a.at - b.at}))
+        // else
+        //     setSessionsPerPage(sessionsPerPage.sort(function(a:any, b:any){return b.at - a.at}))
         
         }, [rowsPerPage, page, sessions]);
       

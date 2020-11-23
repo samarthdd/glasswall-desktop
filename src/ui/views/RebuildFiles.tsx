@@ -474,7 +474,7 @@ function RebuildFiles(){
         report?             : string;
         status?             : string;
         message?            : string;
-        time?               : string;
+        time?               : number;
         userTargetFolder?   : string;
         rebuildSource       : string;
     }
@@ -580,7 +580,7 @@ const downloadResult =(result: any)=>{
             clean_file          : Utils._CLEAN_FOLDER + Utils.getPathSep()+ result.filename,
             report              : Utils._REPORT_FOLDER + Utils.getPathSep() + Utils.stipFileExt(result.filename)+'.xml',
             status              : "Success",
-            time                : new Date().toLocaleDateString(),
+            time                : new Date().getTime(),
             userTargetFolder    : userTargetDir,
             rebuildSource       : Utils.REBUILD_TYPE_CLOUD
         }
@@ -612,7 +612,7 @@ const downloadResult =(result: any)=>{
             clean_file          : '',
             report              : '',
             status              : "Failure",
-            time                : new Date().toLocaleDateString(),
+            time                : new Date().getTime(),
             userTargetFolder    : userTargetDir,
             message             : result.msg,
             rebuildSource       : Utils.REBUILD_TYPE_CLOUD

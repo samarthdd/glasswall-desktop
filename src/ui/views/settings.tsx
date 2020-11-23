@@ -89,12 +89,14 @@ function Settings(){
     const [rebuildUrl, setRebuildUrl] = useState(Utils.getRebuildEngineUrl());
     const [analysisUrl, setAnalysisUrl] = useState(Utils.getRebuildAnalysisUrl());
     const [apiKey, setApiKey] = useState(Utils.getRebuildApiKey());
+    const [rebuildImage, setRebuildImage] = useState(Utils.getRebuildApiKey());
 
     React.useEffect(() => {
         console.log("settings1" + Utils.getRebuildEngineUrl())
         setRebuildUrl(Utils.getRebuildEngineUrl());
         setAnalysisUrl(Utils.getRebuildAnalysisUrl());
         setApiKey(Utils.getRebuildApiKey());
+        setRebuildImage(Utils.getRebuildImage())
        
         
     }, []);
@@ -120,6 +122,12 @@ function Settings(){
     setApiKey(e.target.value)
     localStorage.setItem(Utils.APIKEY_KEY, e.target.value )
    }
+
+   const handleRebuildImageChange =(e:any)=>{
+    console.log(e.target.value);
+    setRebuildImage(e.target.value)
+    localStorage.setItem(Utils.REBUILD_IMAGE_KEY, e.target.value )
+   }
     return(
         <div className={classes.root}> 
             <SideDrawer showBack={false}/>
@@ -141,8 +149,11 @@ function Settings(){
                         <div className={classes.apiKeyBox}>
                             <input onChange={handleApiIKeyChange} type={hide?'password':'text'} value={apiKey}/>
                             <button onClick={showApiKey}> {hide ? <VisibilityIcon /> : <VisibilityOffIcon />}</button>
-                        </div>   
-                                                          
+                        </div>  
+                        <h4>Rebuild Docker Image</h4>   
+                        <div className={classes.urlBox}>
+                            <input onChange={handleRebuildImageChange} type="text" value={rebuildImage}/>
+                        </div>                            
                     </div>
                   
                 </div>   

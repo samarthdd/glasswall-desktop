@@ -53,9 +53,6 @@ function Navbar(){
         <div className={classes.navbar}>                
             <ul>
                 <li className={classes.navItem}> 
-                    <Link className={classes.navBtn} to="/home"><HomeIcon className={classes.matIcon}/> Home </Link>
-                </li>
-                <li className={classes.navItem}> 
                     <a className={classes.navBtn} href="https://github.com/k8-proxy/glasswall-desktop/issues"><BugReportIcon className={classes.matIcon}/> Report issue </a>
                 </li>
               </ul>
