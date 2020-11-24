@@ -305,7 +305,7 @@ const useStyles = makeStyles((theme) => ({
     },
     saveFileBtn:{
         '& button':{
-            background:              '#084d94',
+            background:              '#144e78',
             border:                  'none',
             color:                   '#fff',
             borderRadius:            '3px',
@@ -402,7 +402,7 @@ const useStyles = makeStyles((theme) => ({
     },
     toggleToolTipTitle:{
         display:                    'none',
-        position:                   'fixed',
+        position:                   'absolute',
         background:                 '#0c3451',
         color:                      '#fff',
         margin:                     '10px',
@@ -412,6 +412,7 @@ const useStyles = makeStyles((theme) => ({
         right:                      '30px',
         maxWidth:                   '300px',
         fontWeight:                 'normal',
+        width:                      '300',
         '&::before':{
             content:                '" "',
             height:                 '10px',
