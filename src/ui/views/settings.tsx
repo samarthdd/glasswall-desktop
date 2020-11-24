@@ -23,6 +23,9 @@ const useStyles = makeStyles((theme) => ({
    contentArea:{
         minHeight:                 '85.7vh',
         padding:                   theme.spacing(3),
+        '& h3': {
+            marginTop:             '0',
+        },
         '& p':{
             fontSize:              '12px',
             fontWeight:            'bold'
@@ -31,6 +34,12 @@ const useStyles = makeStyles((theme) => ({
    textContainer:{
         margin:                    '20px 0',
         float:                     'left',
+        background:                '#ffffff',
+        padding:                   '25px 25px',
+        borderRadius:              '6px',
+        border:                    '1px solid #E2E9F0',
+        boxSizing:                 'border-box',
+        boxShadow:                 '0px 16px 40px rgba(0, 0, 0, 0.1)',
         '& h4':{
             margin:                '10px 0 0 0'
         },
@@ -41,7 +50,7 @@ const useStyles = makeStyles((theme) => ({
    },
    urlBox:{
     margin:                    '10px 0',
-    background:                '#e7e7e7',
+    background:                '#e9f3fd',
     padding:                   '5px 10px', 
     float:                     'left',
     '& input':{
@@ -56,7 +65,7 @@ const useStyles = makeStyles((theme) => ({
     },
    apiKeyBox:{
         margin:                    '10px 0',
-        background:                '#e7e7e7',
+        background:                '#e9f3fd',
         padding:                   '5px 10px', 
         float:                     'left',
         '& input':{
