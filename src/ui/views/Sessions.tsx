@@ -46,7 +46,12 @@ const useStyles = makeStyles((theme) => ({
         minWidth:                   650,
         '& td':{
             paddingTop:             '10px',
-            paddingBottom:          '10px'
+            paddingBottom:          '10px',
+            textAlign:             'center',
+        },
+        '& th':{
+            textAlign:             'center',
+            
         }
     },
     container:  {
@@ -155,6 +160,7 @@ const useStyles = makeStyles((theme) => ({
     contentArea:{
          minHeight:                 '85.7vh',
          padding:                   theme.spacing(3),
+         
          '& h3': {
             marginTop:             '0',
         }
@@ -278,7 +284,7 @@ const useStyles = makeStyles((theme) => ({
         fontSize:                   '15px'
     },
     settings:{
-        paddingBottom:              '20px',
+        paddingBottom:              '0px',
         float:                      'left',
         width:                      '100%',
         '& h4':{
@@ -309,7 +315,7 @@ const useStyles = makeStyles((theme) => ({
     },
     saveFileBtn:{
         '& button':{
-            background:              '#084d94',
+            background:              '#144e78',
             border:                  'none',
             color:                   '#fff',
             borderRadius:            '3px',
@@ -460,7 +466,7 @@ const useStyles = makeStyles((theme) => ({
         margin:                     '20px 0 30px 0',
    },
    dockerImage:{
-    height:                     '60px',
+    height:                     '32px',
     margin:                     '10px 0'
 }
 
