@@ -50,9 +50,9 @@ export const REBUILD_TYPE_CLOUD         = "Cloud"
 export const REBUILD_TYPE_DOCKER        = "Docker"
 
 
-const REBUILD_ENGINE_URL         =  'https://8oiyjy8w63.execute-api.us-west-2.amazonaws.com/Prod/api/rebuild/base64';
-const REBUILD_ANALYSIS_URL       =  'https://o7ymnow6vf.execute-api.us-west-2.amazonaws.com/Prod/api/Analyse/base64'
-const REBUILD_API_KEY            =  'dp2Ug1jtEh4xxFHpJBfWn9V7fKB3yVcv60lhwOAG';
+const REBUILD_ENGINE_URL                =  'https://8oiyjy8w63.execute-api.us-west-2.amazonaws.com/Prod/api/rebuild/base64';
+const REBUILD_ANALYSIS_URL              =  'https://o7ymnow6vf.execute-api.us-west-2.amazonaws.com/Prod/api/Analyse/base64'
+const REBUILD_API_KEY                   =  'dp2Ug1jtEh4xxFHpJBfWn9V7fKB3yVcv60lhwOAG';
 
 export const DOCKER_RUNNING             =  0; // Docker running;
 export const DOCKER_NOT_INSTALLED       =  1; // Docker not installed;
