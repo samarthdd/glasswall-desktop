@@ -30,6 +30,9 @@ const useStyles = makeStyles((theme) => ({
    contentArea:{
         minHeight:                 '85.7vh',
         padding:                   theme.spacing(3),
+        '& h3': {
+          marginTop:             '0',
+        },
         '& p':{
             fontSize:              '12px',
             fontWeight:            'bold'
@@ -151,7 +154,7 @@ const useStyles = makeStyles((theme) => ({
     },
 },
 saveBtn:{
-  backgroundColor:"#26a61a",
+  backgroundColor:"#3cb371",
   color:"#fff",
   margin:'0 10px',
   textTransform:"capitalize",
@@ -173,6 +176,10 @@ divStyle:{
 },
 heading:{
   marginBottom:  '50px'
+},
+filledSuccess:{
+position:  'relative',
+top:   '70px',
 }
    
  }));
@@ -396,7 +403,7 @@ function RebuildPolicy(){
                 <div className={classes.toolbar} />  
                 <div className={classes.contentArea}>             
                     <div> 
-                    <h2 >Current Rebuild Policy</h2>               
+                    <h3>Current Rebuild Policy</h3>               
                     <Grid container>
                       <Grid item  xs={12}>
                           <div id='current-policy'>

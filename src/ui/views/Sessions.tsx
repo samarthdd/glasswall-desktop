@@ -154,7 +154,10 @@ const useStyles = makeStyles((theme) => ({
     },
     contentArea:{
          minHeight:                 '85.7vh',
-         padding:                   theme.spacing(3)
+         padding:                   theme.spacing(3),
+         '& h3': {
+            marginTop:             '0',
+        }
         
     },
     dropzoneArea:{
@@ -633,6 +636,7 @@ function Sessions(){
                  {loader  && <Loader/> }  
                     <div className={classes.toolbar} />  
                     <div className={classes.contentArea}>   
+                    <h3>Session History</h3>
                     <div className={classes.tableContainer}>
                    
                         <div>
@@ -640,7 +644,6 @@ function Sessions(){
                                     <div className={classes.settings}>  
                                         <div className={classes.btnHeading}>                                                                           
                                         <div className={classes.headingGroup}>                                                                         
-                                                <h4>Session History  <span>*</span> </h4>
                                                
                                                 <div className={classes.toggleContainer}>
                                                 </div>
