@@ -12,6 +12,38 @@ function Alert(props: any) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
+const theme1 = createMuiTheme({
+  overrides: {
+    MuiInputBase: {
+      input: {
+        "&:focus": {
+          background: "$labelcolor",
+          "&:before": {
+            background: '#75c16e',
+            width: "18px",
+            height: "18px",
+            position: "absolute",
+            right: "-21px",
+            fontSize: "14px",
+            borderRadius: "24px",
+            padding: "5px 5px",
+            top: "-43px",
+            color: "#fff",
+            content: "✔",
+            boxShadow: "2px 3px 4px #777",
+            textAlign: "center"
+          }
+        }
+      }
+    },
+    MuiSelect:{
+      select:{
+        "&:focus": { background: 'transparent'}
+      }
+    }
+  }
+});
+
 const useStyles = makeStyles((theme) => ({
     root:       {   
       display: 'flex',
@@ -423,8 +455,9 @@ function RebuildPolicy(){
                                 <form className={classes.root} autoComplete="off">                                  
                                 <FormControl className={classes.formControl}>
                                     <InputLabel htmlFor="pdf-metadata" className={classes.inputLabel} style={greenColor}>Metadata</InputLabel>
+                                    <MuiThemeProvider theme={theme1}>
                                     <Select
-                                      className={classes.selectBox}
+                                      
                                       value={policy?.pdfConfig.metadata}
                                       onChange={(event: any) => {
                                                                   let pdfPol = policy?.pdfConfig || undefined
@@ -443,7 +476,7 @@ function RebuildPolicy(){
                                       <MenuItem value="allow">Allow</MenuItem>
                                       <MenuItem value="disallow">Disallow</MenuItem>
                                     </Select>
-                                    
+                                     </MuiThemeProvider>
                                   </FormControl>
                                   <FormControl className={classes.formControl}>
                                     <InputLabel htmlFor="pdf-acroform" className={classes.inputLabel} style={greenColor}>Acroform</InputLabel>
@@ -460,31 +493,6 @@ function RebuildPolicy(){
                                       inputProps={{
                                         name: "pdfAcroform",
                                         id: 'pdf-acroform'
-                                      }}
-                                    >
-
-                                      <MenuItem value="sanitise">Sanitise</MenuItem>
-                                      <MenuItem value="allow">Allow</MenuItem>
-                                      <MenuItem value="disallow">Disallow</MenuItem>
-                                    </Select>
-                                    
-                                  </FormControl>
-                                  <FormControl className={classes.formControl}>
-                                    <InputLabel htmlFor="pdf-metadata" className={classes.inputLabel} style={blueColor}>Metadata</InputLabel>
-                                    <Select
-                                      className={classes.selectBox}
-                                      value={policy?.pdfConfig.metadata}
-                                      onChange={(event: any) => {
-                                                                  let pdfPol = policy?.pdfConfig || undefined
-                                                                  if(pdfPol){
-                                                                    pdfPol.metadata = event.target.value
-                                                                  }
-                                                                 setReadyForRender(!readyForRender)
-                                                                }}
-                                      inputProps={{
-                                        name: 'pdfMetadata',
-                                        id: 'pdf-metadata',
-                                        readOnly: false,
                                       }}
                                     >
 
