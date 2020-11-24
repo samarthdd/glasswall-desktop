@@ -42,6 +42,7 @@ export const DOCKER_HEALTH_STATUS_KEY   = "docker_health_status"
 export const REBUILD_URL_KEY            = "rebuild_url"
 export const ANALYSIS_URL_KEY           = "anaylsis_url"
 export const APIKEY_KEY                 = "apikey_key"
+export const REBUILD_IMAGE_KEY          = "rebuild_image_key"
 //Storage Keys ends
 
 
@@ -118,16 +119,18 @@ export const addRawLogLine = (level:number, filename:string, sentence:string) =>
   log.transports.file.file        = getLogsPath();
   let levelStr : string;
   levelStr = "ERROR"
+  let lines  = wordwrap(sentence, 100, '\n', false);
+
   if(level == 0){
     levelStr = "DEBUG"
-    log.debug(" - File-Name - "+filename+" --> "+sentence)
+    log.debug(" - File-Name - "+filename+" --> "+lines)
   }
   else if (level == 1){
     levelStr = "INFO"
-    log.info(" - File-Name - "+filename+" --> "+sentence)
+    log.info(" - File-Name - "+filename+" --> "+lines)
   }    
   else{
-    log.error(" - File-Name - "+filename+" --> "+sentence)
+    log.error(" - File-Name - "+filename+" --> "+lines)
   }  
 }
 
@@ -166,16 +169,25 @@ export const getRebuildApiKey=()=>{
  return key;
 }
 
+export const getRebuildImage=()=>{
+  let key: string;
+  if(!localStorage.getItem(REBUILD_IMAGE_KEY))
+    key = GW_DOCKER_IMG_NAME;
+  else
+    key = localStorage.getItem(REBUILD_IMAGE_KEY) || ""
+
+ return key;
+}
 export const addLogLine = (filename:string, sentence:string) => {     
   const logs  = localStorage.getItem("logs");
   if(logs != null){
     var logsCopy = logs;
-    logsCopy +=  "\n"+getLogTime()+" - INFO - File-Name - "+filename+" --> "+sentence+"\n" 
+    logsCopy +=  "\n"+getLogTime()+" - INFO - File-Name - "+filename+" --> "+wordwrap(sentence, 100, '\n', false)+"\n" 
     localStorage.setItem("logs",logsCopy)
   }
   else{
     localStorage.setItem("logs","")
-    var logsCopy = "\n"+getLogTime()+" - INFO - File-Name - "+filename+" --> "+sentence+"\n" 
+    var logsCopy = "\n"+getLogTime()+" - INFO - File-Name - "+filename+" --> "+ wordwrap(sentence, 100, '\n', false)+"\n" 
     console.log('adding log '+logsCopy)
     localStorage.setItem("logs",logsCopy)
   }
@@ -210,6 +222,24 @@ export const sleepDelay = (milliseconds:number) => {
     
 }
 
+export  const wordwrap=( str: string, width: number, brk: string, cut:boolean ) => {
+ 
+  brk = brk || 'n';
+  width = width || 75;
+  cut = cut || false;
+
+  if (!str) { return str; }
+
+  var regex = '.{1,' +width+ '}(\s|$)' + (cut ? '|.{' +width+ '}|.+$' : '|\S+?(\s|$)');
+
+  let res =   str && regex && str.match( RegExp(regex, 'g') ||"") 
+  if(res){
+    console.log("wordwrap" + res.join( brk ))
+    return res.join( brk );
+  }
+  
+
+}
 export const stipFileExt =(filename: string)=>{
   return filename.split('.').slice(0, -1).join('.')
 }
