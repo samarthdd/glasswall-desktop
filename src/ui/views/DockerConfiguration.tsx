@@ -33,6 +33,9 @@ const useStyles = makeStyles((theme) => ({
     contentArea: {
         minHeight:                  '85.7vh',
         padding:                    theme.spacing(3),
+        '& h3': {
+            marginTop:             '0',
+        },
         '& p': {
             fontSize:               '12px',
             fontWeight:             'bold'
