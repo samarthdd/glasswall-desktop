@@ -1611,6 +1611,27 @@ a:hover.back-to-top {
 /*****************************/
 /*     18. Media Queries     */
 /*****************************/
+/* responsive media query */
+@media (max-width: 479px) {
+.header-img{
+	padding: 0 1.7rem !important;
+}
+h1 {
+    color: #f1f1f8;
+    font: 700 2.2rem/2.7rem "Montserrat", sans-serif !important;
+}
+.btn-solid-lg {
+	padding: 1.375rem 2rem 1.375rem 2rem !important; }
+.basic-3 {
+		padding-top: 4.375rem !important;
+		padding-bottom: 2.25rem !important;}	
+.basic-3 h3, .basic-5 h3 {
+			margin-top: 20px;}
+.basic-5 {
+				padding-top: 2.375rem !important;
+				padding-bottom: 4.25rem !important;}
+.basic-4{padding-bottom: 2.75rem !important;}							
+}
 /* Min-width width 768px */
 @media (min-width: 768px) {
 
@@ -1824,6 +1845,12 @@ a:hover.back-to-top {
   .counter #counter .counter-value {
     font: 700 3.25rem/3.5rem "Montserrat", sans-serif;
   }
+  /* responsive media query */
+	.header-img{
+		padding: 0 1.7rem;
+	}
+	
+	
 }
 /* end of min-width width 768px */
 
@@ -2206,3 +2233,5 @@ a:hover.back-to-top {
 .header-img{
 	padding: 0 6.7rem;
 }
+
+
