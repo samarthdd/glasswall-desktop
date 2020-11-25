@@ -42,7 +42,7 @@ const create_metadata_file = async (xmlReport:string, xmlFilePath:string, xmlFil
         const raw_analysis           = await raw_analysis_create(xmlReport,xmlFilePath,xmlFileName,rebuiltFileName,basePath)
         metadata.file_mime_type      = raw_analysis?.fileType
         metadata.sanitized_file_size = raw_analysis?.fileSize
-        let threat_levels = apply_rules(raw_analysis)
+        let threat_levels = apply_rules(raw_analysis,rebuiltFileName)
         let file_threats = basePath+'/analysed/'+rebuiltFileName+"_threat_levels.json"
         fs.writeJsonSync(file_threats, threat_levels, {spaces: 2}) 
         fs.writeJsonSync(file_metadata, metadata, {spaces: 2})
@@ -81,11 +81,11 @@ const raw_analysis = async (xml_data:string) => {
                 'fileVersion'  : fileVersion    }
 }
 
-const apply_rules = (file_data:any) =>  {
+const apply_rules = (file_data:any, originalFileName:string) =>  {
     const raw_analysis = file_data
     let threats = []
     if ( raw_analysis ) {
-        threats.push(rule_file_extension_match(file_data))
+        threats.push(rule_file_extension_match(file_data,originalFileName))
         threats.push(rule_macros_detected     (file_data))
         threats.push(rule_javascript_detected (file_data))
         threats.push(rule_metadata_detected   (file_data))
@@ -106,13 +106,14 @@ const calculate_threat_level = (threats:any) =>  {
     return level
 }
 
-const rule_file_extension_match = (file_data:any) =>  {
+const rule_file_extension_match = (file_data:any,originalFileName:string) =>  {
     const metadata = file_data.metadata;
-    const file_type_original = metadata && metadata.file_name && metadata.file_name.split('.').pop()
+    const file_type_original = originalFileName.split('.').pop()
     const file_type_rebuild = file_data.fileType
     const name  = 'File Extensions match'
     let level = 'ok'
     let value = 'ok'
+    console.log('file_data '+JSON.stringify(file_data))
     if (file_type_rebuild === 'unknown')
     {
         value =  `could not calculate extension of file (original extension was '${file_type_original}')`
@@ -123,6 +124,7 @@ const rule_file_extension_match = (file_data:any) =>  {
         value =  `extensions didn't match ${file_type_original} != ${file_type_rebuild}`
         level = 'high'
     }
+    console.log('File match level '+level)
     return { name , value , level}
 }
 
