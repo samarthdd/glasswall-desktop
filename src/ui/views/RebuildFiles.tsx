@@ -1,10 +1,8 @@
 import  React, {useState}       from 'react';
 import { makeStyles }           from '@material-ui/core/styles';
-
 import Table                    from '@material-ui/core/Table';
 import TableBody                from '@material-ui/core/TableBody';
 import TableCell                from '@material-ui/core/TableCell';
-import TableContainer           from '@material-ui/core/TableContainer';
 import TableHead                from '@material-ui/core/TableHead';
 import TableRow                 from '@material-ui/core/TableRow';
 import DeleteIcon               from '@material-ui/icons/Delete';
@@ -15,7 +13,6 @@ import { CardActions,
         FormControlLabel,
         Tooltip,         
     }                           from '@material-ui/core';
-import InfoOutlinedIcon         from '@material-ui/icons/InfoOutlined';
 import Footer                   from '../components/Footer';
 import Dropzone                 from "react-dropzone";
 import FileCopyIcon             from '@material-ui/icons/FileCopy';
@@ -26,11 +23,7 @@ import Loader                   from '../components/Loader';
 import * as Utils               from '../utils/utils'
 import RawXml                   from '../components/RawXml';
 const { dialog }                = require('electron').remote
-
-var child_process               = require("child_process");
-const path                      = require('path');
 var fs                          = require('fs');
-const commonPath                = require('common-path');
 
 
 const useStyles = makeStyles((theme) => ({
@@ -457,7 +450,8 @@ function RebuildFiles(){
     const [outputDirType, setOutputDirType]         = useState(Utils.OUTPUT_DIR_FLAT)
     const [showAlertBox, setshowAlertBox]           = useState(false);
     const [flat, setFlat]                           = React.useState(false);
-    const [files, setFiles]                         = useState<Array<RebuildResult>>([]);  
+    const [files, setFiles]                         = useState<Array<RebuildResult>>([]);
+    const [allPath, setAllPath]                     =  React.useState<Array<string>>([]);   
 
     interface RebuildResult {
         id              : string,
@@ -505,20 +499,20 @@ function RebuildFiles(){
             Utils.saveTextFile(JSON.stringify(masterMetaFile),  targetDir, 'metadata.json');
 
             //if(userTargetDir !="" && outputDirType === Utils.OUTPUT_DIR_HIERARCY){
-            if(userTargetDir !="" && !flat){
-                let PATHS: string[];
-                PATHS=[]
+            // if(userTargetDir !="" && !flat){
+            //     let PATHS: string[];
+            //     PATHS=[]
 
-                rebuildFileNames.map(rebuild=>{
-                    if(rebuild.path)
-                        PATHS.push(rebuild.path);
-                });
+            //     rebuildFileNames.map(rebuild=>{
+            //         if(rebuild.path)
+            //             PATHS.push(rebuild.path);
+            //     });
 
-                const common = commonPath(PATHS);
-                common.parsedPaths.map((cPath:any)=>{
-                    Utils.saveBase64File( getRebuildFileContent(cPath.original), userTargetDir + Utils.getPathSep() + cPath.subdir, cPath.basePart );
-            });
-        }
+            //     const common = commonPath(PATHS);
+            //     common.parsedPaths.map((cPath:any)=>{
+            //         Utils.saveBase64File( getRebuildFileContent(cPath.original), userTargetDir + Utils.getPathSep() + cPath.subdir, cPath.basePart );
+            //      });
+            //  }
         }
       }, [counter]);
 
@@ -560,6 +554,15 @@ const downloadResult =(result: any)=>{
     fileHash = Utils.getFileHash(result.original)
       
     if(!result.isError){
+
+        if(flat){
+            Utils.saveBase64File(result.cleanFile, userTargetDir, result.filename );
+        }else{
+            let filePath: string;
+            filePath = Utils.getHieracyPath(result.path, userTargetDir, allPath);
+            Utils.saveBase64File(result.cleanFile, filePath , result.filename );
+        }
+
         var cleanFilePath = Utils.getProcessedPath() + Utils.getPathSep()
                              + result.targetDir + Utils.getPathSep() + fileHash
                               + Utils.getPathSep() + Utils._CLEAN_FOLDER;
@@ -597,12 +600,12 @@ const downloadResult =(result: any)=>{
         
         masterMetaFile.push(content);
 
-        if(userTargetDir !=""){
-            var filepath = userTargetDir;
-            if(flat){
-                Utils.saveBase64File(result.cleanFile, filepath, result.filename );
-            }
-        }
+        // if(userTargetDir !=""){
+        //     var filepath = userTargetDir;
+        //     if(flat){
+        //         Utils.saveBase64File(result.cleanFile, filepath, result.filename );
+        //     }
+        // }
 
     }else{
         var OriginalFilePath =Utils.getProcessedPath() +  Utils.getPathSep()
@@ -623,48 +626,42 @@ const downloadResult =(result: any)=>{
         }
         masterMetaFile.push(content);
     }        
-}
-
-   
-
-   
-
-    const getRebuildFileContent =(filePath: string)=>{
-        var rebuild = rebuildFileNames.find(rebuild=>rebuild.path === filePath);
-        if(rebuild)
-            return rebuild.cleanFile;
-        else    
-            return null;
     }
 
-     
+    
+    const processFiles =(files: any)=>{
+        
+        let outputDirId: string;
+        setCounter((state: any)=>state + files.length)
+        setRebuildFileNames([]);
+        setPage(0);
+        masterMetaFile.length =0;
+        outputDirId = Utils.guid()
+        setFolderId(outputDirId);
+        setAllPath([]); 
+
+        //console.log(acceptedFiles[0].path)
+        files.map(async (file: any) => {
+            allPath.push(file.path);
+            await FileUploadUtils.getFile(file).then(async (data: any) => {
+                setFileNames((fileNames: any) =>[...fileNames, file.name]);
+                var url = window.webkitURL.createObjectURL(file);
+                let guid: string;
+                guid =  Utils.guid();
+                setShowLoader(true);
+                Utils.sleep(600);
+                await FileUploadUtils.makeRequest(data, url, guid, outputDirId, downloadResult);
+            })
+        })
+    }
     //Multi file drop callback 
     const handleDrop = async (acceptedFiles:any) =>{
-        let outputDirId: string;
+       
         if(userTargetDir ==""){
             setshowAlertBox(true);
         }
         else {
-            
-            setCounter((state: any)=>state + acceptedFiles.length)
-            setRebuildFileNames([]);
-            setPage(0);
-            masterMetaFile.length =0;
-            outputDirId = Utils.guid()
-            setFolderId(outputDirId);
-
-            //console.log(acceptedFiles[0].path)
-            acceptedFiles.map(async (file: File) => {
-                await FileUploadUtils.getFile(file).then(async (data: any) => {
-                    setFileNames((fileNames: any) =>[...fileNames, file.name]);
-                    var url = window.webkitURL.createObjectURL(file);
-                    let guid: string;
-                    guid =  Utils.guid();
-                    setShowLoader(true);
-                    Utils.sleep(600);
-                    await FileUploadUtils.makeRequest(data, url, guid, outputDirId, downloadResult);
-                })
-            })
+            setTimeout(processFiles, 100, acceptedFiles);
         }
     }  
 
