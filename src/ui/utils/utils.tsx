@@ -6,6 +6,7 @@ log.transports.file.level       = 'debug';
 const MAX_LOG_FILE_SIZE         = 3000000;
 const resolve                   = require('path').resolve
 const xml2js                    = require('xml2js');
+const commonPath                = require('common-path');
 
 export const GW_DOCKER_IMG_NAME             = 'glasswallsolutions/evaluationsdk:1';
 export const GW_DOCKER_IMG_NAME_WO_TAG      = 'glasswallsolutions/evaluationsdk';
@@ -119,7 +120,7 @@ export const addRawLogLine = (level:number, filename:string, sentence:string) =>
   log.transports.file.file        = getLogsPath();
   let levelStr : string;
   levelStr = "ERROR"
-  let lines  = wordwrap(sentence, 100, '\n', false);
+  let lines  = wordwrap(sentence, 80, '\n', false);
 
   if(level == 0){
     levelStr = "DEBUG"
@@ -182,12 +183,12 @@ export const addLogLine = (filename:string, sentence:string) => {
   const logs  = localStorage.getItem("logs");
   if(logs != null){
     var logsCopy = logs;
-    logsCopy +=  "\n"+getLogTime()+" - INFO - File-Name - "+filename+" --> "+wordwrap(sentence, 100, '\n', false)+"\n" 
+    logsCopy +=  "\n"+getLogTime()+" - INFO - File-Name - "+filename+" --> "+wordwrap(sentence, 80, '\n', false)+"\n" 
     localStorage.setItem("logs",logsCopy)
   }
   else{
     localStorage.setItem("logs","")
-    var logsCopy = "\n"+getLogTime()+" - INFO - File-Name - "+filename+" --> "+ wordwrap(sentence, 100, '\n', false)+"\n" 
+    var logsCopy = "\n"+getLogTime()+" - INFO - File-Name - "+filename+" --> "+ wordwrap(sentence, 80, '\n', false)+"\n" 
     console.log('adding log '+logsCopy)
     localStorage.setItem("logs",logsCopy)
   }
@@ -591,4 +592,19 @@ export const file_size_as_string= (file_size: number)=> {
           ? Math.round(file_size / 1024)    + " KB"
           : Math.round(file_size / 1048576) + " MB" )
       : Math.round(file_size / 1073741824)  + " GB"
+}
+
+
+export const  getHieracyPath=(filePath: any, userTargetDir: string, allPath: string[])=>{
+  let targetPath: string;
+  targetPath =userTargetDir;
+  const common = commonPath(allPath);
+      common.parsedPaths.map((cPath:any)=>{
+          if(cPath.original == filePath){
+              targetPath = userTargetDir +  getPathSep() + cPath.subdir;
+          }
+              
+  });
+  console.log("getHieracyPath" + targetPath)
+  return targetPath;
 }
