@@ -128,12 +128,20 @@ export const docker_exec_rebuild = async (payload: any,request:any,requestId:str
     var cmd = 'docker run --rm -v '+'\"'+ configDir+'\"'+ ':/home/glasswall -v '+'\"'+ resolve(inputDir)+'\"'+':/input -v '+ '\"'+resolve(outputDir)+ '\"'+':/output '+Utils.GW_DOCKER_IMG_NAME;
     console.log("cmd" +cmd)
     exec(cmd, function (err:Error, stdout:string, stderr:string) {      
+        console.log('rebuild stdout ->'+stdout)
         if(err){
             Utils.addRawLogLine(0,request.filename,'Error during rebuild -> \n '+err.stack+"\n")
             Utils.addLogLine(request.filename,'Error during rebuild -> \n '+err.stack+"\n");
             resultCallback({'source':sourceFileUrl, 'url':'TBD', 'filename':request.filename, isError:true,
              msg:'Error during rebuild', id:requestId, targetDir:folderId, original:request.content})
              console.log("cmd2" +err.stack)
+             return;
+        }
+        let cliProcessLogPath = outputDir+'/'+Utils.GW_CLI_LOG_FILE;
+        if(Utils.isBlockedByPolicy(cliProcessLogPath)){
+            resultCallback({'source':sourceFileUrl, 'url':'TBD', 'filename':request.filename, isError:true,
+             msg:'Blocked By Policy', id:requestId, targetDir:folderId, original:request.content})
+             console.log("Blocked by policy")
              return;
         }
         return analyseRebuilt(stdout, stderr, cmd, payload,request,requestId

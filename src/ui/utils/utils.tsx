@@ -21,7 +21,8 @@ export const FW_URL                     = 'https://forensic-workbench.com/';
 export const FILE_DROP_URL              = 'https://file-drop.co.uk/';
 export const REPO_GIT_ISSUE_URL         = "https://github.com/k8-proxy/glasswall-desktop/issues/new";
 
-
+export const POLICY_BLOCKED_TXT         = 'forbidden by content management policy'
+export const GW_CLI_LOG_FILE            = 'glasswallCLIProcess.log'
 export const VERSION                    = '0.1.7'
 export const _PROCESSED_FOLDER          = "processed"
 export const _LOGS_FOLDER               = "gwlogs"
@@ -607,4 +608,10 @@ export const  getHieracyPath=(filePath: any, userTargetDir: string, allPath: str
   });
   console.log("getHieracyPath" + targetPath)
   return targetPath;
+}
+
+export const isBlockedByPolicy = (filePath:string) =>{
+  let data = fs.readFileSync(filePath, 
+            {encoding:'utf8', flag:'r'}); 
+  return data.indexOf(POLICY_BLOCKED_TXT) > -1;
 }

@@ -105,6 +105,12 @@ export const makeRequest = (request: any, sourceFileUrl: string, requestId: stri
             msg:'Docker not installed', id:requestId, targetDir:folderId, original:request.content});
             return;
     }
+    if(rebuiltBase64 == -3 ){
+        Utils.addLogLine(request.filename,"Blocked By Policy");
+        resultCallback({'source':sourceFileUrl, 'url':'TBD', 'filename':request.filename, isError:true,
+            msg:'Blocked By Policy', id:requestId, targetDir:folderId, original:request.content});
+            return;
+    }
     if(rebuiltBase64 == null){
         Utils.addLogLine(request.filename,"File rebuild failed");
         resultCallback({'source':sourceFileUrl, 'url':'TBD', 'filename':request.filename, isError:true,
@@ -207,6 +213,12 @@ export const docker_exec_rebuild = (payload: any,fileName:string) => {
             if(output != null && output != ""){
                 totalOutput = totalOutput+output;
             }            
+        }
+        console.log('rebuild stdout ->'+totalOutput)
+        let cliProcessLogPath = outputDir+'/'+Utils.GW_CLI_LOG_FILE;
+        if(Utils.isBlockedByPolicy(cliProcessLogPath)){            
+             console.log("Blocked by policy")
+             return -3;
         }
  //       Utils.addRawLogLine(0,fileName,"Rebuild output = "+totalOutput);
         if(totalOutput.indexOf("error during connect") > -1){
