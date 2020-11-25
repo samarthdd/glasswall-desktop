@@ -22,6 +22,7 @@ import * as FileUploadUtils     from '../components/FileUploadUtils'
 import Loader                   from '../components/Loader';
 import * as Utils               from '../utils/utils'
 import RawXml                   from '../components/RawXml';
+import preceiveThreats          from '../components/ThreatIntelligence'
 const { dialog }                = require('electron').remote
 var fs                          = require('fs');
 
@@ -475,6 +476,8 @@ function RebuildFiles(){
         time?               : number;
         userTargetFolder?   : string;
         rebuildSource       : string;
+        isThreat            : boolean;
+        threatLevel         : string;
     }
 
     React.useEffect(()=>{
@@ -535,21 +538,10 @@ function RebuildFiles(){
 
 
 //callback for rebuild and analysis
-const downloadResult =(result: any)=>{
-    
-    setRebuildFileNames(rebuildFileNames =>[...rebuildFileNames,  {
-        id:result.id,
-        url: result.url,
-        name: result.filename,
-        sourceFileUrl: result.source,
-        isError: result.isError,
-        msg: result.msg,
-        xmlResult:result.xmlResult,
-        path: result.path,
-        cleanFile: result.cleanFile
-        }]);
-
-    setCounter(state=>state-1);
+const downloadResult = async(result: any)=>{
+    let isThreat = false
+    let threatLevel = "Unknown" 
+    let threat: any;    
     let fileHash: string;
     fileHash = Utils.getFileHash(result.original)
       
@@ -589,8 +581,12 @@ const downloadResult =(result: any)=>{
             status              : "Success",
             time                : new Date().getTime(),
             userTargetFolder    : userTargetDir,
-            rebuildSource       : Utils.REBUILD_TYPE_CLOUD
+            rebuildSource       : Utils.REBUILD_TYPE_CLOUD,
+            isThreat            : isThreat,
+            threatLevel         : threatLevel
         }
+        let metaContentCopy = content
+
         Utils.saveTextFile(JSON.stringify(content), metadataFilePath, 'metadata.json');
     
         content.original_file = fileHash + Utils.getPathSep() + Utils._ORIGINAL_FOLDER + Utils.getPathSep() + result.filename
@@ -599,13 +595,25 @@ const downloadResult =(result: any)=>{
         content.userTargetFolder = userTargetDir;
         
         masterMetaFile.push(content);
-
-        // if(userTargetDir !=""){
-        //     var filepath = userTargetDir;
-        //     if(flat){
-        //         Utils.saveBase64File(result.cleanFile, filepath, result.filename );
-        //     }
-        // }
+        // TI Reporting         
+        let basePath = Utils.getProcessedPath() + Utils.getPathSep() + result.targetDir + Utils.getPathSep() + fileHash + Utils.getPathSep()
+        let xml = result.xmlResult   
+        let reportPath = Utils.stipFileExt(result.filename)+'.xml'
+        threat = await preceiveThreats(xml,reportFilePath, reportPath, cleanFilePath, result.filename,basePath)
+        console.log('threat level '+threat.threat_level)
+        console.log('threats '+JSON.stringify(threat.threats))
+        console.log('threats analysis '+JSON.stringify(threat.threat_analysis))
+        if(threat){                
+            threatLevel = threat.threat_level.toUpperCase() 
+            if(threatLevel != "OK" && threatLevel != "UNKNOWN"){
+                isThreat = true
+            }
+            threat.filename= result.filename;
+            threat.fileSize = result.original.length;
+        }
+        metaContentCopy.isThreat    = isThreat
+        metaContentCopy.threatLevel = threatLevel
+        Utils.saveTextFile(JSON.stringify(metaContentCopy), metadataFilePath, 'metadata.json');
 
     }else{
         var OriginalFilePath =Utils.getProcessedPath() +  Utils.getPathSep()
@@ -622,10 +630,27 @@ const downloadResult =(result: any)=>{
             time                : new Date().getTime(),
             userTargetFolder    : userTargetDir,
             message             : result.msg,
-            rebuildSource       : Utils.REBUILD_TYPE_CLOUD
+            rebuildSource       : Utils.REBUILD_TYPE_CLOUD,
+            isThreat            : isThreat,
+            threatLevel         : threatLevel
         }
         masterMetaFile.push(content);
-    }        
+    }   
+    
+    setRebuildFileNames(rebuildFileNames =>[...rebuildFileNames,  {
+        id:result.id,
+        url: result.url,
+        name: result.filename,
+        sourceFileUrl: result.source,
+        isError: result.isError,
+        msg: result.msg,
+        xmlResult:result.xmlResult,
+        path: result.path,
+        cleanFile: result.cleanFile
+        }]);
+
+    setCounter(state=>state-1);
+    
     }
 
     

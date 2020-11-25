@@ -558,20 +558,6 @@ function DockerRebuildFiles(){
             setShowLoader(false);
             sessionStorage.removeItem("docker_session_runnning")
             Utils.saveTextFile(JSON.stringify(masterMetaFile),  targetDir , 'metadata.json');
-
-            // if(userTargetDir !="" && !flat){
-            //     let PATHS: string[];
-            //     PATHS=[]
-            //     rebuildFileNames.map(rebuild=>{
-            //         if(rebuild.path)
-            //             PATHS.push(rebuild.path);
-            //     });
-
-            //     const common = commonPath(PATHS);
-            //     common.parsedPaths.map((cPath:any)=>{
-            //         Utils.saveBase64File( getRebuildFileContent(cPath.original), userTargetDir +  Utils.getPathSep() + cPath.subdir, cPath.basePart );
-            //     });
-            // }
         }
       }, [counter]);
     
