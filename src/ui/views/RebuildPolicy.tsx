@@ -7,6 +7,7 @@ import { Button, FormControl, FormHelperText, Grid, Input, InputLabel, MenuItem,
 import LibraryBooksIcon         from '@material-ui/icons/LibraryBooks';
 import Loader                   from '../components/Loader'
 import MuiAlert                 from '@material-ui/lab/Alert';
+import Badge from '@material-ui/core/Badge';
 
 function Alert(props: any) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -15,24 +16,22 @@ function Alert(props: any) {
 const theme1 = createMuiTheme({
   overrides: {
     MuiInputBase: {
-      input: {
-        "&:focus": {
-          background: "$labelcolor",
+      input: { overflow:  "visible",
           "&:before": {
             background: '#75c16e',
-            width: "18px",
-            height: "18px",
+            width: "5px",
+            height: "5px",
             position: "absolute",
-            right: "-21px",
+            right: "-16px",
             fontSize: "14px",
             borderRadius: "24px",
             padding: "5px 5px",
-            top: "-43px",
+            top: "-36px",
             color: "#fff",
-            content: "✔",
+            content: "close-quote",
             boxShadow: "2px 3px 4px #777",
-            textAlign: "center"
-          }
+            textAlign: "center",
+            display:  "none"
         }
       }
     },
@@ -212,6 +211,17 @@ heading:{
 filledSuccess:{
 position:  'relative',
 top:   '70px',
+},
+
+MuiBadgeBadge: {
+  top: '-15px',
+  right: '-14px',
+    '& span':{
+      height: '12px',
+      padding: '0',
+      minWidth: '12px',
+      borderRadius: '25px',
+    }
 }
    
  }));
@@ -455,6 +465,7 @@ function RebuildPolicy(){
                                 <h3 className={classes.heading}>PDF Config</h3>
                                 <form className={classes.root} autoComplete="off">                                  
                                 <FormControl className={classes.formControl}>
+                                <Badge color="secondary" variant="dot" className={classes.MuiBadgeBadge}></Badge>
                                     <InputLabel htmlFor="pdf-metadata" className={classes.inputLabel} style={greenColor}>Metadata</InputLabel>
                                     <MuiThemeProvider theme={theme1}>
                                     <Select
