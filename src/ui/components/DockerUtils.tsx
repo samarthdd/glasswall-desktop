@@ -125,7 +125,7 @@ export const docker_exec_rebuild = async (payload: any,request:any,requestId:str
     let configDir = resolve(Utils.getAppDataPath() + Utils.getPathSep() + 'configR');    
     Utils.addRawLogLine(1,request.filename,'Config dir - '+(configDir));
     // Run container ]
-    var cmd = 'docker run --rm -v '+'\"'+ configDir+'\"'+ ':/home/glasswall -v '+'\"'+ resolve(inputDir)+'\"'+':/input -v '+ '\"'+resolve(outputDir)+ '\"'+':/output '+Utils.GW_DOCKER_IMG_NAME;
+    var cmd = 'docker run --rm -v '+'\"'+ configDir+'\"'+ ':/home/glasswall -v '+'\"'+ resolve(inputDir)+'\"'+':/input -v '+ '\"'+resolve(outputDir)+ '\"'+':/output '+ Utils.getRebuildImage() +":" + Utils.getRebuildImageTag();
     console.log("cmd" +cmd)
     exec(cmd, function (err:Error, stdout:string, stderr:string) {      
         console.log('rebuild stdout ->'+stdout)
@@ -217,7 +217,7 @@ export const docker_exec_analysis = async (payload:any,request:any,requestId:str
     Utils.addRawLogLine(1,request.filename,'Config dir - '+(configDir));
     // Run container 
     var cmd = 'docker run --rm -v '+'\"'+ configDir+'\"'+ ':/home/glasswall -v '+
-    '\"'+ resolve(inputDir)+'\"'+ ':/input -v '+'\"'+ resolve(outputDir)+'\"'+ ':/output '+Utils.GW_DOCKER_IMG_NAME;
+    '\"'+ resolve(inputDir)+'\"'+ ':/input -v '+'\"'+ resolve(outputDir)+'\"'+ ':/output '+ Utils.getRebuildImage() +":" + Utils.getRebuildImageTag();
     exec(cmd, function (err:Error, stdout:string, stderr:string) {      
         if(err){
             Utils.addRawLogLine(2,request.filename,'Error during analysis -> \n '+err.stack+"\n")
@@ -341,7 +341,7 @@ export const health_chk = () => {
         localStorage.setItem("healthLogs",oldLogs);       
         return 2;
     }   
-    else if (!totalOutput.includes(Utils.GW_DOCKER_IMG_NAME_WO_TAG)){
+    else if (!totalOutput.includes(Utils.getRebuildImage())){
         // Image not present
         oldLogs += "\n"+Utils.getLogTime()+" - ERROR \n GW IMAGE MISSING - "+totalOutput        
         localStorage.setItem("healthLogs",oldLogs);       
@@ -358,7 +358,7 @@ export const health_chk = () => {
                                         '--rm',
                                         '-v', resolve(inputDir)+':/input',
                                         '-v', resolve(outputDir)+':/output',
-                                        Utils.GW_DOCKER_IMG_NAME], options);    
+                                        Utils.getRebuildImage() +":" + Utils.getRebuildImageTag()], options);    
      if(spawned.hasOwnProperty("output")){
         for(var i=0;i<spawned["output"].length;i++){
             var output = spawned["output"][i];
@@ -414,7 +414,7 @@ export const pull_image = () =>{
     // Pull    
     totalOutput = "";
     var options={"timeout":120000, "shell":false};
-    var pullResponse = spawnSync('docker', [ 'pull',Utils.GW_DOCKER_IMG_NAME], options);
+    var pullResponse = spawnSync('docker', [ 'pull', Utils.getRebuildImage() +":" + Utils.getRebuildImageTag()], options);
     if(pullResponse.hasOwnProperty("output")){            
         for(var i=0;i<pullResponse["output"].length;i++){
             var output = pullResponse["output"][i];        
@@ -463,7 +463,7 @@ export const check_license = () =>{
                                         '--rm',
                                         '-v', resolve(inputDir)+':/input',
                                         '-v', resolve(outputDir)+':/output',
-                                        Utils.GW_DOCKER_IMG_NAME], options);    
+                                        Utils.getRebuildImage() +":" + Utils.getRebuildImageTag()], options);    
     if(spawned.hasOwnProperty("output")){
         console.log("Spawned length "+spawned["output"].length);
         for(var i=0;i<spawned["output"].length;i++){

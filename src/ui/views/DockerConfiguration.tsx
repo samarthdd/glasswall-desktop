@@ -178,7 +178,8 @@ function DockerConfiguration() {
          setShowLoader(true)
          const timer = setTimeout(() => {
             var ouput = DockerUtils.pull_image();
-            if(ouput.includes(Utils.GW_DOCKER_PULL_IMG_OUTPUT) || ouput.includes(Utils.GW_DOCKER_PULL_IMG_OUTPUT_2)){
+            console.log("pullDockerImage" + ouput)
+            if(ouput.includes(Utils.GW_DOCKER_PULL_IMG_OUTPUT + Utils.getRebuildImage()) || ouput.includes(Utils.GW_DOCKER_PULL_IMG_OUTPUT_2 + Utils.getRebuildImage())){
                 ouput = DockerUtils.check_license();
                 if(ouput != 0){
                     setHealthCheckStatus(4)

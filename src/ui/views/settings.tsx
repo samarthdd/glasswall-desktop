@@ -99,6 +99,7 @@ function Settings(){
     const [analysisUrl, setAnalysisUrl] = useState(Utils.getRebuildAnalysisUrl());
     const [apiKey, setApiKey] = useState(Utils.getRebuildApiKey());
     const [rebuildImage, setRebuildImage] = useState(Utils.getRebuildApiKey());
+    const [rebuildImageTag, setRebuildImageTag] = useState(Utils.getRebuildImageTag());
 
     React.useEffect(() => {
         console.log("settings1" + Utils.getRebuildEngineUrl())
@@ -106,8 +107,7 @@ function Settings(){
         setAnalysisUrl(Utils.getRebuildAnalysisUrl());
         setApiKey(Utils.getRebuildApiKey());
         setRebuildImage(Utils.getRebuildImage())
-       
-        
+        setRebuildImageTag(Utils.getRebuildImageTag())
     }, []);
 
    const showApiKey = ()=> {
@@ -137,6 +137,13 @@ function Settings(){
     setRebuildImage(e.target.value)
     localStorage.setItem(Utils.REBUILD_IMAGE_KEY, e.target.value )
    }
+
+   const handleRebuildImageTagChange =(e:any)=>{
+    console.log(e.target.value);
+    setRebuildImageTag(e.target.value)
+    localStorage.setItem(Utils.REBUILD_IMAGE_TAG_KEY, e.target.value )
+   }
+
     return(
         <div className={classes.root}> 
             <SideDrawer showBack={false}/>
@@ -159,9 +166,13 @@ function Settings(){
                             <input onChange={handleApiIKeyChange} type={hide?'password':'text'} value={apiKey}/>
                             <button onClick={showApiKey}> {hide ? <VisibilityIcon /> : <VisibilityOffIcon />}</button>
                         </div>  
-                        <h4>Rebuild Docker Image</h4>   
+                        <h4>REBUILD DOCKER IMAGE</h4>   
                         <div className={classes.urlBox}>
                             <input onChange={handleRebuildImageChange} type="text" value={rebuildImage}/>
+                        </div>  
+                        <h4>REBUILD DOCKER IMAGE TAG</h4>   
+                        <div className={classes.urlBox}>
+                            <input type="text" onChange={handleRebuildImageTagChange}  value={rebuildImageTag}/>
                         </div>                            
                     </div>
                   
