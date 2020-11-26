@@ -268,6 +268,7 @@ function RebuildPolicy(){
     const [policy, setPolicy]   = useState<PolicyConfig>(
       {
         pdfConfig:{
+          watermark               : "Glasswall Protected",
           metadata                : "sanitise",
           javascript              : "sanitise",
           acroform                : "sanitise",
@@ -308,6 +309,7 @@ function RebuildPolicy(){
         }});
 
     interface PdfPolicy{
+      watermark               : string,
       metadata                : string,
       javascript              : string,
       acroform                : string,
@@ -368,6 +370,7 @@ function RebuildPolicy(){
     Utils.getPolicy().then((policyJson:any) => {
       console.log('policy - '+JSON.stringify(policyJson))
       let pdfPolicy = {
+        watermark : policyJson.config.pdfConfig[0].watermark[0],
         external_hyperlinks: policyJson.config.pdfConfig[0].external_hyperlinks[0],
         acroform: policyJson.config.pdfConfig[0].acroform[0],
         metadata: policyJson.config.pdfConfig[0].metadata[0],
@@ -464,6 +467,22 @@ function RebuildPolicy(){
                             </div>
                                 <h3 className={classes.heading}>PDF Config</h3>
                                 <form className={classes.root} autoComplete="off">                                  
+                                
+                                <FormControl className={classes.formControl}>
+                              <InputLabel htmlFor="pdf-watermark" className={classes.inputLabel} style={disabledColor}>Watermark</InputLabel>
+                              <Input id="pdf-watermark" value={policy?.pdfConfig.watermark} onChange={(event) =>{                               
+                                                                  if(event.target.value.length > 19){
+                                                                    return
+                                                                  }
+                                                                  let pdfPol = policy?.pdfConfig || undefined
+                                                                  if(pdfPol){
+                                                                    pdfPol.watermark = event.target.value
+                                                                  }
+                                                                  setReadyForRender(!readyForRender)
+                                                                }
+                              } />
+                            </FormControl>
+
                                 <FormControl className={classes.formControl}>
                                 <Badge color="secondary" variant="dot" className={classes.MuiBadgeBadge}></Badge>
                                     <InputLabel htmlFor="pdf-metadata" className={classes.inputLabel} style={greenColor}>Metadata</InputLabel>
