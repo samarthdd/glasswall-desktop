@@ -533,7 +533,7 @@ function DockerRebuildFiles(){
                 setHealthCheckStatus(status)
                 setShowLoader(false)
                
-              }, 20);
+              }, 100);
             
         } else{
             status = Number(sessionStorage.getItem(Utils.DOCKER_HEALTH_STATUS_KEY));

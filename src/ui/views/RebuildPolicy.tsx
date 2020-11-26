@@ -406,8 +406,8 @@ function RebuildPolicy(){
 
     React.useEffect(()=>{
       console.log("value React.useEffect called")
-    setReadyForRender(!readyForRender)      
-  },[ policy]);
+      //setPrevPolicy(prevPolicy);  
+  },[ policy, readyForRender]);
  
   React.useEffect(()=>{
     Utils.getPolicy().then((policyJson:any) => {
@@ -460,7 +460,7 @@ function RebuildPolicy(){
       }
       console.log('policy set-> '+policy)
       setPolicy(policy)
-      setPrevPolicy(policy)
+      setPrevPolicy(JSON.parse(JSON.stringify(policy)))
       setReadyForRender(!readyForRender)
     })    
     },[]);
@@ -469,7 +469,7 @@ function RebuildPolicy(){
       console.log('Saving policy - '+JSON.stringify(policy))
       setLoader(true)
       Utils.savePolicy({"config":policy})
-      setPrevPolicy(policy);
+      setPrevPolicy(JSON.parse(JSON.stringify(policy)));
       //prevPolicy = policy;
     }
 
@@ -481,7 +481,18 @@ function RebuildPolicy(){
       setLoader(false);
     };
 
+    const handleChange =(event: any) => {
+      let oldPolicy = policy;
+      let pdfPol = oldPolicy?.pdfConfig || undefined
+      if(pdfPol){
+        pdfPol.metadata = event.target.value
+      }
+      setPolicy(oldPolicy);
+      setReadyForRender(!readyForRender)
+    }
     
+    console.log("current" + policy.pdfConfig.metadata)
+    console.log("old" + prevPolicy.pdfConfig.metadata)
     return(
         <div className={classes.root}> 
             <SideDrawer showBack={false}/>
@@ -535,13 +546,7 @@ function RebuildPolicy(){
                                     <Select
                                       
                                       value={policy?.pdfConfig.metadata}
-                                      onChange={(event: any) => {
-                                                                  let pdfPol = policy?.pdfConfig || undefined
-                                                                  if(pdfPol){
-                                                                    pdfPol.metadata = event.target.value
-                                                                  }
-                                                                  setReadyForRender(!readyForRender)
-                                                                }}
+                                      onChange={handleChange}
                                       inputProps={{
                                         name: "pdfMetadata",
                                         id: 'pdf-metadata'
@@ -561,12 +566,11 @@ function RebuildPolicy(){
                                       className={classes.selectBox}
                                       value={policy?.pdfConfig.acroform}
                                       onChange={(event: any) => {
-                                                                  let oldPolicy = policy;
-                                                                  let pdfPol = oldPolicy?.pdfConfig || undefined
+                                                                  let pdfPol = policy?.pdfConfig || undefined
                                                                   if(pdfPol){
                                                                     pdfPol.acroform = event.target.value
                                                                   }
-                                                                  setPolicy(oldPolicy);
+                                                                  setReadyForRender(!readyForRender)
                                                                 }}
                                       inputProps={{
                                         name: "pdfAcroform",
@@ -726,32 +730,6 @@ function RebuildPolicy(){
                                       inputProps={{
                                         name: 'pdfEmbeddedImages',
                                         id: 'pdf-embedded-images',
-                                        readOnly: false,
-                                      }}
-                                    >
-
-                                      <MenuItem value="sanitise">Sanitise</MenuItem>
-                                      <MenuItem value="allow">Allow</MenuItem>
-                                      <MenuItem value="disallow">Disallow</MenuItem>
-                                    </Select>
-                                    
-                                  </FormControl>
-                                  <FormControl className={classes.formControl}>
-                                    {(policy?.pdfConfig.embedded_files != prevPolicy?.pdfConfig.embedded_files) && <Badge color="secondary" variant="dot" className={classes.MuiBadgeBadge}></Badge>}
-                                    <InputLabel htmlFor="pdf-embedded-images" className={classes.inputLabel} style={purpleColor}>Embedded Files</InputLabel>
-                                    <Select
-                                      className={classes.selectBox}
-                                      value={policy?.pdfConfig.embedded_files}
-                                      onChange={(event: any) => {
-                                        let pdfPol = policy?.pdfConfig || undefined
-                                        if(pdfPol){
-                                          pdfPol.embedded_files = event.target.value
-                                        }
-                                        setReadyForRender(!readyForRender)
-                                      }}
-                                      inputProps={{
-                                        name: 'pdfEmbeddedFiles',
-                                        id: 'pdf-embedded-files',
                                         readOnly: false,
                                       }}
                                     >
