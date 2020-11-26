@@ -23,6 +23,8 @@ import Loader                   from '../components/Loader';
 import * as Utils               from '../utils/utils'
 import RawXml                   from '../components/RawXml';
 import preceiveThreats          from '../components/ThreatIntelligence'
+import ThreatAnalysisDialog     from '../components/ThreatAnalysisDialog'
+
 const { dialog }                = require('electron').remote
 var fs                          = require('fs');
 
@@ -452,7 +454,9 @@ function RebuildFiles(){
     const [showAlertBox, setshowAlertBox]           = useState(false);
     const [flat, setFlat]                           = React.useState(false);
     const [files, setFiles]                         = useState<Array<RebuildResult>>([]);
-    const [allPath, setAllPath]                     =  React.useState<Array<string>>([]);   
+    const [allPath, setAllPath]                     =  React.useState<Array<string>>([]);
+    const [openThreatDialog, setOpenThreatDialog]   = React.useState(false);   
+    const [threatAnalysis, setThreatAnalysis]       = useState(null); 
 
     interface RebuildResult {
         id              : string,
@@ -529,6 +533,7 @@ function RebuildFiles(){
         rebuildFile = rebuildFileNames.find((rebuildFile) => rebuildFile.id ==id);
         if(rebuildFile){
             setXml(rebuildFile.xmlResult);
+            setThreatAnalysis(rebuildFile.threat_analysis)
           }
          }, [id, xml, open]);
 
@@ -755,9 +760,19 @@ const downloadResult = async(result: any)=>{
         setFlat((prev) => !prev);
     } 
 
+    const handleThreadDialogOpen =(open:boolean)=>{
+        setOpenThreatDialog(open);
+    }
+
+    const viewThreadAnalysis=(id: string)=>{
+        setId(id);
+        setOpenThreatDialog(!openThreatDialog);
+    }
+
     return(
         <div>   
-            {open && <RawXml content={xml} isOpen={open} handleOpen={openXml}/>   }                
+            {open && <RawXml content={xml} isOpen={open} handleOpen={openXml}/>   }   
+            {openThreatDialog && <ThreatAnalysisDialog threat ={threatAnalysis} isOpen={openThreatDialog} handleOpen={handleThreadDialogOpen}/>   }             
             <div className={classes.root}> 
                 <SideDrawer showBack={false}/>
                 <main className={classes.content}>
@@ -848,6 +863,7 @@ flat filesystem option to saves in a single directory that contains all files wi
                                                 <TableCell align="left" className={classes.texttBold}>Original</TableCell>
                                                 <TableCell align="left" className={classes.texttBold}>Rebuilt</TableCell>
                                                 <TableCell align="left" className={classes.texttBold}>XML</TableCell>
+                                                <TableCell align="left" className={classes.texttBold}>Analysis</TableCell>
                                             </TableRow>
                                             </TableHead>
                                             <TableBody>
@@ -865,6 +881,11 @@ flat filesystem option to saves in a single directory that contains all files wi
                                                     <TableCell align="left"><button  onClick={() => viewXML(row.id)} className={classes.viewBtn}>{!row.isError?'View Report':''}</button></TableCell>
                                                         : <TableCell align="left"></TableCell>
                                                 }
+                                                  {
+                                                !row.isError ?
+                                                <TableCell align="left"><button  onClick={() => viewThreadAnalysis(row.id)} className={classes.viewBtn}>{!row.isError?'File Analysis':''}</button></TableCell>
+                                                    : <TableCell align="left"></TableCell>
+                                                }   
                                                     
                                                 </TableRow>
                                             ))}
