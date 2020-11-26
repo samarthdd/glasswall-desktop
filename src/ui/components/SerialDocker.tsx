@@ -205,7 +205,7 @@ export const docker_exec_rebuild = (payload: any,fileName:string) => {
                                         '-v', configDir+':/home/glasswall',
                                         '-v', resolve(inputDir)+':/input',
                                         '-v', resolve(outputDir)+':/output',
-                                        Utils.GW_DOCKER_IMG_NAME], options);
+                                        Utils.getRebuildImage() +":" + Utils.getRebuildImageTag()], options);
 //    Utils.addRawLogLine(0,fileName," Rebuild spawned response "+String(spawned))             
      if(spawned.hasOwnProperty("output")){        
         for(var i=0;i<spawned["output"].length;i++){
@@ -274,7 +274,7 @@ export const docker_exec_analysis = (payload: any,fileName:string) => {
                                         '-v', configDir+':/home/glasswall',
                                         '-v', resolve(inputDir)+':/input',
                                         '-v', resolve(outputDir)+':/output',
-                                        Utils.GW_DOCKER_IMG_NAME], options);
+                                        Utils.getRebuildImage() +":" + Utils.getRebuildImageTag()], options);
  //   Utils.addRawLogLine(1,fileName,"<docker_exec_analysis> Spawned response "+String(spawned))             
      if(spawned.hasOwnProperty("output")){        
         for(var i=0;i<spawned["output"].length;i++){

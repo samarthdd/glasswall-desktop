@@ -8,10 +8,11 @@ const resolve                   = require('path').resolve
 const xml2js                    = require('xml2js');
 const commonPath                = require('common-path');
 
-export const GW_DOCKER_IMG_NAME             = 'glasswallsolutions/evaluationsdk:1';
-export const GW_DOCKER_IMG_NAME_WO_TAG      = 'glasswallsolutions/evaluationsdk';
-export const GW_DOCKER_PULL_IMG_OUTPUT      = 'Downloaded newer image for glasswallsolutions/evaluationsdk';
-export const GW_DOCKER_PULL_IMG_OUTPUT_2    = 'Image is up to date for glasswallsolutions/evaluationsdk';
+const GW_DOCKER_IMG_NAME             = 'glasswallsolutions/evaluationsdk';
+//export const GW_DOCKER_IMG_NAME_WO_TAG      = 'glasswallsolutions/evaluationsdk';
+const GW_DOCKER_IMG_TAG              = '1';
+export const GW_DOCKER_PULL_IMG_OUTPUT      = 'Downloaded newer image for ';//glasswallsolutions/evaluationsdk';
+export const GW_DOCKER_PULL_IMG_OUTPUT_2    = 'Image is up to date for ';//glasswallsolutions/evaluationsdk';
 export const GW_DOCKER_EXTRACT_IMG_OUTPUT   = 'Loaded image ID'
 
 export const WEBSITE_URL                = 'https://glasswall-desktop.com';
@@ -44,7 +45,8 @@ export const DOCKER_HEALTH_STATUS_KEY   = "docker_health_status"
 export const REBUILD_URL_KEY            = "rebuild_url"
 export const ANALYSIS_URL_KEY           = "anaylsis_url"
 export const APIKEY_KEY                 = "apikey_key"
-export const REBUILD_IMAGE_KEY          = "rebuild_image_key"
+export const REBUILD_IMAGE_KEY          = "rebuild_image_key_1"
+export const REBUILD_IMAGE_TAG_KEY      = "rebuild_image_tag_key"
 //Storage Keys ends
 
 
@@ -54,7 +56,7 @@ export const REBUILD_TYPE_DOCKER        = "Docker"
 
 const REBUILD_ENGINE_URL                =  'https://8oiyjy8w63.execute-api.us-west-2.amazonaws.com/Prod/api/rebuild/base64';
 const REBUILD_ANALYSIS_URL              =  'https://o7ymnow6vf.execute-api.us-west-2.amazonaws.com/Prod/api/Analyse/base64'
-const REBUILD_API_KEY                   =  'dp2Ug1jtEh4xxFHpJBfWn9V7fKB3yVcv60lhwOAG';
+const REBUILD_API_KEY_VALUE                   =  'dp2Ug1jtEh4xxFHpJBfWn9V7fKB3yVcv60lhwOAG';
 
 export const DOCKER_RUNNING             =  0; // Docker running;
 export const DOCKER_NOT_INSTALLED       =  1; // Docker not installed;
@@ -164,7 +166,7 @@ export const getRebuildAnalysisUrl=()=>{
 export const getRebuildApiKey=()=>{
   let key: string;
   if(!localStorage.getItem(APIKEY_KEY))
-    key = REBUILD_API_KEY;
+    key = REBUILD_API_KEY_VALUE;
   else
     key = localStorage.getItem(APIKEY_KEY) || ""
 
@@ -180,6 +182,17 @@ export const getRebuildImage=()=>{
 
  return key;
 }
+
+export const getRebuildImageTag=()=>{
+  let key: string;
+  if(!localStorage.getItem(REBUILD_IMAGE_TAG_KEY))
+    key = GW_DOCKER_IMG_TAG;
+  else
+    key = localStorage.getItem(REBUILD_IMAGE_TAG_KEY) || ""
+
+ return key;
+}
+
 export const addLogLine = (filename:string, sentence:string) => {     
   const logs  = localStorage.getItem("logs");
   if(logs != null){
