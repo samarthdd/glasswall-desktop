@@ -464,6 +464,9 @@ function RebuildFiles(){
         xmlResult       : string;
         path?           : string;
         cleanFile?      : any;
+        threat?         : boolean;
+        threat_level?   : string;
+        threat_analysis?: any;
       }
 
     
@@ -646,7 +649,10 @@ const downloadResult = async(result: any)=>{
         msg: result.msg,
         xmlResult:result.xmlResult,
         path: result.path,
-        cleanFile: result.cleanFile
+        cleanFile: result.cleanFile,
+        threat: isThreat,
+        threat_level: threatLevel,
+        threat_analysis: threat
         }]);
 
     setCounter(state=>state-1);
