@@ -1,4 +1,5 @@
 import  React, {useState}       from 'react';
+import { Link } from 'react-router-dom';
 import { makeStyles }           from '@material-ui/core/styles';
 import SideDrawer               from '../components/SideDrawer';
 import VisibilityIcon           from '@material-ui/icons/Visibility';
@@ -87,7 +88,26 @@ const useStyles = makeStyles((theme) => ({
                 outline:           '0'
             }
         }
-   }
+   },
+
+   submitBtn:{
+    background:                 '#0c3451',
+    color:                      '#fff',
+    border:                     'none',
+    padding:                    '12px 50px',
+    borderRadius:               '3px',
+    cursor:                     'pointer',
+    marginTop:                  '7px',
+    fontSize:                   '15px',
+    
+},
+btnBox:{
+   textDecoration:             'none', 
+   display:                    'block',
+   width:                      '100%',
+   textAlign:                  'center',
+}
+
  }));
 
 
@@ -137,13 +157,17 @@ function Settings(){
     setRebuildImage(e.target.value)
     localStorage.setItem(Utils.REBUILD_IMAGE_KEY, e.target.value )
    }
+   
+   const handleRedirect = () => {
+       console.log('success');
+    window.open('https://glasswall-store.com/');
+  };
 
-   const handleRebuildImageTagChange =(e:any)=>{
+  const handleRebuildImageTagChange =(e:any)=>{
     console.log(e.target.value);
     setRebuildImageTag(e.target.value)
     localStorage.setItem(Utils.REBUILD_IMAGE_TAG_KEY, e.target.value )
    }
-
     return(
         <div className={classes.root}> 
             <SideDrawer showBack={false}/>
@@ -169,12 +193,16 @@ function Settings(){
                         <h4>REBUILD DOCKER IMAGE</h4>   
                         <div className={classes.urlBox}>
                             <input onChange={handleRebuildImageChange} type="text" value={rebuildImage}/>
-                        </div>  
-                        <h4>REBUILD DOCKER IMAGE TAG</h4>   
+                        </div>
+                        <div className={classes.btnBox}>
+                            <button className={classes.submitBtn}  onClick={handleRedirect} >Buy Token</button> 
+                       </div>                       
+
+                       <h4>REBUILD DOCKER IMAGE TAG</h4>   
                         <div className={classes.urlBox}>
                             <input type="text" onChange={handleRebuildImageTagChange}  value={rebuildImageTag}/>
                         </div>                            
-                    </div>
+                        </div>
                   
                 </div>   
             </main>   
