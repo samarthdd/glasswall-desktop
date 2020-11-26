@@ -285,6 +285,7 @@ export const CONFIG_XML_REBUILD   =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\
 <config>\n\
 <pdfConfig>\n\
+<watermark>Glasswall Protected</watermark>\n\
 <metadata>sanitise</metadata>\n\
 <javascript>sanitise</javascript>\n\
 <acroform>sanitise</acroform>\n\
@@ -347,6 +348,7 @@ export const CONFIG_XML   =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\
 <config>\n\
 <pdfConfig>\n\
+<watermark>Glasswall Protected</watermark>\n\
 <metadata>sanitise</metadata>\n\
 <javascript>sanitise</javascript>\n\
 <acroform>sanitise</acroform>\n\
