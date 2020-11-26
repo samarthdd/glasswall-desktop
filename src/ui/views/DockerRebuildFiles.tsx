@@ -33,7 +33,7 @@ import ThreatAnalysisDialog     from '../components/ThreatAnalysisDialog'
 
 
 var fs                          = require('fs');
-const commonPath                = require('common-path');
+
 
 
 const useStyles = makeStyles((theme) => ({
@@ -489,7 +489,8 @@ function DockerRebuildFiles(){
     const [parallel, setParallel]                   = React.useState(true);
     const [openThreatDialog, setOpenThreatDialog]   = React.useState(false);
     const [threatAnalysis, setThreatAnalysis]       = useState(null);  
-    const [healthCheckStatus, setHealthCheckStatus] = React.useState( Number(sessionStorage.getItem("docker_status")) || 0);    
+    const [healthCheckStatus, setHealthCheckStatus] = React.useState( Number(sessionStorage.getItem("docker_status")) || 0); 
+    const [allPath, setAllPath]                     = React.useState<Array<string>>([]);    
 
     interface DockerRebuildResult {
         id              : string,
@@ -558,20 +559,6 @@ function DockerRebuildFiles(){
             setShowLoader(false);
             sessionStorage.removeItem("docker_session_runnning")
             Utils.saveTextFile(JSON.stringify(masterMetaFile),  targetDir , 'metadata.json');
-
-            if(userTargetDir !="" && !flat){
-                let PATHS: string[];
-                PATHS=[]
-                rebuildFileNames.map(rebuild=>{
-                    if(rebuild.path)
-                        PATHS.push(rebuild.path);
-                });
-
-                const common = commonPath(PATHS);
-                common.parsedPaths.map((cPath:any)=>{
-                    Utils.saveBase64File( getRebuildFileContent(cPath.original), userTargetDir +  Utils.getPathSep() + cPath.subdir, cPath.basePart );
-            });
-        }
         }
       }, [counter]);
     
@@ -590,9 +577,10 @@ function DockerRebuildFiles(){
         setFiles(rebuildResultsPerPage)
         }, [rowsPerPage, page, rebuildFileNames]);
 
+
     //callback for rebuild and analysis
     const downloadResult = async (result: any)=>{            
-        
+        console.log("***************downloadResult****************")
         let fileHash: string;
         fileHash = Utils.getFileHash(result.original)
         let isThreat = false
@@ -600,6 +588,15 @@ function DockerRebuildFiles(){
         let threat: any;
 
         if(!result.isError){
+
+            if(flat){
+                Utils.saveBase64File(result.cleanFile, userTargetDir, result.filename );
+            }else{
+                let filePath: string;
+                filePath = Utils.getHieracyPath(result.path, userTargetDir, allPath);
+                Utils.saveBase64File(result.cleanFile, filePath , result.filename );
+            }
+            
             var cleanFilePath = Utils.getProcessedPath() + Utils.getPathSep()
                                  + result.targetDir + Utils.getPathSep() + fileHash
                                   + Utils.getPathSep() + Utils._CLEAN_FOLDER;
@@ -617,6 +614,7 @@ function DockerRebuildFiles(){
 
             var metadataFilePath =  Utils.getProcessedPath() + Utils.getPathSep() + 
                                     result.targetDir + Utils.getPathSep() + fileHash;
+
             let content: Metadata;
             content = {
                 original_file       : Utils._ORIGINAL_FOLDER + Utils.getPathSep() + result.filename,
@@ -637,12 +635,7 @@ function DockerRebuildFiles(){
             content.userTargetFolder = userTargetDir;
             
             masterMetaFile.push(content);
-            if(userTargetDir !=""){
-                var filepath = userTargetDir;
-                if(flat){
-                    Utils.saveBase64File(result.cleanFile, filepath, result.filename );
-                }
-            }
+            
             // TI Reporting         
             let basePath = Utils.getProcessedPath() + Utils.getPathSep() + result.targetDir + Utils.getPathSep() + fileHash + Utils.getPathSep()
             let xml = result.xmlResult   
@@ -702,57 +695,59 @@ function DockerRebuildFiles(){
 
     }
 
-    const getRebuildFileContent =(filePath: string)=>{
-        var rebuild = rebuildFileNames.find(rebuild=>rebuild.path === filePath);
-        if(rebuild)
-            return rebuild.cleanFile;
-        else    
-            return null;
-    }
-     
      const renderRedirect = () => {
         if (healthCheckStatus) {
           return <Redirect to='/configure' />
         }
       }
+
+    const processFiles =(files: any)=>{
+
+        let outputDirId: string;
+        sessionStorage.setItem("docker_session_runnning", "true");     
+        setCounter((state: any)=>state + files.length)
+        setRebuildFileNames([]);
+        setPage(0);
+        masterMetaFile.length =0;
+        outputDirId = Utils.guid()
+        setFolderId(outputDirId);
+        setShowLoader(true); 
+        setAllPath([]);     
+        files.map((file: any) => {
+            allPath.push(file.path);
+            if(parallel){
+                DockerUtils.getFile(file).then(async (data: any) => {
+                    Utils.addLogLine(file.name,"Starting rebuild");
+                    setFileNames((fileNames: any) =>[...fileNames, file.name]);
+                    var url = window.webkitURL.createObjectURL(file);
+                    let guid: string;
+                    guid =  Utils.guid();                                    
+                    DockerUtils.makeRequest(data, url, guid, outputDirId, downloadResult);
+                })
+            }
+            else{
+                SerialDocker.getFile(file).then(async (data: any) => {
+                    Utils.addLogLine(file.name,"Starting rebuild");
+                    setFileNames((fileNames: any) =>[...fileNames, file.name]);
+                    var url = window.webkitURL.createObjectURL(file);
+                    let guid: string;
+                    guid =  Utils.guid();                                    
+                    SerialDocker.makeRequest(data, url, guid, outputDirId, downloadResult);
+                })
+            }
+        })
+        console.log("FILE PATH" + allPath)
+    }
+
     //Multi file drop callback 
     const handleDrop = async (acceptedFiles:any) =>{
         Utils.initLogger();
-        let outputDirId: string;
         if(userTargetDir ==""){
             setshowAlertBox(true);
         }
-        else {      
-            sessionStorage.setItem("docker_session_runnning", "true");     
-            setCounter((state: any)=>state + acceptedFiles.length)
-            setRebuildFileNames([]);
-            setPage(0);
-            masterMetaFile.length =0;
-            outputDirId = Utils.guid()
-            setFolderId(outputDirId);
-            setShowLoader(true);            
-            acceptedFiles.map((file: File) => {
-                if(parallel){
-                    DockerUtils.getFile(file).then(async (data: any) => {
-                        Utils.addLogLine(file.name,"Starting rebuild");
-                        setFileNames((fileNames: any) =>[...fileNames, file.name]);
-                        var url = window.webkitURL.createObjectURL(file);
-                        let guid: string;
-                        guid =  Utils.guid();                                    
-                        DockerUtils.makeRequest(data, url, guid, outputDirId, downloadResult);
-                    })
-                }
-                else{
-                    SerialDocker.getFile(file).then(async (data: any) => {
-                        Utils.addLogLine(file.name,"Starting rebuild");
-                        setFileNames((fileNames: any) =>[...fileNames, file.name]);
-                        var url = window.webkitURL.createObjectURL(file);
-                        let guid: string;
-                        guid =  Utils.guid();                                    
-                        SerialDocker.makeRequest(data, url, guid, outputDirId, downloadResult);
-                    })
-                }
-            })
+        else 
+        {      
+             setTimeout(processFiles, 100, acceptedFiles);
         }        
 
     }  

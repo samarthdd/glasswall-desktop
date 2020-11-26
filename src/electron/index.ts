@@ -22,75 +22,81 @@ autoUpdater.logger.transports.file.level = 'debug';
 log.info('App starting...');
 
 
-
+log.info("process.platform" + process.platform)
 function createMenu(){
-    var template =[
-        {
-            label: 'Desktop'
-        },
-        {
-            label: 'Glasswall Desktop',
-            submenu: [
-                {
-                    label: 'Home',
-                    click: openMainWindow,
-                },
-                {
-                    type:'separator'
-                }, 
-                {
-                    label:'About Glasswall Desktop',
-                    click: async (): Promise<void> => {
-                        const { response } = await dialog.showMessageBox({
-                        message: `About Glasswall Desktop`,
-                        detail: ` Glasswall Desktop is a desktop based applications that provide multi file drag and drop rebuild workflow.`,
-                        buttons: [ `Ok`],
-                        defaultId: 1,
-                        type: `info`,
-                        })
-                    },
-                },
-                
-                {
-                    type:'separator'
-                },
-                {
-                    type:'separator'
-                }, 
-                {
-                    label:'Quit Glasswall Desktop',
-                    click: async (): Promise<void> => {
-                        //openMainWindow()
-                        const { response } = await dialog.showMessageBox({
-                        message: `Quit Glasswall Desktop?`,
-                        detail: `Do you really want to quit?`,
-                        buttons: [`Cancel`, `Quit`],
-                        defaultId: 1,
-                        type: `question`,
-                        })
-                
-                        if (response === 1) {
-                            app.quit()
-                        }
-                    },
-                    accelerator: 'CmdOrCtrl+Q'
-                }
-            ]
-        },
-        {
-        role: 'help',
+  var template = [];
+  if(process.platform == "darwin"){
+      {
+        template.push( {
+          label: 'Desktop'
+      })
+       
+    }
+  }
+        
+  template.push({
+        label: 'Glasswall Desktop',
         submenu: [
             {
-                label: 'Learn More',
-                click() { 
-                    shell.openExternal(' https://github.com/k8-proxy/glasswall-desktop/blob/main/README.md')
+                label: 'Home',
+                click: openMainWindow,
+            },
+            {
+                type:'separator'
+            }, 
+            {
+                label:'About Glasswall Desktop',
+                click: async (): Promise<void> => {
+                    const { response } = await dialog.showMessageBox({
+                    message: `About Glasswall Desktop`,
+                    detail: ` Glasswall Desktop is a desktop based applications that provide multi file drag and drop rebuild workflow.`,
+                    buttons: [ `Ok`],
+                    defaultId: 1,
+                    type: `info`,
+                    })
                 },
-                accelerator: 'CmdOrCtrl+H'
+            },
+            
+            {
+                type:'separator'
+            },
+            {
+                type:'separator'
+            }, 
+            {
+                label:'Quit Glasswall Desktop',
+                click: async (): Promise<void> => {
+                    //openMainWindow()
+                    const { response } = await dialog.showMessageBox({
+                    message: `Quit Glasswall Desktop?`,
+                    detail: `Do you really want to quit?`,
+                    buttons: [`Cancel`, `Quit`],
+                    defaultId: 1,
+                    type: `question`,
+                    })
+            
+                    if (response === 1) {
+                        app.quit()
+                    }
+                },
+                accelerator: 'CmdOrCtrl+Q'
             }
         ]
-        }
+    })
 
+    template.push({
+    role: 'help',
+    submenu: [
+        {
+            label: 'Learn More',
+            click() { 
+                shell.openExternal(' https://github.com/k8-proxy/glasswall-desktop/blob/main/README.md')
+            },
+            accelerator: 'CmdOrCtrl+H'
+        }
     ]
+    });
+    
     const menu = Menu.buildFromTemplate(template)
     Menu.setApplicationMenu(menu)
 

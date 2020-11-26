@@ -6,11 +6,13 @@ log.transports.file.level       = 'debug';
 const MAX_LOG_FILE_SIZE         = 3000000;
 const resolve                   = require('path').resolve
 const xml2js                    = require('xml2js');
+const commonPath                = require('common-path');
 
-export const GW_DOCKER_IMG_NAME             = 'glasswallsolutions/evaluationsdk:1';
-export const GW_DOCKER_IMG_NAME_WO_TAG      = 'glasswallsolutions/evaluationsdk';
-export const GW_DOCKER_PULL_IMG_OUTPUT      = 'Downloaded newer image for glasswallsolutions/evaluationsdk';
-export const GW_DOCKER_PULL_IMG_OUTPUT_2    = 'Image is up to date for glasswallsolutions/evaluationsdk';
+const GW_DOCKER_IMG_NAME             = 'glasswallsolutions/evaluationsdk';
+//export const GW_DOCKER_IMG_NAME_WO_TAG      = 'glasswallsolutions/evaluationsdk';
+const GW_DOCKER_IMG_TAG              = '1';
+export const GW_DOCKER_PULL_IMG_OUTPUT      = 'Downloaded newer image for ';//glasswallsolutions/evaluationsdk';
+export const GW_DOCKER_PULL_IMG_OUTPUT_2    = 'Image is up to date for ';//glasswallsolutions/evaluationsdk';
 export const GW_DOCKER_EXTRACT_IMG_OUTPUT   = 'Loaded image ID'
 
 export const WEBSITE_URL                = 'https://glasswall-desktop.com';
@@ -20,7 +22,8 @@ export const FW_URL                     = 'https://forensic-workbench.com/';
 export const FILE_DROP_URL              = 'https://file-drop.co.uk/';
 export const REPO_GIT_ISSUE_URL         = "https://github.com/k8-proxy/glasswall-desktop/issues/new";
 
-
+export const POLICY_BLOCKED_TXT         = 'forbidden by content management policy'
+export const GW_CLI_LOG_FILE            = 'glasswallCLIProcess.log'
 export const VERSION                    = '0.1.7'
 export const _PROCESSED_FOLDER          = "processed"
 export const _LOGS_FOLDER               = "gwlogs"
@@ -42,7 +45,8 @@ export const DOCKER_HEALTH_STATUS_KEY   = "docker_health_status"
 export const REBUILD_URL_KEY            = "rebuild_url"
 export const ANALYSIS_URL_KEY           = "anaylsis_url"
 export const APIKEY_KEY                 = "apikey_key"
-export const REBUILD_IMAGE_KEY          = "rebuild_image_key"
+export const REBUILD_IMAGE_KEY          = "rebuild_image_key_1"
+export const REBUILD_IMAGE_TAG_KEY      = "rebuild_image_tag_key"
 //Storage Keys ends
 
 
@@ -52,7 +56,7 @@ export const REBUILD_TYPE_DOCKER        = "Docker"
 
 const REBUILD_ENGINE_URL                =  'https://8oiyjy8w63.execute-api.us-west-2.amazonaws.com/Prod/api/rebuild/base64';
 const REBUILD_ANALYSIS_URL              =  'https://o7ymnow6vf.execute-api.us-west-2.amazonaws.com/Prod/api/Analyse/base64'
-const REBUILD_API_KEY                   =  'dp2Ug1jtEh4xxFHpJBfWn9V7fKB3yVcv60lhwOAG';
+const REBUILD_API_KEY_VALUE                   =  'dp2Ug1jtEh4xxFHpJBfWn9V7fKB3yVcv60lhwOAG';
 
 export const DOCKER_RUNNING             =  0; // Docker running;
 export const DOCKER_NOT_INSTALLED       =  1; // Docker not installed;
@@ -119,7 +123,7 @@ export const addRawLogLine = (level:number, filename:string, sentence:string) =>
   log.transports.file.file        = getLogsPath();
   let levelStr : string;
   levelStr = "ERROR"
-  let lines  = wordwrap(sentence, 100, '\n', false);
+  let lines  = wordwrap(sentence, 80, '\n', false);
 
   if(level == 0){
     levelStr = "DEBUG"
@@ -162,7 +166,7 @@ export const getRebuildAnalysisUrl=()=>{
 export const getRebuildApiKey=()=>{
   let key: string;
   if(!localStorage.getItem(APIKEY_KEY))
-    key = REBUILD_API_KEY;
+    key = REBUILD_API_KEY_VALUE;
   else
     key = localStorage.getItem(APIKEY_KEY) || ""
 
@@ -178,16 +182,27 @@ export const getRebuildImage=()=>{
 
  return key;
 }
+
+export const getRebuildImageTag=()=>{
+  let key: string;
+  if(!localStorage.getItem(REBUILD_IMAGE_TAG_KEY))
+    key = GW_DOCKER_IMG_TAG;
+  else
+    key = localStorage.getItem(REBUILD_IMAGE_TAG_KEY) || ""
+
+ return key;
+}
+
 export const addLogLine = (filename:string, sentence:string) => {     
   const logs  = localStorage.getItem("logs");
   if(logs != null){
     var logsCopy = logs;
-    logsCopy +=  "\n"+getLogTime()+" - INFO - File-Name - "+filename+" --> "+wordwrap(sentence, 100, '\n', false)+"\n" 
+    logsCopy +=  "\n"+getLogTime()+" - INFO - File-Name - "+filename+" --> "+wordwrap(sentence, 80, '\n', false)+"\n" 
     localStorage.setItem("logs",logsCopy)
   }
   else{
     localStorage.setItem("logs","")
-    var logsCopy = "\n"+getLogTime()+" - INFO - File-Name - "+filename+" --> "+ wordwrap(sentence, 100, '\n', false)+"\n" 
+    var logsCopy = "\n"+getLogTime()+" - INFO - File-Name - "+filename+" --> "+ wordwrap(sentence, 80, '\n', false)+"\n" 
     console.log('adding log '+logsCopy)
     localStorage.setItem("logs",logsCopy)
   }
@@ -283,6 +298,7 @@ export const CONFIG_XML_REBUILD   =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\
 <config>\n\
 <pdfConfig>\n\
+<watermark>Glasswall Protected</watermark>\n\
 <metadata>sanitise</metadata>\n\
 <javascript>sanitise</javascript>\n\
 <acroform>sanitise</acroform>\n\
@@ -345,6 +361,7 @@ export const CONFIG_XML   =
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\
 <config>\n\
 <pdfConfig>\n\
+<watermark>Glasswall Protected</watermark>\n\
 <metadata>sanitise</metadata>\n\
 <javascript>sanitise</javascript>\n\
 <acroform>sanitise</acroform>\n\
@@ -591,4 +608,25 @@ export const file_size_as_string= (file_size: number)=> {
           ? Math.round(file_size / 1024)    + " KB"
           : Math.round(file_size / 1048576) + " MB" )
       : Math.round(file_size / 1073741824)  + " GB"
+}
+
+
+export const  getHieracyPath=(filePath: any, userTargetDir: string, allPath: string[])=>{
+  let targetPath: string;
+  targetPath =userTargetDir;
+  const common = commonPath(allPath);
+      common.parsedPaths.map((cPath:any)=>{
+          if(cPath.original == filePath){
+              targetPath = userTargetDir +  getPathSep() + cPath.subdir;
+          }
+              
+  });
+  console.log("getHieracyPath" + targetPath)
+  return targetPath;
+}
+
+export const isBlockedByPolicy = (filePath:string) =>{
+  let data = fs.readFileSync(filePath, 
+            {encoding:'utf8', flag:'r'}); 
+  return data.indexOf(POLICY_BLOCKED_TXT) > -1;
 }

@@ -265,9 +265,52 @@ function RebuildPolicy(){
     const classes = useStyles(); 
     const [readyForRender, setReadyForRender]   = useState(false)
     const [loader, setLoader]                   = useState(false)
+    const [prevPolicy, setPrevPolicy]            = useState<PolicyConfig>(  {
+      pdfConfig:{
+        watermark               : "Glasswall Protected",
+        metadata                : "sanitise",
+        javascript              : "sanitise",
+        acroform                : "sanitise",
+        actions_all             : "sanitise",
+        embedded_files          : "sanitise",
+        external_hyperlinks     : "sanitise",
+        internal_hyperlinks     : "sanitise",
+        embedded_images         : "sanitise",
+      },
+      wordConfig:{
+        metadata                : "sanitise",
+        macros                  : "sanitise",
+        embedded_files          : "sanitise",
+        review_comments         : "sanitise",
+        internal_hyperlinks     : "sanitise",
+        external_hyperlinks     : "sanitise",
+        dynamic_data_exchange   : "sanitise",
+        embedded_images         : "sanitise",
+      },
+      pptConfig:{
+        metadata                : "sanitise",
+        macros                  : "sanitise",
+        embedded_files          : "sanitise",
+        review_comments         : "sanitise",
+        internal_hyperlinks     : "sanitise",
+        external_hyperlinks     : "sanitise",
+        embedded_images         : "sanitise",
+      },
+      xlsConfig:{
+        metadata                : "sanitise",  
+        macros                  : "sanitise",  
+        embedded_files          : "sanitise",  
+        internal_hyperlinks     : "sanitise",  
+        external_hyperlinks     : "sanitise",  
+        review_comments         : "sanitise",  
+        dynamic_data_exchange   : "sanitise",  
+        embedded_images         : "sanitise",  
+      }})
+
     const [policy, setPolicy]   = useState<PolicyConfig>(
       {
         pdfConfig:{
+          watermark               : "Glasswall Protected",
           metadata                : "sanitise",
           javascript              : "sanitise",
           acroform                : "sanitise",
@@ -308,6 +351,7 @@ function RebuildPolicy(){
         }});
 
     interface PdfPolicy{
+      watermark               : string,
       metadata                : string,
       javascript              : string,
       acroform                : string,
@@ -361,13 +405,15 @@ function RebuildPolicy(){
    
 
     React.useEffect(()=>{
-      console.log("value React.useEffect called")      
-  },[policy, readyForRender]);
+      console.log("value React.useEffect called")
+    setReadyForRender(!readyForRender)      
+  },[ policy]);
  
   React.useEffect(()=>{
     Utils.getPolicy().then((policyJson:any) => {
       console.log('policy - '+JSON.stringify(policyJson))
       let pdfPolicy = {
+        watermark : policyJson.config.pdfConfig[0].watermark[0],
         external_hyperlinks: policyJson.config.pdfConfig[0].external_hyperlinks[0],
         acroform: policyJson.config.pdfConfig[0].acroform[0],
         metadata: policyJson.config.pdfConfig[0].metadata[0],
@@ -414,6 +460,7 @@ function RebuildPolicy(){
       }
       console.log('policy set-> '+policy)
       setPolicy(policy)
+      setPrevPolicy(policy)
       setReadyForRender(!readyForRender)
     })    
     },[]);
@@ -422,6 +469,8 @@ function RebuildPolicy(){
       console.log('Saving policy - '+JSON.stringify(policy))
       setLoader(true)
       Utils.savePolicy({"config":policy})
+      setPrevPolicy(policy);
+      //prevPolicy = policy;
     }
 
 
@@ -429,11 +478,10 @@ function RebuildPolicy(){
       if (reason === 'clickaway') {
         return;
       }
-  
       setLoader(false);
     };
 
-       
+    
     return(
         <div className={classes.root}> 
             <SideDrawer showBack={false}/>
@@ -464,8 +512,24 @@ function RebuildPolicy(){
                             </div>
                                 <h3 className={classes.heading}>PDF Config</h3>
                                 <form className={classes.root} autoComplete="off">                                  
+                                
                                 <FormControl className={classes.formControl}>
-                                <Badge color="secondary" variant="dot" className={classes.MuiBadgeBadge}></Badge>
+                                  {(policy?.pdfConfig.watermark != prevPolicy?.pdfConfig.watermark) && <Badge color="secondary" variant="dot" className={classes.MuiBadgeBadge}></Badge>}
+                                  <InputLabel htmlFor="pdf-watermark" className={classes.inputLabel} style={disabledColor}>Watermark</InputLabel>
+                                  <Input id="pdf-watermark" value={policy?.pdfConfig.watermark} onChange={(event) =>{                               
+                                                                      if(event.target.value.length > 19){
+                                                                        return
+                                                                      }
+                                                                      let pdfPol = policy?.pdfConfig || undefined
+                                                                      if(pdfPol){
+                                                                        pdfPol.watermark = event.target.value
+                                                                      }
+                                                                      setReadyForRender(!readyForRender)
+                                                                    }
+                                  } />
+                                </FormControl>
+                                <FormControl className={classes.formControl}>
+                                    {(policy?.pdfConfig.metadata != prevPolicy?.pdfConfig.metadata) && <Badge color="secondary" variant="dot" className={classes.MuiBadgeBadge}></Badge>}
                                     <InputLabel htmlFor="pdf-metadata" className={classes.inputLabel} style={greenColor}>Metadata</InputLabel>
                                     <MuiThemeProvider theme={theme1}>
                                     <Select
@@ -491,16 +555,18 @@ function RebuildPolicy(){
                                      </MuiThemeProvider>
                                   </FormControl>
                                   <FormControl className={classes.formControl}>
+                                    {(policy?.pdfConfig.acroform != prevPolicy?.pdfConfig.acroform) && <Badge color="secondary" variant="dot" className={classes.MuiBadgeBadge}></Badge>}
                                     <InputLabel htmlFor="pdf-acroform" className={classes.inputLabel} style={greenColor}>Acroform</InputLabel>
                                     <Select
                                       className={classes.selectBox}
                                       value={policy?.pdfConfig.acroform}
                                       onChange={(event: any) => {
-                                                                  let pdfPol = policy?.pdfConfig || undefined
+                                                                  let oldPolicy = policy;
+                                                                  let pdfPol = oldPolicy?.pdfConfig || undefined
                                                                   if(pdfPol){
                                                                     pdfPol.acroform = event.target.value
                                                                   }
-                                                                  setReadyForRender(!readyForRender)
+                                                                  setPolicy(oldPolicy);
                                                                 }}
                                       inputProps={{
                                         name: "pdfAcroform",
@@ -515,6 +581,7 @@ function RebuildPolicy(){
                                     
                                   </FormControl>
                                   <FormControl className={classes.formControl}>
+                                    {(policy?.pdfConfig.javascript != prevPolicy?.pdfConfig.javascript) && <Badge color="secondary" variant="dot" className={classes.MuiBadgeBadge}></Badge>}
                                     <InputLabel htmlFor="pdf-javascript" className={classes.inputLabel} style={purpleColor}>Javascript</InputLabel>
                                     <Select
                                       className={classes.selectBox}
@@ -540,6 +607,7 @@ function RebuildPolicy(){
                                     
                                   </FormControl>
                                   <FormControl className={classes.formControl}>
+                                    {(policy?.pdfConfig.actions_all != prevPolicy?.pdfConfig.actions_all) && <Badge color="secondary" variant="dot" className={classes.MuiBadgeBadge}></Badge>}
                                     <InputLabel htmlFor="pdf-actions-all" className={classes.inputLabel} style={greenColor}>Actions All</InputLabel>
                                     <Select
                                      className={classes.selectBox}
@@ -565,6 +633,7 @@ function RebuildPolicy(){
                                     
                                   </FormControl>
                                   <FormControl className={classes.formControl}>
+                                    {(policy?.pdfConfig.embedded_files != prevPolicy?.pdfConfig.embedded_files) && <Badge color="secondary" variant="dot" className={classes.MuiBadgeBadge}></Badge>}
                                     <InputLabel htmlFor="pdf-embedded-files" className={classes.inputLabel} style={blueColor}>Embedded Files</InputLabel>
                                     <Select
                                       className={classes.selectBox}
@@ -590,6 +659,7 @@ function RebuildPolicy(){
                                     
                                   </FormControl>
                                   <FormControl className={classes.formControl}>
+                                    {(policy?.pdfConfig.internal_hyperlinks != prevPolicy?.pdfConfig.internal_hyperlinks) && <Badge color="secondary" variant="dot" className={classes.MuiBadgeBadge}></Badge>}
                                     <InputLabel htmlFor="pdf-internal-hyperlinks" className={classes.inputLabel} style={purpleColor}>Internal Hyperlinks</InputLabel>
                                     <Select
                                       className={classes.selectBox}
@@ -615,6 +685,7 @@ function RebuildPolicy(){
                                     
                                   </FormControl>
                                   <FormControl className={classes.formControl}>
+                                    {(policy?.pdfConfig.external_hyperlinks != prevPolicy?.pdfConfig.external_hyperlinks) && <Badge color="secondary" variant="dot" className={classes.MuiBadgeBadge}></Badge>}
                                     <InputLabel htmlFor="pdf-external-hyperlinks" className={classes.inputLabel} style={blueColor}>External Hyperlinks</InputLabel>
                                     <Select
                                       className={classes.selectBox}
@@ -640,6 +711,7 @@ function RebuildPolicy(){
                                     
                                   </FormControl>
                                   <FormControl className={classes.formControl}>
+                                    {(policy?.pdfConfig.embedded_images != prevPolicy?.pdfConfig.embedded_images) && <Badge color="secondary" variant="dot" className={classes.MuiBadgeBadge}></Badge>}
                                     <InputLabel htmlFor="pdf-embedded-images" className={classes.inputLabel} style={purpleColor}>Embedded Images</InputLabel>
                                     <Select
                                       className={classes.selectBox}
@@ -665,6 +737,7 @@ function RebuildPolicy(){
                                     
                                   </FormControl>
                                   <FormControl className={classes.formControl}>
+                                    {(policy?.pdfConfig.embedded_files != prevPolicy?.pdfConfig.embedded_files) && <Badge color="secondary" variant="dot" className={classes.MuiBadgeBadge}></Badge>}
                                     <InputLabel htmlFor="pdf-embedded-images" className={classes.inputLabel} style={purpleColor}>Embedded Files</InputLabel>
                                     <Select
                                       className={classes.selectBox}
@@ -695,6 +768,7 @@ function RebuildPolicy(){
                                   <h3>Word Config</h3>
                                   <form className={classes.root} autoComplete="off">
                                   <FormControl className={classes.formControl}>
+                                    {(policy?.wordConfig.metadata != prevPolicy?.wordConfig.metadata) && <Badge color="secondary" variant="dot" className={classes.MuiBadgeBadge}></Badge>}
                                     <InputLabel htmlFor="word-metadata" className={classes.inputLabel} style={redColor}>Metadata</InputLabel>
                                     <Select
                                       className={classes.selectBox}
@@ -720,6 +794,7 @@ function RebuildPolicy(){
                                     
                                   </FormControl>
                                   <FormControl className={classes.formControl}>
+                                    {(policy?.wordConfig.macros != prevPolicy?.wordConfig.macros) && <Badge color="secondary" variant="dot" className={classes.MuiBadgeBadge}></Badge>}
                                     <InputLabel htmlFor="word-macros" className={classes.inputLabel} style={redColor}>Macros</InputLabel>
                                     <Select
                                       className={classes.selectBox}
@@ -746,6 +821,7 @@ function RebuildPolicy(){
                                   </FormControl>
                                   
                                   <FormControl className={classes.formControl}>
+                                    {(policy?.wordConfig.review_comments != prevPolicy?.wordConfig.review_comments) && <Badge color="secondary" variant="dot" className={classes.MuiBadgeBadge}></Badge>}
                                     <InputLabel htmlFor="word-review-comments" className={classes.inputLabel} style={orangeColor}>Review Comments</InputLabel>
                                     <Select
                                       className={classes.selectBox}
@@ -771,6 +847,7 @@ function RebuildPolicy(){
                                     
                                   </FormControl>
                                   <FormControl className={classes.formControl}>
+                                    {(policy?.wordConfig.embedded_files != prevPolicy?.wordConfig.embedded_files) && <Badge color="secondary" variant="dot" className={classes.MuiBadgeBadge}></Badge>}
                                     <InputLabel htmlFor="word-embedded-files" className={classes.inputLabel} style={blueColor}>Embedded Files</InputLabel>
                                     <Select
                                       className={classes.selectBox}
@@ -796,6 +873,7 @@ function RebuildPolicy(){
                                     
                                   </FormControl>
                                   <FormControl className={classes.formControl}>
+                                    {(policy?.wordConfig.internal_hyperlinks != prevPolicy?.wordConfig.internal_hyperlinks) && <Badge color="secondary" variant="dot" className={classes.MuiBadgeBadge}></Badge>}
                                     <InputLabel htmlFor="word-internal-hyperlinks" className={classes.inputLabel} style={purpleColor}>Internal Hyperlinks</InputLabel>
                                     <Select
                                       className={classes.selectBox}
@@ -821,10 +899,11 @@ function RebuildPolicy(){
                                     
                                   </FormControl>
                                   <FormControl className={classes.formControl}>
+                                    {(policy?.wordConfig.external_hyperlinks != prevPolicy?.wordConfig.external_hyperlinks) && <Badge color="secondary" variant="dot" className={classes.MuiBadgeBadge}></Badge>}
                                     <InputLabel htmlFor="word-external-hyperlinks" className={classes.inputLabel} style={blueColor}>External Hyperlinks</InputLabel>
                                     <Select
                                       className={classes.selectBox}
-                                      value={policy?.pdfConfig.external_hyperlinks}
+                                      value={policy?.wordConfig.external_hyperlinks}
                                       onChange={(event: any) => {
                                         let wordPol = policy?.wordConfig || undefined
                                         if(wordPol){
@@ -846,6 +925,7 @@ function RebuildPolicy(){
                                     
                                   </FormControl>
                                   <FormControl className={classes.formControl}> 
+                                    {(policy?.wordConfig.dynamic_data_exchange != prevPolicy?.wordConfig.dynamic_data_exchange) && <Badge color="secondary" variant="dot" className={classes.MuiBadgeBadge}></Badge>}
                                     <InputLabel htmlFor="word-dynamic-data-exchange" className={classes.inputLabel} style={purpleColor}>Dynamic Data Exchange</InputLabel>
                                     <Select
                                       className={classes.selectBox}
@@ -871,6 +951,7 @@ function RebuildPolicy(){
                                     
                                   </FormControl>
                                   <FormControl className={classes.formControl}>
+                                    {(policy?.wordConfig.embedded_images != prevPolicy?.wordConfig.embedded_images) && <Badge color="secondary" variant="dot" className={classes.MuiBadgeBadge}></Badge>}
                                     <InputLabel htmlFor="word-embedded-images" className={classes.inputLabel}  style={blueColor}>Embedded Images</InputLabel>
                                     <Select
                                       className={classes.selectBox}
@@ -898,6 +979,7 @@ function RebuildPolicy(){
                                   <h3>Excel Config</h3>
                                   <form className={classes.root} autoComplete="off">
                                   <FormControl className={classes.formControl}>
+                                    {(policy?.xlsConfig.macros != prevPolicy?.xlsConfig.macros) && <Badge color="secondary" variant="dot" className={classes.MuiBadgeBadge}></Badge>}
                                     <InputLabel htmlFor="excel-macros" className={classes.inputLabel} style={redColor}>Macros</InputLabel>
                                     <Select
                                       className={classes.selectBox}
@@ -923,6 +1005,7 @@ function RebuildPolicy(){
                                     
                                   </FormControl>
                                   <FormControl className={classes.formControl}>
+                                    {(policy?.xlsConfig.metadata != prevPolicy?.xlsConfig.metadata) && <Badge color="secondary" variant="dot" className={classes.MuiBadgeBadge}></Badge>}
                                     <InputLabel htmlFor="excel-metadata" className={classes.inputLabel} style={greenColor}>Metadata</InputLabel>
                                     <Select
                                       className={classes.selectBox}
@@ -948,6 +1031,7 @@ function RebuildPolicy(){
                                     
                                   </FormControl>
                                   <FormControl className={classes.formControl}>
+                                    {(policy?.xlsConfig.review_comments != prevPolicy?.xlsConfig.review_comments) && <Badge color="secondary" variant="dot" className={classes.MuiBadgeBadge}></Badge>}
                                     <InputLabel htmlFor="excel-review-comments" className={classes.inputLabel} style={orangeColor}>Review Comments</InputLabel>
                                     <Select
                                       className={classes.selectBox}
@@ -973,6 +1057,7 @@ function RebuildPolicy(){
                                     
                                   </FormControl>
                                   <FormControl className={classes.formControl}>
+                                    {(policy?.xlsConfig.embedded_files != prevPolicy?.xlsConfig.embedded_files) && <Badge color="secondary" variant="dot" className={classes.MuiBadgeBadge}></Badge>}
                                     <InputLabel htmlFor="excel-embedded-files" className={classes.inputLabel} style={blueColor}>Embedded Files</InputLabel>
                                     <Select
                                       className={classes.selectBox}
@@ -998,6 +1083,7 @@ function RebuildPolicy(){
                                     
                                   </FormControl>
                                   <FormControl className={classes.formControl}>
+                                    {(policy?.xlsConfig.internal_hyperlinks != prevPolicy?.xlsConfig.internal_hyperlinks) && <Badge color="secondary" variant="dot" className={classes.MuiBadgeBadge}></Badge>}
                                     <InputLabel htmlFor="excel-internal-hyperlinks" className={classes.inputLabel} style={purpleColor}>Internal Hyperlinks</InputLabel>
                                     <Select
                                       className={classes.selectBox}
@@ -1023,6 +1109,7 @@ function RebuildPolicy(){
                                     
                                   </FormControl>
                                   <FormControl className={classes.formControl}>
+                                    {(policy?.xlsConfig.external_hyperlinks != prevPolicy?.xlsConfig.external_hyperlinks) && <Badge color="secondary" variant="dot" className={classes.MuiBadgeBadge}></Badge>}
                                     <InputLabel htmlFor="excel-external-hyperlinks" className={classes.inputLabel} style={greenColor}>External Hyperlinks</InputLabel>
                                     <Select
                                       className={classes.selectBox}
@@ -1048,6 +1135,7 @@ function RebuildPolicy(){
                                     
                                   </FormControl>
                                   <FormControl className={classes.formControl}>
+                                    {(policy?.xlsConfig.dynamic_data_exchange != prevPolicy?.xlsConfig.dynamic_data_exchange) && <Badge color="secondary" variant="dot" className={classes.MuiBadgeBadge}></Badge>}
                                     <InputLabel htmlFor="excel-dynamic-data-exchange" className={classes.inputLabel} style={blueColor}>Dynamic Data Exchange</InputLabel>
                                     <Select
                                       className={classes.selectBox}
@@ -1073,6 +1161,7 @@ function RebuildPolicy(){
                                     
                                   </FormControl>
                                   <FormControl className={classes.formControl}>
+                                    {(policy?.xlsConfig.embedded_images != prevPolicy?.xlsConfig.embedded_images) && <Badge color="secondary" variant="dot" className={classes.MuiBadgeBadge}></Badge>}
                                     <InputLabel htmlFor="excel-embedded-images" className={classes.inputLabel} style={purpleColor}>Embedded Images</InputLabel>
                                     <Select
                                       className={classes.selectBox}
@@ -1101,6 +1190,7 @@ function RebuildPolicy(){
                                   <h3>Powerpoint Config</h3>
                                   <form className={classes.root} autoComplete="off">
                                   <FormControl className={classes.formControl}>
+                                    {(policy?.pptConfig.macros != prevPolicy?.pptConfig.macros) && <Badge color="secondary" variant="dot" className={classes.MuiBadgeBadge}></Badge>}
                                     <InputLabel htmlFor="ppt-macros" className={classes.inputLabel} style={redColor}>Macros</InputLabel>
                                     <Select
                                       className={classes.selectBox}
@@ -1126,6 +1216,7 @@ function RebuildPolicy(){
                                     
                                   </FormControl>
                                   <FormControl className={classes.formControl}>
+                                    {(policy?.pptConfig.metadata != prevPolicy?.pptConfig.metadata) && <Badge color="secondary" variant="dot" className={classes.MuiBadgeBadge}></Badge>}
                                     <InputLabel htmlFor="ppt-metadata" className={classes.inputLabel} style={greenColor}>Metadata</InputLabel>
                                     <Select
                                       className={classes.selectBox}
@@ -1151,6 +1242,7 @@ function RebuildPolicy(){
                                     
                                   </FormControl>
                                   <FormControl className={classes.formControl}>
+                                    {(policy?.pptConfig.review_comments != prevPolicy?.pptConfig.review_comments) && <Badge color="secondary" variant="dot" className={classes.MuiBadgeBadge}></Badge>}
                                     <InputLabel htmlFor="ppt-review-comments" className={classes.inputLabel} style={orangeColor}>Review Comments</InputLabel>
                                     <Select
                                       className={classes.selectBox}
@@ -1176,6 +1268,7 @@ function RebuildPolicy(){
                                     
                                   </FormControl>
                                   <FormControl className={classes.formControl}>
+                                    {(policy?.pptConfig.embedded_files != prevPolicy?.pptConfig.embedded_files) && <Badge color="secondary" variant="dot" className={classes.MuiBadgeBadge}></Badge>}
                                     <InputLabel htmlFor="ppt-embedded-files" className={classes.inputLabel} style={blueColor}>Embedded Files</InputLabel>
                                     <Select
                                       className={classes.selectBox}
@@ -1201,6 +1294,7 @@ function RebuildPolicy(){
                                     
                                   </FormControl>
                                   <FormControl className={classes.formControl}>
+                                    {(policy?.pptConfig.internal_hyperlinks != prevPolicy?.pptConfig.internal_hyperlinks) && <Badge color="secondary" variant="dot" className={classes.MuiBadgeBadge}></Badge>}
                                     <InputLabel htmlFor="ppt-internal-hyperlinks" className={classes.inputLabel} style={purpleColor}>Internal Hyperlinks</InputLabel>
                                     <Select
                                       className={classes.selectBox}
@@ -1226,6 +1320,7 @@ function RebuildPolicy(){
                                     
                                   </FormControl>
                                   <FormControl className={classes.formControl}>
+                                    {(policy?.pptConfig.external_hyperlinks != prevPolicy?.pptConfig.external_hyperlinks) && <Badge color="secondary" variant="dot" className={classes.MuiBadgeBadge}></Badge>}
                                     <InputLabel htmlFor="ppt-external-hyperlinks" className={classes.inputLabel} style={blueColor}>External Hyperlinks</InputLabel>
                                     <Select
                                       className={classes.selectBox}
@@ -1251,6 +1346,7 @@ function RebuildPolicy(){
                                     
                                   </FormControl>
                                   <FormControl className={classes.formControl}>
+                                    {(policy?.pptConfig.embedded_images != prevPolicy?.pptConfig.embedded_images) && <Badge color="secondary" variant="dot" className={classes.MuiBadgeBadge}></Badge>}
                                     <InputLabel htmlFor="ppt-embedded-images" className={classes.inputLabel} style={purpleColor}>Embedded Images</InputLabel>
                                     <Select
                                       className={classes.selectBox}
