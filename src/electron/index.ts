@@ -106,7 +106,8 @@ function createMenu(){
 function makeWindow(): typeof BrowserWindow {
     
     const tray = new Tray(path.resolve(dir, `assets`, `IconTemplate.png`))
-    const iconPath = path.join(__dirname, "assets", "Favicon.png");
+    const iconPath = path.join(__dirname, "../assets", "Favicon.png");
+    log.info(iconPath);
     let window = new BrowserWindow({
         title: `Glasswall Desktop`,
         width: 1500,
