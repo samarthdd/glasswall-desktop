@@ -97,8 +97,8 @@ const useStyles = makeStyles((theme) => ({
     padding:                    '12px 50px',
     borderRadius:               '3px',
     cursor:                     'pointer',
-    marginTop:                  '7px',
-    fontSize:                   '15px',
+    marginTop:                  '15px',
+    fontSize:                   '15px'
     
 },
 btnBox:{
@@ -106,6 +106,7 @@ btnBox:{
    display:                    'block',
    width:                      '100%',
    textAlign:                  'center',
+   marginTop:                  '10px',
 }
 
  }));
@@ -159,7 +160,6 @@ function Settings(){
    }
    
    const handleRedirect = () => {
-       console.log('success');
     window.open('https://glasswall-store.com/');
   };
 
@@ -194,14 +194,13 @@ function Settings(){
                         <div className={classes.urlBox}>
                             <input onChange={handleRebuildImageChange} type="text" value={rebuildImage}/>
                         </div>
-                        <div className={classes.btnBox}>
-                            <button className={classes.submitBtn}  onClick={handleRedirect} >Buy Token</button> 
-                       </div>                       
-
                        <h4>REBUILD DOCKER IMAGE TAG</h4>   
                         <div className={classes.urlBox}>
                             <input type="text" onChange={handleRebuildImageTagChange}  value={rebuildImageTag}/>
-                        </div>                            
+                        </div>    
+                        <div className={classes.btnBox}>
+                            <a className={classes.submitBtn} href="https://glasswall-store.com/">Buy Token </a>
+                       </div>                          
                         </div>
                   
                 </div>   
