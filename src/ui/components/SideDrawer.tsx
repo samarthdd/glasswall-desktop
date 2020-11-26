@@ -183,15 +183,11 @@ function SideDrawer({ showBack }: headerOptions) {
     const classes = useStyles();
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
-    // const [openTooltip, setopenTooltip] = React.useState(false);    
+    const [change, setChange] = React.useState(true);
 
-    // const handleClose = () => {
-    //     setopenTooltip(false);
-    // };
-
-    // const handleOpen = () => {
-    //     setopenTooltip(true);
-    // };
+    React.useEffect(()=>{
+        
+    },[change]);
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -204,7 +200,14 @@ function SideDrawer({ showBack }: headerOptions) {
 
       
     const handleClick =()=>{
-        alert("handleClick");
+        if(sessionStorage.getItem("policy_changes")){
+            alert("You have unsaved policy");
+            setChange(false);
+            sessionStorage.removeItem("policy_changes")
+        }else{
+            setChange(true);
+        }
+       
     }
 
 
@@ -306,7 +309,7 @@ function SideDrawer({ showBack }: headerOptions) {
                 <List className={classes.navList}>
                 {navData.map((nav, index) => (
                         // <ListItem key={index} button component={NavLink} to={nav.anchLink} activeClassName={classes.active} selected ={index ==1}>
-                        <ListItem  key={index} button component={NavLink} to={ !sessionStorage.getItem("docker_session_runnning")?nav.anchLink:location.pathname} activeClassName={classes.active} selected = {location.pathname == nav.anchLink} >                               
+                        <ListItem  onClick={handleClick} key={index} button component={NavLink} disabled ={ sessionStorage.getItem("docker_session_runnning") ?true:false} to={nav.anchLink} activeClassName={classes.active} selected = {location.pathname == nav.anchLink} >                               
                             <ListItemIcon><img src={nav.navIcon}  className={classes.icons}></img></ListItemIcon>
                             <div className={classes.tooltipBox}>{nav.navName}</div>
                                 <ListItemText primary={nav.navName} className={classes.navText}/>

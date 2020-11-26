@@ -406,7 +406,12 @@ function RebuildPolicy(){
 
     React.useEffect(()=>{
       console.log("value React.useEffect called")
-      //setPrevPolicy(prevPolicy);  
+      //setPrevPolicy(prevPolicy);
+      if(JSON.stringify(policy) !== JSON.stringify(prevPolicy)){
+        sessionStorage.setItem("policy_changes", "true")
+      }else{
+        sessionStorage.removeItem("policy_changes")
+      }  
   },[ policy, readyForRender]);
  
   React.useEffect(()=>{
@@ -470,6 +475,7 @@ function RebuildPolicy(){
       setLoader(true)
       Utils.savePolicy({"config":policy})
       setPrevPolicy(JSON.parse(JSON.stringify(policy)));
+      sessionStorage.removeItem("policy_changes")
       //prevPolicy = policy;
     }
 
