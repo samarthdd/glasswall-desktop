@@ -1,4 +1,5 @@
 import  React, {useState}       from 'react';
+import { Link } from 'react-router-dom';
 import { makeStyles }           from '@material-ui/core/styles';
 import SideDrawer               from '../components/SideDrawer';
 import VisibilityIcon           from '@material-ui/icons/Visibility';
@@ -87,7 +88,26 @@ const useStyles = makeStyles((theme) => ({
                 outline:           '0'
             }
         }
-   }
+   },
+
+   submitBtn:{
+    background:                 '#0c3451',
+    color:                      '#fff',
+    border:                     'none',
+    padding:                    '12px 50px',
+    borderRadius:               '3px',
+    cursor:                     'pointer',
+    marginTop:                  '7px',
+    fontSize:                   '15px',
+    
+},
+btnBox:{
+   textDecoration:             'none', 
+   display:                    'block',
+   width:                      '100%',
+   textAlign:                  'center',
+}
+
  }));
 
 
@@ -137,6 +157,11 @@ function Settings(){
     setRebuildImage(e.target.value)
     localStorage.setItem(Utils.REBUILD_IMAGE_KEY, e.target.value )
    }
+   
+   const handleRedirect = () => {
+       console.log('success');
+    window.open('https://glasswall-store.com/');
+  };
     return(
         <div className={classes.root}> 
             <SideDrawer showBack={false}/>
@@ -162,7 +187,10 @@ function Settings(){
                         <h4>Rebuild Docker Image</h4>   
                         <div className={classes.urlBox}>
                             <input onChange={handleRebuildImageChange} type="text" value={rebuildImage}/>
-                        </div>                            
+                        </div>
+                        <div className={classes.btnBox}>
+                            <button className={classes.submitBtn}  onClick={handleRedirect} >Buy Token</button> 
+                       </div>                       
                     </div>
                   
                 </div>   
