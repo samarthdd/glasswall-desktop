@@ -1,7 +1,7 @@
 {
   "name": "glasswall-desktop",
   "productName": "glasswall-desktop",
-  "version": "0.9",
+  "version": "0.9.0",
   "description": "Glasswall desktop application using Electron and React",
   "main": "./out/electron/index.js",
   "scripts": {

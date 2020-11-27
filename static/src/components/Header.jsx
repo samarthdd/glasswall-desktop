@@ -11,7 +11,7 @@ export default function Loader() {
             <div className="col-lg-12">
               <div className="text-container header-img">
                 <h1>
-                   Technological Preview of Glasswall Desktop Application <br />
+                   Technological Preview Of Glasswall Desktop Application <br />
                   For <span id="js-static">Rebuild Files</span>
                   {/* {" "}
                   <span id="js-rotating">
