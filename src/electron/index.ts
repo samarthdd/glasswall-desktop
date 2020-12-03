@@ -25,15 +25,6 @@ log.info('App starting...');
 log.info("process.platform" + process.platform)
 function createMenu(){
   var template = [];
-  if(process.platform == "darwin"){
-      {
-        template.push( {
-          label: 'Desktop'
-      })
-       
-    }
-  }
-        
   template.push({
         label: 'Glasswall Desktop',
         submenu: [
@@ -106,7 +97,10 @@ function createMenu(){
 function makeWindow(): typeof BrowserWindow {
     
     const tray = new Tray(path.resolve(dir, `assets`, `IconTemplate.png`))
-    const iconPath = path.join(__dirname, "../assets", "Favicon.png");
+    let iconPath = path.join(__dirname, "../assets", "Favicon.png");
+    if(process.platform == "darwin")
+      iconPath = path.join(__dirname, "../assets", "Favicon.icns");
+
     log.info(iconPath);
     let window = new BrowserWindow({
         title: `Glasswall Desktop`,
