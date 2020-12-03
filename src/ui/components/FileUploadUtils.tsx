@@ -4,24 +4,38 @@ import * as Utils   from '../utils/utils'
 
 const NUM_RETRIES = 5;
 
-const getPayload = (data: any) => {
+const getPayload = async (data: any) => {
     let buffer = Buffer.from(data.content, 'base64');
     let size_of_file = buffer.length / 1000000;
     Utils.addRawLogLine(0,"-","File Size (MB) : " + size_of_file);
-    var json = {
+    let policyflags = await Utils.getPolicyInApiFormat();
+    console.log("policyflags" + policyflags)
+
+    var json = policyflags ? {
+            fileSize : size_of_file,
+            Base64 : data.content,
+            ContentManagementFlags: policyflags
+        }:{
             fileSize : size_of_file,
             Base64 : data.content
-        };
+        }
     return json;
 }
 
-const getAnalysisPayload = (data: any) => {
+const getAnalysisPayload = async (data: any) => {
     let buffer = Buffer.from(data.content, 'base64');
     let size_of_file = buffer.length / 1000000;
-    var json = {
+    let policyflags = await Utils.getPolicyInApiFormat();
+    console.log("policyflags" + policyflags)
+
+    var json = policyflags?{
             Base64 : data.content,
             fileSize : size_of_file,
-        };
+            ContentManagementFlags: policyflags
+        }: {
+            Base64 : data.content,
+            fileSize : size_of_file,
+        }
         return json;
 }
 
@@ -92,7 +106,7 @@ export const makeRequest = async (request: any, sourceFileUrl: string, requestId
     let url : string| null;
     url = Utils.getRebuildEngineUrl();
 
-    payload = getPayload(request)
+    payload = await getPayload(request)
     var fileSize = payload.fileSize;
 
     // Files smaller than 6MB - Normal
@@ -138,7 +152,7 @@ export const retry = async (request: any, sourceFileUrl: string, requestId: stri
     let url : string| null;
     url = Utils.getRebuildEngineUrl();
 
-    payload = getPayload(request)
+    payload = await getPayload(request)
     var fileSize = payload.fileSize;
 
     // Files smaller than 6MB - Normal
@@ -175,7 +189,7 @@ export const getAnalysisResult= async (isBinaryFile: boolean, reBuildResponse: a
     let url : string| null;
     url = Utils.getRebuildAnalysisUrl();
 
-    payload = getAnalysisPayload(request)
+    payload = await getAnalysisPayload(request)
     var fileSize = payload.fileSize;
     // Files smaller than 6MB - Normal
     payload = JSON.stringify(payload)
