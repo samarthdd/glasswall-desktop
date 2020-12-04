@@ -28,6 +28,7 @@ import HealthCheck              from '../assets/images/healthcheck.png';
 import LOGICON                  from '../assets/images/log.png';
 import SessionIcon              from '../assets/images/session.png';
 import PolicyIcon              from '../assets/images/policyFlag.png';
+import PastPolicyIcon              from '../assets/images/pastpolicy.png';
 
 import { useLocation }          from 'react-router-dom'
 
@@ -231,6 +232,11 @@ function SideDrawer({ showBack }: headerOptions) {
         navName:    'Rebuild Policy',
         navIcon:    PolicyIcon,
         anchLink:   '/policy'
+    },
+    {
+        navName:    'Past Rebuild Policy',
+        navIcon:    PastPolicyIcon,
+        anchLink:   '/pastPolicy'
     },
     {
         navName:    'Rebuilt Sessions',
