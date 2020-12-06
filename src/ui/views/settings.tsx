@@ -33,8 +33,8 @@ const useStyles = makeStyles((theme) => ({
         }
    },
    textContainer:{
-        margin:                    '20px 0',
-        float:                     'left',
+        margin:                    '20px auto',
+        width:                     '60%',
         background:                '#ffffff',
         padding:                   '25px 25px',
         borderRadius:              '6px',
@@ -53,13 +53,13 @@ const useStyles = makeStyles((theme) => ({
     margin:                    '10px 0',
     background:                '#e9f3fd',
     padding:                   '5px 10px', 
-    float:                     'left',
+    position:                  'relative',
     '& input':{
         border:                'none',
         background:            'transparent',
-        float:                 'left',
+        width:                 '100%',
         minHeight:             '30px',
-        minWidth:              '635px',
+        // minWidth:              '635px',
         
     }
     
@@ -68,13 +68,13 @@ const useStyles = makeStyles((theme) => ({
         margin:                    '10px 0',
         background:                '#e9f3fd',
         padding:                   '5px 10px', 
-        float:                     'left',
+        position:                  'relative',
         '& input':{
             border:                'none',
             background:            'transparent',
-            float:                 'left',
+            width:                 '100%',
             minHeight:             '30px',
-            minWidth:              '600px',
+            // minWidth:              '600px',
             '&:focus':{
                 border:            '0',
                 outline:           '0'
@@ -83,6 +83,10 @@ const useStyles = makeStyles((theme) => ({
         '& button':{
             border:                'none',
             background:            'transparent',
+            position:              'absolute',
+            right:                 '8px',
+            zIndex:                '1',
+            top:                   '7px',
             '&:focus':{
                 border:            '0',
                 outline:           '0'
@@ -98,7 +102,10 @@ const useStyles = makeStyles((theme) => ({
     borderRadius:               '3px',
     cursor:                     'pointer',
     marginTop:                  '15px',
-    fontSize:                   '15px'
+    fontSize:                   '15px',
+    textDecoration:             'none',
+    display:                    'inline-block',
+    
     
 },
 btnBox:{
@@ -106,7 +113,7 @@ btnBox:{
    display:                    'block',
    width:                      '100%',
    textAlign:                  'center',
-   marginTop:                  '10px',
+   marginTop:                  '20px',
 }
 
  }));
