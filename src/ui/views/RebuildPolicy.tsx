@@ -95,17 +95,6 @@ const useStyles = makeStyles((theme) => ({
     }
     
     },
-    logButton:{
-        background:                 '#3cb371',
-        border:                     'none',
-        color:                      '#fff',
-        borderRadius:               '3px',
-        padding:                    '10px 20px',
-        fontSize:                   '12px',
-        marginBottom:               '20px',
-        marginLeft:                 '5px',
-        cursor:                     'pointer'                 
-     },
      disabledLogButton:{
         background:                 'grey',
         border:                     'none',
@@ -117,6 +106,17 @@ const useStyles = makeStyles((theme) => ({
         marginLeft:                 '5px'
                         
      },
+     logButton:{
+      background:                 '#3cb371',
+      border:                     'none',
+      color:                      '#fff',
+      borderRadius:               '3px',
+      padding:                    '10px 20px',
+      fontSize:                   '12px',
+      marginBottom:               '20px',
+      marginLeft:                 '5px',
+      cursor:                     'pointer'                 
+   },
    apiKeyBox:{
         margin:                    '10px 0',
         background:                '#e7e7e7',
@@ -184,15 +184,6 @@ const useStyles = makeStyles((theme) => ({
       marginLeft: 0,
     },
 },
-saveBtn:{
-  backgroundColor:"#3cb371",
-  color:"#fff",
-  margin:'0 10px',
-  textTransform:"capitalize",
-  '&:hover':{
-    backgroundColor:'#1a8110'
-  }
-},
 saveAsBtn:{
   backgroundColor:"#09a573",
   color:"#fff",
@@ -200,6 +191,15 @@ saveAsBtn:{
   textTransform:"capitalize",
   '&:hover':{
     backgroundColor:'#096347'
+  }
+},
+saveBtn:{
+  backgroundColor:"#3cb371",
+  color:"#fff",
+  margin:'0 10px',
+  textTransform:"capitalize",
+  '&:hover':{
+    backgroundColor:'#1a8110'
   }
 },
 divStyle:{
@@ -243,11 +243,11 @@ MuiBadgeBadge: {
 const disabledColor = {
   backgroundColor: '#999',
 }
-const orangeColor = {
-  background: 'linear-gradient(to right, #f4910d , #d57b03)',
-};
 const greenColor = {
   background: 'linear-gradient(to right, #44a748 , #19931f)',
+};
+const orangeColor = {
+  background: 'linear-gradient(to right, #f4910d , #d57b03)',
 };
 const redColor = {
   background: 'linear-gradient(to right, #de423f , #c4201c)',
@@ -438,6 +438,15 @@ function RebuildPolicy(){
         dynamic_data_exchange: policyJson.config.wordConfig[0].dynamic_data_exchange[0],
         embedded_images: policyJson.config.wordConfig[0].embedded_images[0]
       }
+      let pptPolicy = {
+        macros: policyJson.config.pptConfig[0].macros[0],
+        metadata: policyJson.config.pptConfig[0].metadata[0],
+        review_comments: policyJson.config.pptConfig[0].review_comments[0],
+        embedded_files: policyJson.config.pptConfig[0].embedded_files[0],
+        internal_hyperlinks: policyJson.config.pptConfig[0].internal_hyperlinks[0],
+        external_hyperlinks: policyJson.config.pptConfig[0].external_hyperlinks[0],
+        embedded_images: policyJson.config.pptConfig[0].embedded_images[0],
+      } 
       let excelPolicy = {
         macros: policyJson.config.xlsConfig[0].macros[0],
         metadata: policyJson.config.xlsConfig[0].metadata[0],
@@ -447,16 +456,7 @@ function RebuildPolicy(){
         external_hyperlinks: policyJson.config.xlsConfig[0].external_hyperlinks[0],
         dynamic_data_exchange: policyJson.config.xlsConfig[0].dynamic_data_exchange[0],
         embedded_images: policyJson.config.xlsConfig[0].embedded_images[0]
-      }
-      let pptPolicy = {
-        macros: policyJson.config.pptConfig[0].macros[0],
-        metadata: policyJson.config.pptConfig[0].metadata[0],
-        review_comments: policyJson.config.pptConfig[0].review_comments[0],
-        embedded_files: policyJson.config.pptConfig[0].embedded_files[0],
-        internal_hyperlinks: policyJson.config.pptConfig[0].internal_hyperlinks[0],
-        external_hyperlinks: policyJson.config.pptConfig[0].external_hyperlinks[0],
-        embedded_images: policyJson.config.pptConfig[0].embedded_images[0],
-      }    
+      }   
       if(policy){
         policy.pdfConfig = pdfPolicy  
         policy.wordConfig = wordPolicy

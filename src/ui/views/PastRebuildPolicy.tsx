@@ -184,15 +184,6 @@ const useStyles = makeStyles((theme) => ({
       marginLeft: 0,
     },
 },
-saveBtn:{
-  backgroundColor:"#3cb371",
-  color:"#fff",
-  margin:'0 10px',
-  textTransform:"capitalize",
-  '&:hover':{
-    backgroundColor:'#1a8110'
-  }
-},
 saveAsBtn:{
   backgroundColor:"#09a573",
   color:"#fff",
@@ -200,6 +191,15 @@ saveAsBtn:{
   textTransform:"capitalize",
   '&:hover':{
     backgroundColor:'#096347'
+  }
+},
+saveBtn:{
+  backgroundColor:"#3cb371",
+  color:"#fff",
+  margin:'0 10px',
+  textTransform:"capitalize",
+  '&:hover':{
+    backgroundColor:'#1a8110'
   }
 },
 divStyle:{
