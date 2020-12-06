@@ -1,6 +1,5 @@
 {
   "name": "glasswall-desktop",
-  "productName": "glasswall-desktop",
   "version": "0.9.0",
   "description": "Glasswall desktop application using Electron and React",
   "main": "./out/electron/index.js",
@@ -15,6 +14,11 @@
     "dist-m": "electron-builder build -m -c.extraMetadata.main=out/electron/index.js",
     "dist": "electron-builder build -wlm -c.extraMetadata.main=out/electron/index.js",
     "deploy": "electron-builder build -w -c.extraMetadata.main=out/electron/index.js --publish always"
+  },
+  "build": {
+    "directories": {
+      "buildResources": "out/assets"
+    }
   },
   "repository": {
     "type": "git",
