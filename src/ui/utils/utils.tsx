@@ -460,23 +460,6 @@ export const getPolicyFlag = (action:string) => {
   }
 }
 
-const convertPolicyValueToNumber=(policyOption:string)=>{
-     let value: number;
-     value =0;
-
-     switch(policyOption){
-      case "allow":{
-        value =0;
-       }break;
-      case "sanitize":{
-        value =1
-      }break;
-      case "disallow":{
-        value =2
-      }break;
-     }
-     return value;
-}
 //0 - allow, 1 - sanitize, 2 - disallow 
 export  const  getPolicyInApiFormat=async()=>{
   let policyJson: any;
@@ -487,43 +470,43 @@ export  const  getPolicyInApiFormat=async()=>{
   if(policyJson){
 
     let pdfPolicy = {
-      ExternalHyperlinks: convertPolicyValueToNumber(policyJson.config.pdfConfig[0].external_hyperlinks[0]),
-      Acroform: convertPolicyValueToNumber(policyJson.config.pdfConfig[0].acroform[0]),
-      Metadata: convertPolicyValueToNumber(policyJson.config.pdfConfig[0].metadata[0]),
-      Javascript: convertPolicyValueToNumber(policyJson.config.pdfConfig[0].javascript[0]),
-      ActionsAll: convertPolicyValueToNumber(policyJson.config.pdfConfig[0].actions_all[0]),
-      InternalHyperlinks: convertPolicyValueToNumber(policyJson.config.pdfConfig[0].internal_hyperlinks[0]),
-      EmbeddedFiles: convertPolicyValueToNumber(policyJson.config.pdfConfig[0].embedded_files[0]),
-      EmbeddedImages: convertPolicyValueToNumber(policyJson.config.pdfConfig[0].embedded_images[0])
+      ExternalHyperlinks: getPolicyFlag(policyJson.config.pdfConfig[0].external_hyperlinks[0]),
+      Acroform: getPolicyFlag(policyJson.config.pdfConfig[0].acroform[0]),
+      Metadata: getPolicyFlag(policyJson.config.pdfConfig[0].metadata[0]),
+      Javascript: getPolicyFlag(policyJson.config.pdfConfig[0].javascript[0]),
+      ActionsAll: getPolicyFlag(policyJson.config.pdfConfig[0].actions_all[0]),
+      InternalHyperlinks: getPolicyFlag(policyJson.config.pdfConfig[0].internal_hyperlinks[0]),
+      EmbeddedFiles: getPolicyFlag(policyJson.config.pdfConfig[0].embedded_files[0]),
+      EmbeddedImages: getPolicyFlag(policyJson.config.pdfConfig[0].embedded_images[0])
     }
     let wordPolicy = {        
-      Macros: convertPolicyValueToNumber(policyJson.config.wordConfig[0].macros[0]),
-      Metadata: convertPolicyValueToNumber(policyJson.config.wordConfig[0].metadata[0]),
-      ReviewComments: convertPolicyValueToNumber(policyJson.config.wordConfig[0].review_comments[0]),
-      EmbeddedFiles: convertPolicyValueToNumber(policyJson.config.wordConfig[0].embedded_files[0]),
-      InternalHyperlinks: convertPolicyValueToNumber(policyJson.config.wordConfig[0].internal_hyperlinks[0]),
-      ExternalHyperlinks: convertPolicyValueToNumber(policyJson.config.wordConfig[0].external_hyperlinks[0]),
-      DynamicDataExchange: convertPolicyValueToNumber(policyJson.config.wordConfig[0].dynamic_data_exchange[0]),
-      EmbeddedImages: convertPolicyValueToNumber(policyJson.config.wordConfig[0].embedded_images[0])
+      Macros: getPolicyFlag(policyJson.config.wordConfig[0].macros[0]),
+      Metadata: getPolicyFlag(policyJson.config.wordConfig[0].metadata[0]),
+      ReviewComments: getPolicyFlag(policyJson.config.wordConfig[0].review_comments[0]),
+      EmbeddedFiles: getPolicyFlag(policyJson.config.wordConfig[0].embedded_files[0]),
+      InternalHyperlinks: getPolicyFlag(policyJson.config.wordConfig[0].internal_hyperlinks[0]),
+      ExternalHyperlinks: getPolicyFlag(policyJson.config.wordConfig[0].external_hyperlinks[0]),
+      DynamicDataExchange: getPolicyFlag(policyJson.config.wordConfig[0].dynamic_data_exchange[0]),
+      EmbeddedImages: getPolicyFlag(policyJson.config.wordConfig[0].embedded_images[0])
     }
     let excelPolicy = {
-      Macros: convertPolicyValueToNumber(policyJson.config.xlsConfig[0].macros[0]),
-      Metadata: convertPolicyValueToNumber(policyJson.config.xlsConfig[0].metadata[0]),
-      ReviewComments: convertPolicyValueToNumber(policyJson.config.xlsConfig[0].review_comments[0]),
-      EmbeddedFiles: convertPolicyValueToNumber(policyJson.config.xlsConfig[0].embedded_files[0]),
-      InternalHyperlinks: convertPolicyValueToNumber(policyJson.config.xlsConfig[0].internal_hyperlinks[0]),
-      ExternalHyperlinks: convertPolicyValueToNumber(policyJson.config.xlsConfig[0].external_hyperlinks[0]),
-      DynamicDataExchange: convertPolicyValueToNumber(policyJson.config.xlsConfig[0].dynamic_data_exchange[0]),
-      EmbeddedImages: convertPolicyValueToNumber(policyJson.config.xlsConfig[0].embedded_images[0])
+      Macros: getPolicyFlag(policyJson.config.xlsConfig[0].macros[0]),
+      Metadata: getPolicyFlag(policyJson.config.xlsConfig[0].metadata[0]),
+      ReviewComments: getPolicyFlag(policyJson.config.xlsConfig[0].review_comments[0]),
+      EmbeddedFiles: getPolicyFlag(policyJson.config.xlsConfig[0].embedded_files[0]),
+      InternalHyperlinks: getPolicyFlag(policyJson.config.xlsConfig[0].internal_hyperlinks[0]),
+      ExternalHyperlinks: getPolicyFlag(policyJson.config.xlsConfig[0].external_hyperlinks[0]),
+      DynamicDataExchange: getPolicyFlag(policyJson.config.xlsConfig[0].dynamic_data_exchange[0]),
+      EmbeddedImages: getPolicyFlag(policyJson.config.xlsConfig[0].embedded_images[0])
     }
     let pptPolicy = {
-      Macros: convertPolicyValueToNumber(policyJson.config.pptConfig[0].macros[0]),
-      Metadata: convertPolicyValueToNumber(policyJson.config.pptConfig[0].metadata[0]),
-      ReviewComments: convertPolicyValueToNumber(policyJson.config.pptConfig[0].review_comments[0]),
-      EmbeddedFiles: convertPolicyValueToNumber(policyJson.config.pptConfig[0].embedded_files[0]),
-      InternalHyperlinks: convertPolicyValueToNumber(policyJson.config.pptConfig[0].internal_hyperlinks[0]),
-      ExternalHyperlinks: convertPolicyValueToNumber(policyJson.config.pptConfig[0].external_hyperlinks[0]),
-      EmbeddedImages: convertPolicyValueToNumber(policyJson.config.pptConfig[0].embedded_images[0]),
+      Macros: getPolicyFlag(policyJson.config.pptConfig[0].macros[0]),
+      Metadata: getPolicyFlag(policyJson.config.pptConfig[0].metadata[0]),
+      ReviewComments: getPolicyFlag(policyJson.config.pptConfig[0].review_comments[0]),
+      EmbeddedFiles: getPolicyFlag(policyJson.config.pptConfig[0].embedded_files[0]),
+      InternalHyperlinks: getPolicyFlag(policyJson.config.pptConfig[0].internal_hyperlinks[0]),
+      ExternalHyperlinks: getPolicyFlag(policyJson.config.pptConfig[0].external_hyperlinks[0]),
+      EmbeddedImages: getPolicyFlag(policyJson.config.pptConfig[0].embedded_images[0]),
     } 
      configPolicy ={
       "PdfContentManagement":pdfPolicy,
