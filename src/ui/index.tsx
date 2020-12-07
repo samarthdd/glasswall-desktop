@@ -10,6 +10,8 @@ import      LoggerView            from './views/LoggerView'
 import      DockerConfiguration   from './views/DockerConfiguration'
 import      Sessions              from './views/Sessions'
 import      RebuildPolicy         from './views/RebuildPolicy'
+import      PastRebuildPolicy     from './views/PastRebuildPolicy'
+
 import   * as Utils               from './utils/utils'
 const resolve                     = require('path').resolve
 const fs                          = require('fs-extra')
@@ -68,6 +70,7 @@ const App = () => (
         <Route path="/logs"                   exact component=  { LoggerView          } />
         <Route path="/sessions"               exact component=  { Sessions            } />
         <Route path="/policy"                 exact component=  { RebuildPolicy       } />
+        <Route path="/pastPolicy"             exact component=  { PastRebuildPolicy   } />
       </div>
     </HashRouter>
 );
