@@ -122,19 +122,21 @@ export const makeRequest = async (request: any, sourceFileUrl: string, requestId
             })
         .then(async (response) => {
             if(response.status === 200){
-                await getAnalysisResult(false, response.data, request, sourceFileUrl, requestId, folderId, resultCallback);
+                await getAnalysisResult(false, false,  response.data, request, sourceFileUrl, requestId, folderId, resultCallback);
             }
         })
         .catch(async err => {
             Utils.addRawLogLine(2,"-","3:" + JSON.stringify(err));
-            if(err.message.indexOf('422') > -1){
-                resultCallback({'source':sourceFileUrl, 'url':'TBD', 'filename':request.filename, isError:true,
-             msg:'File of this type cannot be processed - '+err.message, id:requestId, targetDir:folderId, original:request.content})
-            }
-            else{
-                resultCallback({'source':sourceFileUrl, 'url':'TBD', 'filename':request.filename, isError:true,
-                  msg:err.message, id:requestId, targetDir:folderId, original:request.content})
-            }
+            await getAnalysisResult(false, true, err, request, sourceFileUrl, requestId, folderId, resultCallback);
+            // if(err.message.indexOf('422') > -1){
+            //     resultCallback({'source':sourceFileUrl, 'url':'TBD', 'filename':request.filename, isError:true,
+            //  msg:'File of this type cannot be processed - '+ err.message, id:requestId, targetDir:folderId, original:request.content})
+
+            // }
+            // else{
+            //     resultCallback({'source':sourceFileUrl, 'url':'TBD', 'filename':request.filename, isError:true,
+            //       msg:err.message, id:requestId, targetDir:folderId, original:request.content})
+            // }
         }
 
         )
@@ -145,44 +147,7 @@ export const makeRequest = async (request: any, sourceFileUrl: string, requestId
     }
 }
 
-export const retry = async (request: any, sourceFileUrl: string, requestId: string, folderId: string,
-      resultCallback: Function) => {
-
-    let payload: string | any;
-    let url : string| null;
-    url = Utils.getRebuildEngineUrl();
-
-    payload = await getPayload(request)
-    var fileSize = payload.fileSize;
-
-    // Files smaller than 6MB - Normal
-    payload = JSON.stringify(payload)
-    if(fileSize < 6){
-
-        return  url &&  await axios.post(url, payload, {
-                headers: {
-                    "x-api-key": Utils.getRebuildApiKey(),
-                    "Content-Type": "application/json"
-                }
-            })
-        .then((response) => {
-            if(response.status === 200){
-                getAnalysisResult(false, response.data, request, sourceFileUrl, requestId, folderId, resultCallback);
-            }
-        })
-        .catch(err => {
-            resultCallback({'source':sourceFileUrl, 'url':'TBD', 'filename':request.filename, isError:true,
-              msg:err.message, id:requestId, targetDir:folderId, original:request.content})
-        })
-    }
-    else{
-        resultCallback({'source':sourceFileUrl, 'url':'TBD', 'filename':request.filename, isError:true,
-             msg:'File too big. 4 bytes to 6 MB file size bracket', id:requestId, targetDir:folderId, original:request.content})
-    }
-}
-
-
-export const getAnalysisResult= async (isBinaryFile: boolean, reBuildResponse: any, request: any, sourceFile: string,
+export const getAnalysisResult= async (isBinaryFile: boolean, rebuiltFailed: boolean, reBuildResponse: any, request: any, sourceFile: string,
      requestId: string, targetFolder: string, resultCallback: Function)=>{
 
     let payload: string | any;
@@ -205,6 +170,10 @@ export const getAnalysisResult= async (isBinaryFile: boolean, reBuildResponse: a
         .then((response) => {
             Utils.addRawLogLine(2,"-","response.status" + response.status)
             if(response.status === 200){
+                if(rebuiltFailed)
+                return resultCallback({'source':sourceFile, 'url':'TBD', 'filename':request.filename, isError:true,
+                msg:reBuildResponse.message, cleanFile:null, xmlResult: response.data, id:requestId, targetDir:targetFolder, original:request.content, path:request.path})
+
                if(isBinaryFile){
                     writeBinaryFile(reBuildResponse, response.data, request, sourceFile, requestId, targetFolder, resultCallback)
                }else{
