@@ -550,6 +550,39 @@ export const getPolicy = async () =>{
       var xml = builder.buildObject(json);
       fs.writeFileSync(path.join(configDir,"config.xml"),xml);            
       fs.writeFileSync(path.join(configDirR,"config.xml"),xml);            
+  }
+
+
+
+  export const getPastPolicy = async () =>{
+    let configDir = resolve(getAppDataPath() + getPathSep() + 'config');
+      if (!fs.existsSync(configDir)){
+          fs.mkdirSync(configDir);
+      }
+      if (fs.existsSync(configDir+"/past_config.xml")){        
+        const xml = fs.readFileSync(configDir+"/past_config.xml",{encoding:'utf8', flag:'r'});    
+        console.log('File = '+(configDir+"/past_config.xml"))     
+        console.log('xml = '+xml)     
+        const json_data = await xml_parser(xml)
+        console.log('json out = '+JSON.stringify(json_data))     
+        return json_data    
+      }
+      return null;
+  }
+  
+    export const savePastPolicy = async (json:any) =>{
+      let configDir = resolve(getAppDataPath() + getPathSep() + 'config');
+      let configDirR = resolve(getAppDataPath() + getPathSep() + 'configR');
+        if (!fs.existsSync(configDir)){
+            fs.mkdirSync(configDir);
+        }      
+        if (!fs.existsSync(configDirR)){
+          fs.mkdirSync(configDirR);
+      }      
+        var builder = new xml2js.Builder();
+        var xml = builder.buildObject(json);
+        fs.writeFileSync(path.join(configDir,"past_config.xml"),xml);            
+        fs.writeFileSync(path.join(configDirR,"past_config.xml"),xml);            
     }
 
 export const getAppDataPath =() =>{
