@@ -918,8 +918,8 @@ flat filesystem option to saves in a single directory that contains all files wi
                                                 }
                                                  <TableCell align="left" >{getFormattedThreatValue(row.threat, row.threat_level)}</TableCell>
                                                 {
-                                                    !row.isError ?
-                                                    <TableCell align="left"><button  onClick={() => viewXML(row.id)} className={classes.viewBtn}>{!row.isError?'View Report':''}</button></TableCell>
+                                                    !row.isError || row.xmlResult != "undefined" ?
+                                                    <TableCell align="left"><button  onClick={() => viewXML(row.id)} className={classes.viewBtn}>{!row.isError||row.xmlResult != "undefined"?'View Report':''}</button></TableCell>
                                                         : <TableCell align="left"></TableCell>
                                                 }
                                                   {
