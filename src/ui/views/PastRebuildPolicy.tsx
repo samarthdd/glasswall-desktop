@@ -184,15 +184,6 @@ const useStyles = makeStyles((theme) => ({
       marginLeft: 0,
     },
 },
-saveAsBtn:{
-  backgroundColor:"#09a573",
-  color:"#fff",
-  margin:'0 10px',
-  textTransform:"capitalize",
-  '&:hover':{
-    backgroundColor:'#096347'
-  }
-},
 saveBtn:{
   backgroundColor:"#3cb371",
   color:"#fff",
@@ -200,6 +191,15 @@ saveBtn:{
   textTransform:"capitalize",
   '&:hover':{
     backgroundColor:'#1a8110'
+  }
+},
+saveAsBtn:{
+  backgroundColor:"#09a573",
+  color:"#fff",
+  margin:'0 10px',
+  textTransform:"capitalize",
+  '&:hover':{
+    backgroundColor:'#096347'
   }
 },
 divStyle:{
@@ -407,15 +407,11 @@ function PastRebuildPolicy(){
     React.useEffect(()=>{
       console.log("value React.useEffect called")
       //setPrevPolicy(prevPolicy);
-      if(JSON.stringify(policy) !== JSON.stringify(prevPolicy)){
-        sessionStorage.setItem("policy_changes", "true")
-      }else{
-        sessionStorage.removeItem("policy_changes")
-      }  
+     
   },[ policy, readyForRender]);
  
   React.useEffect(()=>{
-    Utils.getPolicy().then((policyJson:any) => {
+    Utils.getPastPolicy().then((policyJson:any) => {
       console.log('policy - '+JSON.stringify(policyJson))
       let pdfPolicy = {
         watermark : policyJson.config.pdfConfig[0].watermark[0],

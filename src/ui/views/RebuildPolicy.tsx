@@ -406,7 +406,7 @@ function RebuildPolicy(){
 
     React.useEffect(()=>{
       console.log("value React.useEffect called")
-      //setPrevPolicy(prevPolicy);
+     
       if(JSON.stringify(policy) !== JSON.stringify(prevPolicy)){
         sessionStorage.setItem("policy_changes", "true")
       }else{
@@ -466,6 +466,7 @@ function RebuildPolicy(){
       console.log('policy set-> '+policy)
       setPolicy(policy)
       setPrevPolicy(JSON.parse(JSON.stringify(policy)))
+      //setPastPolicy(JSON.parse(JSON.stringify(policy)));
       setReadyForRender(!readyForRender)
     })    
     },[]);
@@ -474,7 +475,9 @@ function RebuildPolicy(){
       console.log('Saving policy - '+JSON.stringify(policy))
       setLoader(true)
       Utils.savePolicy({"config":policy})
+      Utils.savePastPolicy({"config":prevPolicy})
       setPrevPolicy(JSON.parse(JSON.stringify(policy)));
+      //setPastPolicy(JSON.parse(JSON.stringify(policy)));
       sessionStorage.removeItem("policy_changes")
       //prevPolicy = policy;
     }
