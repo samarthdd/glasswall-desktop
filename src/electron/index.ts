@@ -96,7 +96,6 @@ function createMenu(){
 
 function makeWindow(): typeof BrowserWindow {
     
-    const tray = new Tray(path.resolve(dir, `assets`, `IconTemplate.png`))
     let iconPath = path.join(__dirname, "../assets", "Favicon.png");
     if(process.platform == "darwin")
       iconPath = path.join(__dirname, "../assets", "Favicon.icns");
