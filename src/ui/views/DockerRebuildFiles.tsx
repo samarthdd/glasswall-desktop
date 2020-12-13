@@ -123,6 +123,13 @@ const useStyles = makeStyles((theme) => ({
         width:                      '100%',
         textAlign:                  'center'
    },
+   successMsg:{
+    color:                      'green',
+    margin:                     '0px 0 10px 0',
+    fontSize:                   '15px',
+    display:                    'none',
+    textAlign:                  'center'
+},
    selectFileBtn:{
         display:                    'block',
         margin:                     '0px auto 30px auto',
@@ -140,13 +147,6 @@ const useStyles = makeStyles((theme) => ({
         display:                    'none',
         textAlign:                  'center'
 },
-    successMsg:{
-        color:                      'green',
-        margin:                     '0px 0 10px 0',
-        fontSize:                   '15px',
-        display:                    'none',
-        textAlign:                  'center'
-    },
     toolbar: {
          display:                   'flex',
          alignItems:                'center',
@@ -366,6 +366,14 @@ const useStyles = makeStyles((theme) => ({
             marginRight:            '10px'
         }
     },
+    submitBtn:{
+        background:                 '#0c3451',
+        color:                      '#fff',
+        border:                     'none',
+        padding:                    '10px 20px',
+        borderRadius:               '3px',
+        cursor:                     'pointer'
+    },
     alertContainer:{
         width:                      '100%',
         position:                   'fixed',
@@ -384,14 +392,6 @@ const useStyles = makeStyles((theme) => ({
         padding:                    '20px',
         borderRadius:               '5px',
         textAlign:                  'center'
-    },
-    submitBtn:{
-        background:                 '#0c3451',
-        color:                      '#fff',
-        border:                     'none',
-        padding:                    '10px 20px',
-        borderRadius:               '3px',
-        cursor:                     'pointer'
     },
     toggleContainer:{
         float:                      'right',
