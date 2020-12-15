@@ -45,11 +45,11 @@ const getLocalUpload = (data: any) => {
 
 const decodeBase64Image=(dataString: string) =>{
     let response: any;
-    response = dataString.split(';base64,').pop();
+    response = dataString && dataString.split(';base64,').pop();
     return response;
 }
 
-const writeDecodedBase64File = (baseBase64Response: string, xmlReport:string, request: any, sourceFileUrl: string,
+const writeDecodedBase64File = (baseBase64Response: any, xmlReport:string, request: any, sourceFileUrl: string,
     requestId:string, targetFolder: string, resultCallback: Function) => {
    var decodedBase64 = decodeBase64Image(baseBase64Response);
    var bs = atob(baseBase64Response);
@@ -170,9 +170,15 @@ export const getAnalysisResult= async (isBinaryFile: boolean, rebuiltFailed: boo
         .then((response) => {
             Utils.addRawLogLine(2,"-","response.status" + response.status)
             if(response.status === 200){
-                if(rebuiltFailed)
-                return resultCallback({'source':sourceFile, 'url':'TBD', 'filename':request.filename, isError:true,
-                msg:reBuildResponse.message, cleanFile:null, xmlResult: response.data, id:requestId, targetDir:targetFolder, original:request.content, path:request.path})
+                if(rebuiltFailed || typeof reBuildResponse == "object"){
+                    let errMsg = reBuildResponse.message;
+                    if(Utils.isBlockedByPolicyMsg(reBuildResponse.errorMessage)){
+                        errMsg = "Blocked by policy";
+                    }
+                   return resultCallback({'source':sourceFile, 'url':'TBD', 'filename':request.filename, isError:true,
+                        msg:errMsg, cleanFile:null, xmlResult: response.data, id:requestId, targetDir:targetFolder, original:request.content, path:request.path})
+                }
+                
 
                if(isBinaryFile){
                     writeBinaryFile(reBuildResponse, response.data, request, sourceFile, requestId, targetFolder, resultCallback)
