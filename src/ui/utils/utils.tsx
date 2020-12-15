@@ -508,13 +508,18 @@ export  const  getPolicyInApiFormat=async()=>{
       ExternalHyperlinks: getPolicyFlag(policyJson.config.pptConfig[0].external_hyperlinks[0]),
       EmbeddedImages: getPolicyFlag(policyJson.config.pptConfig[0].embedded_images[0]),
     } 
+    let tiffPolicy = {
+      GeoTiff: getPolicyFlag(policyJson.config.tiffConfig[0].geotiff[0]),
+     
+    } 
      configPolicy ={
       "PdfContentManagement":pdfPolicy,
       "ExcelContentManagement":excelPolicy,
       "PowerPointContentManagement":pptPolicy,
-      "WordContentManagement": wordPolicy
+      "WordContentManagement": wordPolicy,
+      "TiffContentManagement": tiffPolicy
     }
-    console.log("policy updated" + JSON.stringify(configPolicy))
+    console.log("getPolicyInApiFormat" + JSON.stringify(configPolicy))
   } 
 
   return configPolicy;
@@ -722,4 +727,8 @@ export const isBlockedByPolicy = (filePath:string) =>{
   let data = fs.readFileSync(filePath, 
             {encoding:'utf8', flag:'r'}); 
   return data.indexOf(POLICY_BLOCKED_TXT) > -1;
+}
+
+export const isBlockedByPolicyMsg = (message:string) =>{
+  return message.indexOf(POLICY_BLOCKED_TXT) > -1;
 }
