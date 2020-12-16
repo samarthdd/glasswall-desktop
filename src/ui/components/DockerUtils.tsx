@@ -44,12 +44,15 @@ const writeDecodedBase64File = (baseBase64Response: string, xmlReport:string, re
     requestId:string, targetFolder: string, resultCallback: Function) => {
    var decodedBase64 = decodeBase64Image(baseBase64Response);   
    //var bs = atob(decodedBase64);
-   var bs = new Buffer(decodedBase64, 'base64').toString('utf8')   
+   //var bs = new Buffer(decodedBase64, 'base64').toString('utf8') 
+   var bs = atob(baseBase64Response);  
    var buffer = new ArrayBuffer(bs.length);
    var ba = new Uint8Array(buffer);
    for (var i = 0; i < bs.length; i++) {
        ba[i] = bs.charCodeAt(i);
    }
+
+   
    var file = new Blob([ba], { type: request.type });
    var url = window.webkitURL.createObjectURL(file);    
    Utils.addLogLine(request.filename,"Processing complete ");  
