@@ -305,7 +305,11 @@ function RebuildPolicy(){
         review_comments         : "sanitise",  
         dynamic_data_exchange   : "sanitise",  
         embedded_images         : "sanitise",  
-      }})
+      },
+      tiffConfig:{
+        geotiff                 : "sanitise"
+      }
+    })
 
     const [policy, setPolicy]   = useState<PolicyConfig>(
       {
@@ -348,7 +352,12 @@ function RebuildPolicy(){
           review_comments         : "sanitise",  
           dynamic_data_exchange   : "sanitise",  
           embedded_images         : "sanitise",  
-        }});
+        },
+        tiffConfig:{
+          geotiff                 : "sanitise"
+        }
+        
+      });
 
     interface PdfPolicy{
       watermark               : string,
@@ -394,13 +403,17 @@ function RebuildPolicy(){
       embedded_images         : string,
     }
 
+    interface TiffPolicy{
+      geotiff                : string,
+    }
 
     interface PolicyConfig
     {      
       pdfConfig                 : PdfPolicy,
       wordConfig                : WordPolicy,
       xlsConfig                 : ExcelPolicy,
-      pptConfig                 : PptPolicy,      
+      pptConfig                 : PptPolicy, 
+      tiffConfig                : TiffPolicy     
     }
    
 
@@ -457,11 +470,15 @@ function RebuildPolicy(){
         dynamic_data_exchange: policyJson.config.xlsConfig[0].dynamic_data_exchange[0],
         embedded_images: policyJson.config.xlsConfig[0].embedded_images[0]
       }   
+      let tiffPolicy = {
+        geotiff: policyJson.config.tiffConfig[0].geotiff[0]
+      }   
       if(policy){
         policy.pdfConfig = pdfPolicy  
         policy.wordConfig = wordPolicy
         policy.pptConfig = pptPolicy
         policy.xlsConfig = excelPolicy
+        policy.tiffConfig = tiffPolicy;
       }
       console.log('policy set-> '+policy)
       setPolicy(policy)
@@ -1358,7 +1375,39 @@ function RebuildPolicy(){
                                     </Select>
                                     
                                   </FormControl>
-                                  </form>
+                                </form>
+                                
+
+
+                                <h3>Tiff Config</h3>
+                                  <form className={classes.root} autoComplete="off">
+                                  <FormControl className={classes.formControl}>
+                                    {(policy?.tiffConfig.geotiff != prevPolicy?.tiffConfig.geotiff) && <Badge color="secondary" variant="dot" className={classes.MuiBadgeBadge}></Badge>}
+                                    <InputLabel htmlFor="tiff-geotiff" className={classes.inputLabel} style={redColor}>Geotiff</InputLabel>
+                                    <Select
+                                      className={classes.selectBox}
+                                      value={policy?.tiffConfig.geotiff}
+                                      onChange={(event: any) => {
+                                        let pptPol = policy?.tiffConfig || undefined
+                                        if(pptPol){
+                                          pptPol.geotiff = event.target.value
+                                        }
+                                        setReadyForRender(!readyForRender)
+                                      }}
+                                      inputProps={{
+                                        name: 'geotiff',
+                                        id: 'tiff-geotiff',
+                                        readOnly: false,
+                                      }}
+                                    >
+
+                                      <MenuItem value="sanitise">Sanitise</MenuItem>
+                                      <MenuItem value="allow">Allow</MenuItem>
+                                      <MenuItem value="disallow">Disallow</MenuItem>
+                                    </Select>
+                                    
+                                  </FormControl>
+                                </form>
                             </div>
                         </Grid>
 		    	            </Grid>
