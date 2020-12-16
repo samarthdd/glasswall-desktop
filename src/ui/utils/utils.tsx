@@ -1,77 +1,77 @@
-var child_process               = require("child_process");
-const path                      = require('path');
-var fs                          = require('fs');
-const log                       = require('electron-log');
-log.transports.file.level       = 'debug';
-const MAX_LOG_FILE_SIZE         = 3000000;
-const resolve                   = require('path').resolve
-const xml2js                    = require('xml2js');
-const commonPath                = require('common-path');
+var child_process                         = require("child_process");
+const path                                = require('path');
+var fs                                    = require('fs');
+const log                                 = require('electron-log');
+log.transports.file.level                 = 'debug';
+const MAX_LOG_FILE_SIZE                   = 3000000;
+const resolve                             = require('path').resolve
+const xml2js                              = require('xml2js');
+const commonPath                          = require('common-path');
 
-const GW_DOCKER_IMG_NAME             = 'glasswallsolutions/evaluationsdk';
+const GW_DOCKER_IMG_NAME                  = 'glasswallsolutions/evaluationsdk';
 //export const GW_DOCKER_IMG_NAME_WO_TAG      = 'glasswallsolutions/evaluationsdk';
-const GW_DOCKER_IMG_TAG              = '1';
-export const GW_DOCKER_PULL_IMG_OUTPUT      = 'Downloaded newer image for ';//glasswallsolutions/evaluationsdk';
-export const GW_DOCKER_PULL_IMG_OUTPUT_2    = 'Image is up to date for ';//glasswallsolutions/evaluationsdk';
-export const GW_DOCKER_EXTRACT_IMG_OUTPUT   = 'Loaded image ID'
+const GW_DOCKER_IMG_TAG                   = 'rebuild';
+export const GW_DOCKER_PULL_IMG_OUTPUT    = 'Downloaded newer image for ';//glasswallsolutions/evaluationsdk';
+export const GW_DOCKER_PULL_IMG_OUTPUT_2  = 'Image is up to date for ';//glasswallsolutions/evaluationsdk';
+export const GW_DOCKER_EXTRACT_IMG_OUTPUT = 'Loaded image ID'
 
-export const WEBSITE_URL                = 'https://glasswall-desktop.com';
-export const RELEASE_URL                = 'https://github.com/k8-proxy/glasswall-desktop/releases';
-export const LICENSE_URL                = 'https://github.com/k8-proxy/glasswall-desktop/blob/master/LICENSE';
-export const FW_URL                     = 'https://forensic-workbench.com/';
-export const FILE_DROP_URL              = 'https://file-drop.co.uk/';
-export const REPO_GIT_ISSUE_URL         = "https://github.com/k8-proxy/glasswall-desktop/issues/new";
+export const WEBSITE_URL                  = 'https://glasswall-desktop.com';
+export const RELEASE_URL                  = 'https://github.com/k8-proxy/glasswall-desktop/releases';
+export const LICENSE_URL                  = 'https://github.com/k8-proxy/glasswall-desktop/blob/master/LICENSE';
+export const FW_URL                       = 'https://forensic-workbench.com/';
+export const FILE_DROP_URL                = 'https://file-drop.co.uk/';
+export const REPO_GIT_ISSUE_URL           = "https://github.com/k8-proxy/glasswall-desktop/issues/new";
 
-export const POLICY_BLOCKED_TXT         = 'forbidden by content management policy'
-export const GW_CLI_LOG_FILE            = 'glasswallCLIProcess.log'
-export const VERSION                    = '0.9.0'
-export const _PROCESSED_FOLDER          = "processed"
-export const _LOGS_FOLDER               = "gwlogs"
-export const _LOGS_FILE                 = "glasswall_0_1_6.log"
-export const _CLEAN_FOLDER              = "clean"
-export const _ORIGINAL_FOLDER           = "original"
-export const _REPORT_FOLDER             = "report"
-export const _ANALYSIS_FOLDER           = "analysis"
-export const OUTPUT_DIR_FLAT            = "flat";
-export const OUTPUT_DIR_HIERARCY        = "hierarcy";
+export const POLICY_BLOCKED_TXT           = 'forbidden by content management policy'
+export const GW_CLI_LOG_FILE              = 'glasswallCLIProcess.log'
+export const VERSION                      = '0.9.0'
+export const _PROCESSED_FOLDER            = "processed"
+export const _LOGS_FOLDER                 = "gwlogs"
+export const _LOGS_FILE                   = "glasswall_0_1_6.log"
+export const _CLEAN_FOLDER                = "clean"
+export const _ORIGINAL_FOLDER             = "original"
+export const _REPORT_FOLDER               = "report"
+export const _ANALYSIS_FOLDER             = "analysis"
+export const OUTPUT_DIR_FLAT              = "flat";
+export const OUTPUT_DIR_HIERARCY          = "hierarcy";
 
 //Storage Keys Starts
-export const WELCOME_PAGE_VISTIED_KEY   = "visited"
-export const WELCOME_PAGE_VISTIED_VAL   = "yes"
+export const WELCOME_PAGE_VISTIED_KEY     = "visited"
+export const WELCOME_PAGE_VISTIED_VAL     = "yes"
 
-export const DOCKER_OUPUT_DIR_KEY       = "DOCKER_OUPUT_DIR"
-export const CLOUD_OUPUT_DIR_KEY        = "CLOUD_OUPUT_DIR"
-export const DOCKER_HEALTH_STATUS_KEY   = "docker_health_status"
-export const REBUILD_URL_KEY            = "rebuild_url"
-export const ANALYSIS_URL_KEY           = "anaylsis_url"
-export const APIKEY_KEY                 = "apikey_key"
-export const REBUILD_IMAGE_KEY          = "rebuild_image_key_1"
-export const REBUILD_IMAGE_TAG_KEY      = "rebuild_image_tag_key"
+export const DOCKER_OUPUT_DIR_KEY         = "DOCKER_OUPUT_DIR"
+export const CLOUD_OUPUT_DIR_KEY          = "CLOUD_OUPUT_DIR"
+export const DOCKER_HEALTH_STATUS_KEY     = "docker_health_status"
+export const REBUILD_URL_KEY              = "rebuild_url"
+export const ANALYSIS_URL_KEY             = "anaylsis_url"
+export const APIKEY_KEY                   = "apikey_key"
+export const REBUILD_IMAGE_KEY            = "rebuild_image_key_1"
+export const REBUILD_IMAGE_TAG_KEY        = "rebuild_image_tag_key_1"
 //Storage Keys ends
 
 
-export const REBUILD_TYPE_CLOUD         = "Cloud"
-export const REBUILD_TYPE_DOCKER        = "Docker"
+export const REBUILD_TYPE_CLOUD           = "Cloud"
+export const REBUILD_TYPE_DOCKER          = "Docker"
 
 
-const REBUILD_ENGINE_URL                =  'https://8oiyjy8w63.execute-api.us-west-2.amazonaws.com/Prod/api/rebuild/base64';
-const REBUILD_ANALYSIS_URL              =  'https://o7ymnow6vf.execute-api.us-west-2.amazonaws.com/Prod/api/Analyse/base64'
-const REBUILD_API_KEY_VALUE                   =  'dp2Ug1jtEh4xxFHpJBfWn9V7fKB3yVcv60lhwOAG';
+const REBUILD_ENGINE_URL                  =  'https://8oiyjy8w63.execute-api.us-west-2.amazonaws.com/Prod/api/rebuild/base64';
+const REBUILD_ANALYSIS_URL                =  'https://o7ymnow6vf.execute-api.us-west-2.amazonaws.com/Prod/api/Analyse/base64'
+const REBUILD_API_KEY_VALUE               =  'dp2Ug1jtEh4xxFHpJBfWn9V7fKB3yVcv60lhwOAG';
 
-export const DOCKER_RUNNING             =  0; // Docker running;
-export const DOCKER_NOT_INSTALLED       =  1; // Docker not installed;
-export const DOCKER_NOT_STARTED         =  2; // Docker not started;
-export const DOCKER_GW_IMAGE_NOT_PRESENT=  3; // Image not present;
-export const LICENSE_NOT_VALID          =  4; // License not valid
-export const REBUILD_FAILED             =  5; // File failed rebuild
-export const MISSING_OUTPUT_PROPERTY    =  6; //Does not have output property
+export const DOCKER_RUNNING               =  0; // Docker running;
+export const DOCKER_NOT_INSTALLED         =  1; // Docker not installed;
+export const DOCKER_NOT_STARTED           =  2; // Docker not started;
+export const DOCKER_GW_IMAGE_NOT_PRESENT  =  3; // Image not present;
+export const LICENSE_NOT_VALID            =  4; // License not valid
+export const REBUILD_FAILED               =  5; // File failed rebuild
+export const MISSING_OUTPUT_PROPERTY      =  6; //Does not have output property
 
-export const TEXT_PARALLEL              =  "Parallel"
-export const TEXT_SEQUENTIAL            =  "Sequential"
+export const TEXT_PARALLEL                =  "Parallel"
+export const TEXT_SEQUENTIAL              =  "Sequential"
 
-const REGEX_SAFE_FILE_NAME              = /[^a-zA-Z0-9-_\.]/g
+const REGEX_SAFE_FILE_NAME                = /[^a-zA-Z0-9-_\.]/g
 
-export const RELEAE_NOTES               =[
+export const RELEAE_NOTES                 =[
                                             {
                                               "date":"November 27th 2020",
                                               "desc":"Fixed UI issues and added Docker image Name/TAG under setting tab"
