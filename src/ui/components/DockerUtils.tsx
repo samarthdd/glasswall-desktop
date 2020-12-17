@@ -57,7 +57,8 @@ const writeDecodedBase64File = (baseBase64Response: string, xmlReport:string, re
    var url = window.webkitURL.createObjectURL(file);    
    Utils.addLogLine(request.filename,"Processing complete ");  
    resultCallback({'source':sourceFileUrl, 'url':url, 'filename':request.filename, isError:false, msg:'',
-       cleanFile:decodedBase64, xmlResult: xmlReport, id:requestId, targetDir:targetFolder, original:request.content, path:request.path})
+       cleanFile:decodedBase64, xmlResult: xmlReport, id:requestId, targetDir:targetFolder,
+        original:request.content, path:request.path,request:request})
    
 }
 
@@ -72,7 +73,7 @@ const writeBinaryFile = (bytes: any,  xmlReport:string, request: any, sourceFile
    var file = new Blob([ba], { type: request.type });
    var url = window.webkitURL.createObjectURL(file);
    resultCallback({'source':sourceFileUrl,  'url':url, 'filename':request.filename, isError: false, msg:'',
-     cleanFile:buffer, xmlResult: xmlReport, id:requestId, targetDir:targetFolder, original:request.content,path:request.paths })
+     cleanFile:buffer, xmlResult: xmlReport, id:requestId, targetDir:targetFolder, original:request.content,path:request.paths,reques:request })
   
 }
 
@@ -136,14 +137,14 @@ export const docker_exec_rebuild = async (payload: any,request:any,requestId:str
             Utils.addRawLogLine(0,request.filename,'Error during rebuild -> \n '+err.stack+"\n")
             Utils.addLogLine(request.filename,'Error during rebuild -> \n '+err.stack+"\n");
             resultCallback({'source':sourceFileUrl, 'url':'TBD', 'filename':request.filename, isError:true,
-             msg:'Error during rebuild', id:requestId, targetDir:folderId, original:request.content})
+             msg:'Error during rebuild', id:requestId, targetDir:folderId, original:request.content,'request':request})
              console.log("cmd2" +err.stack)
              return;
         }
         let cliProcessLogPath = outputDir+'/'+Utils.GW_CLI_LOG_FILE;
         if(Utils.isBlockedByPolicy(cliProcessLogPath)){
             resultCallback({'source':sourceFileUrl, 'url':'TBD', 'filename':request.filename, isError:true,
-             msg:'Blocked By Policy', id:requestId, targetDir:folderId, original:request.content})
+             msg:'Blocked By Policy', id:requestId, targetDir:folderId, original:request.content,'request':request})
              console.log("Blocked by policy")
              return;
         }
@@ -159,7 +160,8 @@ export const docker_exec_rebuild = async (payload: any,request:any,requestId:str
         if(stdout.indexOf("error during connect") > -1){
             Utils.addLogLine(request.filename,"Docker Daemon is not started");
             resultCallback({'source':sourceFileUrl, 'url':'TBD', 'filename':request.filename, isError:true,
-                msg:'Docker Daemon is not started', id:requestId, targetDir:folderId, original:request.content});
+                msg:'Docker Daemon is not started', id:requestId, targetDir:folderId, original:request.content
+                ,'request':request});
             return;
         }
         fs.stat(outputDir+'/Managed', function(err:Error,stat:any) {          
@@ -172,7 +174,8 @@ export const docker_exec_rebuild = async (payload: any,request:any,requestId:str
                                 Utils.addRawLogLine(2,request.filename,'Failed to read output file '+(outputDir+'/Managed/'+request.filename));
                                 Utils.addLogLine(request.filename,'Failed to read output file '+(outputDir+'/Managed/'+request.filename));
                                 resultCallback({'source':sourceFileUrl, 'url':'TBD', 'filename':request.filename, isError:true,
-                                    msg:'Failed to read rebuilt file', id:requestId, targetDir:folderId, original:request.content});
+                                    msg:'Failed to read rebuilt file', id:requestId, 
+                                    targetDir:folderId, original:request.content,'request':request});
                                     return;
                             }
                             Utils.addLogLine(request.filename,'File rebuild successful. Starting analysis');
@@ -184,7 +187,8 @@ export const docker_exec_rebuild = async (payload: any,request:any,requestId:str
                         Utils.addRawLogLine(2,request.filename,'File failed rebuuild.Managed dir present. File missing - \n'+err.stack);
                         Utils.addLogLine(request.filename,"File failed analysis.Managed dir present.File missing - "+err.stack);
                         resultCallback({'source':sourceFileUrl, 'url':'TBD', 'filename':request.filename, isError:true,
-                            msg:'File type not supported', id:requestId, targetDir:folderId, original:request.content});
+                            msg:'File type not supported', id:requestId, targetDir:folderId, original:request.content
+                            ,'request':request});
                             return;
                     }
                 });
@@ -193,7 +197,7 @@ export const docker_exec_rebuild = async (payload: any,request:any,requestId:str
                 Utils.addRawLogLine(2,request.filename,'File failed rebuild.Managed dir missing \n'+err.stack);
                 Utils.addLogLine(request.filename,"File failed rebuild.Managed dir missing - \n"+err.stack);
                 resultCallback({'source':sourceFileUrl, 'url':'TBD', 'filename':request.filename, isError:true,
-                    msg:'File type not supported', id:requestId, targetDir:folderId, original:request.content});
+                    msg:'File type not supported', id:requestId, targetDir:folderId, original:request.content,'request':request});
                     return;
             }
           });
@@ -226,7 +230,7 @@ export const docker_exec_analysis = async (payload:any,request:any,requestId:str
             Utils.addRawLogLine(2,request.filename,'Error during analysis -> \n '+err.stack+"\n")
             Utils.addLogLine(request.filename,'Error during analysis -> \n '+err.stack+"\n");
             resultCallback({'source':sourceFileUrl, 'url':'TBD', 'filename':request.filename, isError:true,
-             msg:'Error during analysis', id:requestId, targetDir:folderId, original:request.content})
+             msg:'Error during analysis', id:requestId, targetDir:folderId, original:request.content,'request':request})
              return;
         }
         analyseAnalyzed(stdout, stderr, cmd, base64Data,request,requestId
@@ -267,7 +271,7 @@ export const analyseAnalyzed = async (stdout:string, stderr:string, cmd:string, 
                         Utils.addRawLogLine(2,request.filename,'File failed analysis.Managed dir present. File missing - \n'+err.stack);
                         Utils.addLogLine(request.filename,"File failed analysis.Managed dir present. File  - \n"+err.stack);
                         resultCallback({'source':sourceFileUrl, 'url':'TBD', 'filename':request.filename, isError:true,
-                            msg:'File type not supported', id:requestId, targetDir:folderId, original:request.content});
+                            msg:'File type not supported', id:requestId, targetDir:folderId, original:request.content,'request':request});
                             return;
                     }
                 });
