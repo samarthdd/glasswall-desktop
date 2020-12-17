@@ -10,7 +10,7 @@ const commonPath                = require('common-path');
 
 const GW_DOCKER_IMG_NAME             = 'glasswallsolutions/evaluationsdk';
 //export const GW_DOCKER_IMG_NAME_WO_TAG      = 'glasswallsolutions/evaluationsdk';
-const GW_DOCKER_IMG_TAG              = '1';
+const GW_DOCKER_IMG_TAG              = 'rebuild';
 export const GW_DOCKER_PULL_IMG_OUTPUT      = 'Downloaded newer image for ';//glasswallsolutions/evaluationsdk';
 export const GW_DOCKER_PULL_IMG_OUTPUT_2    = 'Image is up to date for ';//glasswallsolutions/evaluationsdk';
 export const GW_DOCKER_EXTRACT_IMG_OUTPUT   = 'Loaded image ID'
