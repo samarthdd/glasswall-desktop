@@ -172,7 +172,7 @@ export const getAnalysisResult= async (isBinaryFile: boolean, rebuiltFailed: boo
             if(response.status === 200){
                 if(rebuiltFailed || typeof reBuildResponse == "object"){
                     let errMsg = reBuildResponse.message;
-                    if(Utils.isBlockedByPolicyMsg(reBuildResponse.errorMessage)){
+                    if(typeof reBuildResponse.errorMessage != "undefined" && Utils.isBlockedByPolicyMsg(reBuildResponse.errorMessage)){
                         errMsg = "Blocked by policy";
                     }
                    return resultCallback({'source':sourceFile, 'url':'TBD', 'filename':request.filename, isError:true,
