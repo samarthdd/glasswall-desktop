@@ -958,7 +958,7 @@ function DockerRebuildFiles(){
                                             
                                             {
                                                 !row.isError ?
-                                                    <TableCell align="left"><a id="download_link" href={row.sourceFileUrl} download={row.name} className={classes.downloadLink} title={row.name}><FileCopyIcon className={classes.fileIcon}/>{row.name}</a></TableCell>
+                                                    <TableCell align="left"><a id="download_link" href={row.url} download={row.name} className={classes.downloadLink} title={row.name}><FileCopyIcon className={classes.fileIcon}/>{row.name}</a></TableCell>
                                                     : <TableCell align="left">{row.msg}</TableCell>
                                             }
                                             
