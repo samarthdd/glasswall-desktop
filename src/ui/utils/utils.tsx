@@ -24,7 +24,7 @@ export const REPO_GIT_ISSUE_URL           = "https://github.com/k8-proxy/glasswa
 
 export const POLICY_BLOCKED_TXT           = 'forbidden by content management policy'
 export const GW_CLI_LOG_FILE              = 'glasswallCLIProcess.log'
-export const VERSION                      = '0.9.0'
+export const VERSION                      = '1.0.0'
 export const _PROCESSED_FOLDER            = "processed"
 export const _LOGS_FOLDER                 = "gwlogs"
 export const _LOGS_FILE                   = "glasswall_0_1_6.log"
@@ -73,24 +73,24 @@ const REGEX_SAFE_FILE_NAME                = /[^a-zA-Z0-9-_\.]/g
 
 export const RELEAE_NOTES                 =[
                                             {
-                                              "date":"November 27th 2020",
-                                              "desc":"Fixed UI issues and added Docker image Name/TAG under setting tab"
+                                              "date":"December 16th 2020",
+                                              "desc":"Integrated Geotiff file processing support with Cloud and Docker."
                                             }, 
                                             {
-                                              "date":"November 26th 2020",
-                                              "desc":"Watermark added to the rebuild PDF files."
+                                              "date":"November 16th 2020",
+                                              "desc":"Integrated new Docker image Name/TAG with Application."
                                             },
                                             {
-                                              "date":"November 25th  2020",
-                                              "desc":"Threat Analysis : Integrated Threat analysis of files rebuilt with Cloud."
+                                              "date":"December 10th  2020",
+                                              "desc":"Analysis of files rebuild has been integrated in cloud and docker."
                                             }, 
                                             {
-                                              "date":"November 24th  2020",
-                                              "desc":"Fixed fiel saving in sequence and other issues realted to file saving."
+                                              "date":"December 8th  2020",
+                                              "desc":"Maintained History for Policy Management changes."
                                             },
                                             {
-                                              "date":"November 23rd  2020",
-                                              "desc":"Fixed functional and UI issues realted to Session"
+                                              "date":"December 3rd  2020",
+                                              "desc":"Policy Management applied to files rebuilt through Cloud Versionn"
                                             }
                                         ]
 
