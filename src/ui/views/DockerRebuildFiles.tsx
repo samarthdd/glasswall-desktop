@@ -657,6 +657,10 @@ function DockerRebuildFiles(){
             Utils.saveTextFile(JSON.stringify(metaContentCopy), metadataFilePath, 'metadata.json');
         } 
         else{
+            let originalRequest= result.request
+            let payload = SerialDocker.getAnalysisPayload(originalRequest)
+            let xml = SerialDocker.docker_exec_analysis(payload,originalRequest.filename)
+            console.log('XML Report for file with reuild error - '+xml)
             var OriginalFilePath =Utils.getProcessedPath() +  Utils.getPathSep()
                                 + result.targetDir + Utils.getPathSep() + fileHash +  Utils.getPathSep() + 
                                     Utils._ORIGINAL_FOLDER;

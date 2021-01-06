@@ -22,7 +22,7 @@ const getPayload = (data: any) => {
     return json;
 }
 
-const getAnalysisPayload = (data: any) => {
+export const getAnalysisPayload = (data: any) => {
     let buffer = Buffer.from(data.content, 'base64');
     let size_of_file = buffer.length / 1000000;
     var json = {
@@ -56,7 +56,8 @@ const writeDecodedBase64File = (baseBase64Response: string, xmlReport:string, re
    var url = window.webkitURL.createObjectURL(file);    
    Utils.addLogLine(request.filename,"Processing complete ");  
    resultCallback({'source':sourceFileUrl, 'url':url, 'filename':request.filename, isError:false, msg:'',
-       cleanFile:decodedBase64, xmlResult: xmlReport, id:requestId, targetDir:targetFolder, original:request.content, path:request.path})
+       cleanFile:decodedBase64, xmlResult: xmlReport,
+        id:requestId, targetDir:targetFolder, original:request.content, path:request.path,'request':request})
    
 }
 
@@ -71,7 +72,8 @@ const writeBinaryFile = (bytes: any,  xmlReport:string, request: any, sourceFile
    var file = new Blob([ba], { type: request.type });
    var url = window.webkitURL.createObjectURL(file);
    resultCallback({'source':sourceFileUrl,  'url':url, 'filename':request.filename, isError: false, msg:'',
-     cleanFile:buffer, xmlResult: xmlReport, id:requestId, targetDir:targetFolder, original:request.content,path:request.paths })
+     cleanFile:buffer, xmlResult: xmlReport, id:requestId, targetDir:targetFolder,
+      original:request.content,path:request.paths,request:request })
   
 }
 
@@ -96,25 +98,25 @@ export const makeRequest = (request: any, sourceFileUrl: string, requestId: stri
     if(rebuiltBase64 == -1 ){
         Utils.addLogLine(request.filename,"Docker Daemon is not started");
         resultCallback({'source':sourceFileUrl, 'url':'TBD', 'filename':request.filename, isError:true,
-            msg:'Docker Daemon is not started', id:requestId, targetDir:folderId, original:request.content});
+            msg:'Docker Daemon is not started', id:requestId, targetDir:folderId, original:request.content,'request':request});
             return;
     }
     if(rebuiltBase64 == -2 ){
         Utils.addLogLine(request.filename,"Docker not installed");
         resultCallback({'source':sourceFileUrl, 'url':'TBD', 'filename':request.filename, isError:true,
-            msg:'Docker not installed', id:requestId, targetDir:folderId, original:request.content});
+            msg:'Docker not installed', id:requestId, targetDir:folderId, original:request.content,'request':request});
             return;
     }
     if(rebuiltBase64 == -3 ){
         Utils.addLogLine(request.filename,"Blocked By Policy");
         resultCallback({'source':sourceFileUrl, 'url':'TBD', 'filename':request.filename, isError:true,
-            msg:'Blocked By Policy', id:requestId, targetDir:folderId, original:request.content});
+            msg:'Blocked By Policy', id:requestId, targetDir:folderId, original:request.content,'request':request});
             return;
     }
     if(rebuiltBase64 == null){
         Utils.addLogLine(request.filename,"File rebuild failed");
         resultCallback({'source':sourceFileUrl, 'url':'TBD', 'filename':request.filename, isError:true,
-            msg:'File could not be rebuilt', id:requestId, targetDir:folderId, original:request.content});
+            msg:'File could not be rebuilt', id:requestId, targetDir:folderId, original:request.content,'request':request});
             return;
     }
     
@@ -127,11 +129,12 @@ export const makeRequest = (request: any, sourceFileUrl: string, requestId: stri
         Utils.addLogLine(request.filename,"Analysis Error "+err.message);
         if(err.message.indexOf('422') > -1){
             resultCallback({'source':sourceFileUrl, 'url':'TBD', 'filename':request.filename, isError:true,
-            msg:'File of this type cannot be processed - '+err.message, id:requestId, targetDir:folderId, original:request.content})
+            msg:'File of this type cannot be processed - '+err.message, 
+            id:requestId, targetDir:folderId, original:request.content,'request':request})
         }
         else{
             resultCallback({'source':sourceFileUrl, 'url':'TBD', 'filename':request.filename, isError:true,
-                msg:err.message, id:requestId, targetDir:folderId, original:request.content})
+                msg:err.message, id:requestId, targetDir:folderId, original:request.content,'request':request})
         }
     }            
 }
@@ -155,12 +158,13 @@ export const getAnalysisResult = (isBinaryFile: boolean, reBuildResponse: any, r
             Utils.addRawLogLine(2,request.filename,"11" + err.message);
             Utils.addRawLogLine(0,request.filename,"11" + err.stack);
             resultCallback({'source':sourceFile, 'url':'TBD', 'filename':request.filename, isError:true,
-                 msg:err.message, id:requestId, targetDir:targetFolder, original:request.content})
+                 msg:err.message, id:requestId, targetDir:targetFolder, original:request.content,'request':request})
         }
     }
     else{
         resultCallback({'source':sourceFile, 'url':'TBD', 'filename':request.filename, isError:true,
-             msg:'File too big. 4 bytes to 6 MB file size bracket', id:requestId, targetDir:targetFolder, original:request.content})
+             msg:'File too big. 4 bytes to 6 MB file size bracket',
+              id:requestId, targetDir:targetFolder, original:request.content,'request':request})
     }
 }
 
