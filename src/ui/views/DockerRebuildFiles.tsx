@@ -855,7 +855,7 @@ function DockerRebuildFiles(){
             {logView && <Logs content={ localStorage.getItem("logs") || ""} isOpen={logView} handleOpen={openLogView}/>   }                
             <div className={classes.root}> 
                 <SideDrawer showBack={false}/>
-                {healthCheckStatus !=0 && renderRedirect()}
+                {healthCheckStatus !=0 && healthCheckStatus !=5 && renderRedirect()}
                 
                 <main className={classes.content}>
                 {loader  && <Loader/> }  
