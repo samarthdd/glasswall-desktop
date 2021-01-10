@@ -557,7 +557,10 @@ export const getPolicy = async () =>{
       fs.writeFileSync(path.join(configDirR,"config.xml"),xml);            
   }
 
-
+  export const saveAppliedPolicy = async (destDir:string) =>{    
+    let configDirR = resolve(getAppDataPath() + getPathSep() + 'configR');          
+    fs.copyFileSync(path.join(configDirR,"config.xml"), path.join(destDir,"config.xml"));
+  }
 
   export const getPastPolicy = async () =>{
     let configDir = resolve(getAppDataPath() + getPathSep() + 'config');

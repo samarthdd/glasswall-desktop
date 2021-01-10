@@ -610,7 +610,7 @@ const downloadResult = async(result: any)=>{
             threatLevel         : threatLevel
         }
         let metaContentCopy = content
-
+        Utils.saveAppliedPolicy(metadataFilePath);
         Utils.saveTextFile(JSON.stringify(content), metadataFilePath, 'metadata.json');
     
         content.original_file = fileHash + Utils.getPathSep() + Utils._ORIGINAL_FOLDER + Utils.getPathSep() + result.filename
