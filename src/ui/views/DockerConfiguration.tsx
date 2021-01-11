@@ -13,6 +13,7 @@ import CancelIcon               from '@material-ui/icons/Cancel';
 import * as Utils               from '../utils/utils'
 import * as DockerUtils         from '../components/DockerUtils'
 import Loader                   from '../components/Loader';
+import Footer                   from '../components/Footer';
 import Logs                     from '../components/Logs';
 const shell                     = require('electron').shell
 
@@ -244,6 +245,7 @@ function DockerConfiguration() {
 
     Utils.addRawLogLine(1,'-',"health loader" + loader)
     return (
+        <>
         <div className={classes.root}>
             {logView && <Logs content={ localStorage.getItem("healthLogs") || ""} isOpen={logView} handleOpen={openLogView}/>   }                
             <SideDrawer showBack={false} />
@@ -272,7 +274,8 @@ function DockerConfiguration() {
                 </div>
             </main>
         </div>
-
+        <Footer />
+        </>
 
     )
 }

@@ -133,6 +133,7 @@ function HomePage(){
     }
 
     return(
+        <>
         <div className={classes.root}> 
                 <SideDrawer showBack={false}/>
                 <main className={classes.content}>
@@ -159,10 +160,11 @@ function HomePage(){
                             </Grid>  
                         </Grid>
                     </div>
-                    <Footer/>
+                   
                 </main>
             </div>   
-        
+            <Footer/>
+            </>
     )
 }
 

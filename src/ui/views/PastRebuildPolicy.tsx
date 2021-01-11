@@ -8,6 +8,7 @@ import LibraryBooksIcon         from '@material-ui/icons/LibraryBooks';
 import Loader                   from '../components/Loader'
 import MuiAlert                 from '@material-ui/lab/Alert';
 import Badge from '@material-ui/core/Badge';
+import Footer from '../components/Footer';
 
 function Alert(props: any) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -514,6 +515,7 @@ function PastRebuildPolicy(){
     console.log("current" + policy.pdfConfig.metadata)
     console.log("old" + prevPolicy.pdfConfig.metadata)
     return(
+      <>
         <div className={classes.root}> 
             <SideDrawer showBack={false}/>
             <main className={classes.content}>
@@ -1406,6 +1408,8 @@ function PastRebuildPolicy(){
                 </div>   
             </main>   
         </div>
+     <Footer />
+        </>
        
         
     )

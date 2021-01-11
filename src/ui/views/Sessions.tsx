@@ -737,9 +737,10 @@ function Sessions(){
                           }
                     </div>
                     </div>
-                    <Footer/>
+                    
                 </main>
             </div>   
+            <Footer/>
         </div>
        
         
