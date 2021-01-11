@@ -1009,9 +1009,10 @@ function DockerRebuildFiles(){
                           }
                     </div>
                     </div>
-                    <Footer/>
+                   
                 </main>
-            </div>   
+            </div>  
+            <Footer/>
         </div>
        
         

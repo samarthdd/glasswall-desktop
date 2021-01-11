@@ -4,6 +4,7 @@ import { makeStyles }           from '@material-ui/core/styles';
 import SideDrawer               from '../components/SideDrawer';
 import VisibilityIcon           from '@material-ui/icons/Visibility';
 import VisibilityOffIcon        from '@material-ui/icons/VisibilityOff';
+import Footer                   from '../components/Footer';
 
 import * as Utils               from '../utils/utils'
 
@@ -183,6 +184,7 @@ function Settings(){
     localStorage.setItem(Utils.REBUILD_IMAGE_TAG_KEY, e.target.value )
    }
     return(
+        <>
         <div className={classes.root}> 
             <SideDrawer showBack={false}/>
             <main className={classes.content}>
@@ -221,7 +223,10 @@ function Settings(){
                   
                 </div>   
             </main>   
+            
         </div>
+        <Footer/>
+        </>
        
         
     )

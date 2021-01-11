@@ -12,8 +12,8 @@ const useStyles = makeStyles((theme) => ({
     },
     footerNav:{        
         background:         '#0c3451',
-        float:              'right',
-        position:           'relative',
+        float:              'none',
+        position:           'fixed',
         width:              '100%',
         textAlign:          'center',
         bottom:             '0',
