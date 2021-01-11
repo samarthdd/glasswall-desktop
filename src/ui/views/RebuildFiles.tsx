@@ -958,9 +958,10 @@ flat filesystem option to saves in a single directory that contains all files wi
                           }
                     </div>
                     </div>
-                    <Footer/>
+                   
                 </main>
             </div>   
+            <Footer/>
         </div>
        
         
