@@ -654,6 +654,8 @@ function DockerRebuildFiles(){
             }
             metaContentCopy.isThreat    = isThreat
             metaContentCopy.threatLevel = threatLevel
+            // Save policy
+            Utils.saveAppliedPolicy(metadataFilePath);
             Utils.saveTextFile(JSON.stringify(metaContentCopy), metadataFilePath, 'metadata.json');
         } 
         else{
