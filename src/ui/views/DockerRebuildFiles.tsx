@@ -511,6 +511,7 @@ function DockerRebuildFiles(){
         original_file       : string,
         clean_file?         : string;
         report?             : string;
+        policy_file?         : string;
         status?             : string;
         message?            : string;
         time?               : number;
@@ -620,6 +621,7 @@ function DockerRebuildFiles(){
                 original_file       : Utils._ORIGINAL_FOLDER + Utils.getPathSep() + result.filename,
                 clean_file          : Utils._CLEAN_FOLDER + Utils.getPathSep()+ result.filename,
                 report              : Utils._REPORT_FOLDER + Utils.getPathSep() + Utils.stipFileExt(result.filename)+'.xml',
+                policy_file         : "config.xml",
                 status              : "Success",
                 time                : new Date().getTime(),
                 userTargetFolder    : userTargetDir,
@@ -633,6 +635,7 @@ function DockerRebuildFiles(){
             content.clean_file = fileHash +Utils.getPathSep() + Utils._CLEAN_FOLDER + Utils.getPathSep() + result.filename
             content.report = fileHash + Utils.getPathSep() + Utils._REPORT_FOLDER + Utils.getPathSep() + Utils.stipFileExt(result.filename)+'.xml'
             content.userTargetFolder = userTargetDir;
+            content.policy_file = fileHash +Utils.getPathSep() + "config.xml";
             
             masterMetaFile.push(content);
             
