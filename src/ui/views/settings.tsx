@@ -10,7 +10,10 @@ import * as Utils               from '../utils/utils'
 const useStyles = makeStyles((theme) => ({
     root:       {   
         display:                    'flex', 
-    },    
+    },
+    
+    
+    
     toolbar: {
         display:                   'flex',
         alignItems:                'center',
@@ -94,6 +97,8 @@ const useStyles = makeStyles((theme) => ({
         }
    },
 
+  
+
    submitBtn:{
     background:                 '#0c3451',
     color:                      '#fff',
@@ -114,7 +119,9 @@ btnBox:{
    width:                      '100%',
    textAlign:                  'center',
    marginTop:                  '20px',
-}
+},
+
+
 
  }));
 
@@ -186,11 +193,13 @@ function Settings(){
                     <div className={classes.textContainer}>
                         <h4>REBUILD ENGINE URL</h4>
                         <div className={classes.urlBox}>
-                            <input onChange={handleRebuildUrlChange} type="text" value={rebuildUrl}/>
+                        <label className="readOnlys">https://</label>
+                            <input className="pl-left-48" onChange={handleRebuildUrlChange} type="text" value={rebuildUrl}/>
                         </div>  
                         <h4>REBUILD ANALYSIS URL</h4>
                         <div className={classes.urlBox}>
-                            <input onChange={handleAnalysisUrlChange} type="text" value={analysisUrl}/>
+                        <label className="readOnlys">https://</label>
+                            <input className="pl-left-48" onChange={handleAnalysisUrlChange} type="text" value={analysisUrl}/>
                         </div>  
                         <h4>API Key</h4>   
                         <div className={classes.apiKeyBox}>
