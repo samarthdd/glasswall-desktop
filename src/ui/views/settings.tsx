@@ -139,12 +139,18 @@ function Settings(){
 
     React.useEffect(() => {
         console.log("settings1" + Utils.getRebuildEngineUrl())
-        setRebuildUrl(Utils.getRebuildEngineUrl());
-        setAnalysisUrl(Utils.getRebuildAnalysisUrl());
+        let url = removeHttps(Utils.getRebuildEngineUrl());
+        setRebuildUrl(url);
+        url = removeHttps(Utils.getRebuildAnalysisUrl());
+        setAnalysisUrl(url);
         setApiKey(Utils.getRebuildApiKey());
         setRebuildImage(Utils.getRebuildImage())
         setRebuildImageTag(Utils.getRebuildImageTag())
     }, []);
+
+const removeHttps = (link: string) =>{ 
+    return link.replace(/^(https?:|)\/\//, '');
+    };
 
    const showApiKey = ()=> {
     setHide(!hide)
@@ -153,13 +159,15 @@ function Settings(){
    const handleRebuildUrlChange =(e:any)=>{
     console.log("settings2" + e.target.value);
     setRebuildUrl(e.target.value)
-    localStorage.setItem(Utils.REBUILD_URL_KEY, e.target.value )
+    let url ="https://"+e.target.value;
+    localStorage.setItem(Utils.REBUILD_URL_KEY, url )
    }
 
    const handleAnalysisUrlChange =(e:any)=>{
     console.log(e.target.value);
     setAnalysisUrl(e.target.value)
-    localStorage.setItem(Utils.ANALYSIS_URL_KEY, e.target.value )
+    let url ="https://"+e.target.value;
+    localStorage.setItem(Utils.ANALYSIS_URL_KEY, url )
    }
 
    const handleApiIKeyChange =(e:any)=>{
