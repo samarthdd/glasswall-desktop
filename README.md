@@ -8,9 +8,10 @@ Glasswall Desktop is a desktop application that provides multi file drag and dro
 
 | Avatar | Name | Role | Time Zone |
 | -------------------------------------------|----------------------|----------------------------| -------- |
+| <img src="img/Sudhish.png" width=100 alt="@kumarsudhish">  | Sudhidh Kumar [@kumarsudhish](https://github.com/kumarsudhish) |  Delivery Manager/QA | IST |
 | <img src="img/Sanchit.png" width=100 alt="@rajmbcoderx">  | Sanchit Garg [@rajmbcoderx](https://github.com/rajmbcoderx) | Member | IST |
 | <img src="img/Mudit.png" width=100 alt="@gmuditdce">  | Mudit Gupta [@gmuditdce](https://github.com/gmuditdce) | Member | IST |
-| <img src="img/Sudhish.png" width=100 alt="@kumarsudhish">  | Sudhidh Kumar [@kumarsudhish](https://github.com/kumarsudhish) |  Delivery Manager/QA | IST |
+| <img src="img/" width=100 alt="@nishantswarup">  | Nishant Swarup [@nishantswarup](https://github.com/nishantswarup) | Member | IST |
 
 
 ## Current Objective and Key Results
