@@ -4,7 +4,7 @@
   "description": "Glasswall desktop application using Electron and React",
   "main": "./out/electron/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "node ./node_modules/mocha/bin/_mocha --require esm --timeout 20000 \"./tests/Test*.js\"",
     "build": "webpack --config webpack.ui.config.js --config webpack.electron.config.js",
     "build:watch": "npm run build -- --watch",
     "build-server": "dotnet publish ./src/server/ --output ../../out/server",
@@ -38,21 +38,29 @@
     "asset"
   ],
   "devDependencies": {
+    "@types/mocha": "^8.2.0",
     "@types/react": "^16.9.49",
     "@types/react-dom": "^16.9.8",
     "@types/react-router-dom": "^5.1.5",
     "css-loader": "^4.3.0",
-    "electron": "^10.1.2",
+    "electron": "^11.1.0",
     "electron-builder": "^22.8.0",
     "electron-reload": "^1.5.0",
     "file-loader": "^6.1.0",
     "html-webpack-plugin": "^4.4.1",
+    "protractor": "^7.0.0",
     "react-iframe": "^1.8.0",
+    "spectron": "^13.0.0",
     "style-loader": "^1.2.1",
     "ts-loader": "^8.0.3",
     "typescript": "^4.0.2",
     "webpack": "^4.44.1",
-    "webpack-cli": "^3.3.12"
+    "webpack-cli": "^3.3.12",
+    "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1",
+    "eslint": "^7.15.0",
+    "esm": "^3.2.25",
+    "mocha": "^8.2.1"
   },
   "dependencies": {
     "@material-ui/core": "^4.11.0",
