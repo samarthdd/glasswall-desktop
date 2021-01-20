@@ -1,23 +1,25 @@
 module.exports = {
-    preset: 'ts-jest/presets/js-with-ts',
+  // The root of your source code, typically /src
+  // `<rootDir>` is a token Jest substitutes
+  roots: ['<rootDir>/src'],
+
+  // Jest transformations -- this adds support for TypeScript
+  // using ts-jest
+  transform: {
+    '^.+\\.tsx?$': 'ts-jest',
+  },
+
+  // Runs special logic, adding special
+  // extended assertions to Jest
+  setupFilesAfterEnv: [
+    '@testing-library/jest-dom/extend-expect'
+  ],
+
+  // Test spec file resolution pattern
+  // Matches parent folder `__tests__` and filename
+  // should contain `test` or `spec`.
+  testRegex: '(/__tests__/.*|(\\.|/)(test|spec))\\.tsx?$',
   
-    // testEnvironment: 'node',
-    testEnvironment: 'enzyme',
-    setupFiles: [
-      // '/Users/ldu020/workspace/github.com/mrdulin/jest-codelab/src/stackoverflow/58585527/window.setup.js'
-      // '/Users/ldu020/workspace/github.com/mrdulin/jest-codelab/src/stackoverflow/45702292/chai.setup.js'
-    ],
-    setupFilesAfterEnv: ['jest-enzyme', './jest.setup.js'],
-    testEnvironmentOptions: {
-      enzymeAdapter: 'react16',
-    },
-    coverageReporters: ['json', 'text', 'lcov', 'clover'],
-    testMatch: ['**/__tests__/**/*.[jt]s?(x)', '**/?(*.)+(spec|test).[jt]s?(x)'],
-    modulePathIgnorePatterns: ['<rootDir>/src/import-undefined-issue'],
-    verbose: true,
-  };
-  
-  // module.exports = {
-  //   preset: 'ts-jest/presets/js-with-ts',
-  //   testEnvironment: 'jsdom',
-  // };
+  // Module file extensions for importing
+  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
+}
