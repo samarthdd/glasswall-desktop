@@ -1,7 +1,8 @@
 import { shallow } from 'enzyme';
 import React from 'react';
 const { ipcRenderer } = require('electron');
-import * as Utils from '../src/ui/utils/utils'
+import * as Utils from '../ui/utils/utils'
+import "@testing-library/jest-dom/extend-expect";
 
 jest.mock(
   'electron',
