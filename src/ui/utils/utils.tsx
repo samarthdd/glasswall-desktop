@@ -222,9 +222,9 @@ export const sleepDelay = (milliseconds:number) => {
     return new Promise(resolve => setTimeout(resolve, milliseconds))
   }
 
-  export const sleep = (delay:number) => {
-    var start = new Date().getTime();
-    while (new Date().getTime() < start + delay);
+export const sleep = (delay:number) => {
+  var start = new Date().getTime();
+  while (new Date().getTime() < start + delay);
 }
 
   const _p8=(s:boolean) =>{
@@ -233,8 +233,7 @@ export const sleepDelay = (milliseconds:number) => {
     return s ? "-" + p.substr(0,4) + "-" + p.substr(4,4) : p ;
 }
  export const guid=()=> {
-    return _p8(false);
-    
+    return _p8(false);  
 }
 
 export  const wordwrap=( str: string, width: number, brk: string, cut:boolean ) => {
@@ -252,7 +251,6 @@ export  const wordwrap=( str: string, width: number, brk: string, cut:boolean ) 
     console.log("wordwrap" + res.join( brk ))
     return res.join( brk );
   }
-  
 
 }
 export const stipFileExt =(filename: string)=>{

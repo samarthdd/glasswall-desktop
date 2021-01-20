@@ -12,9 +12,9 @@ jest.mock(
   { virtual: true },
 );
 
+var fs = require('fs');
 
-
-describe('59934084', () => {
+describe('to get rebuild engine url', () => {
   it('should render', () => {
     let url = expect(Utils.getRebuildEngineUrl()).
       toBe("https://8oiyjy8w63.execute-api.us-west-2.amazonaws.com/Prod/api/rebuild/base64");
@@ -22,32 +22,111 @@ describe('59934084', () => {
 
 });
 
+describe('logs data should not be empty', () => {
+  it('should render', () => {
+    let data = expect(Utils.getRawLogs()).not.toBe('0');
+  });
+});
 
-// describe('59934084', () => {
-//   let wrapper;
-//   beforeEach(() => {
-//     wrapper = shallow(<SomeComponent></SomeComponent>);
-//   });
-//   it('should render', () => {
-//     expect(wrapper.exists).toBeTruthy();
-//   });
+describe('to get rebuild analysis url', () => {
+  it('should render', () => {
+    let url = expect(Utils.getRebuildAnalysisUrl()).
+      toBe("https://o7ymnow6vf.execute-api.us-west-2.amazonaws.com/Prod/api/Analyse/base64");
+  });
 
-//   it('should handle submit, set status to true', () => {
-//     ipcRenderer.on.mockImplementationOnce((event, callback) => {
-//       callback(event, 'success');
-//     });
-//     wrapper.find('form').simulate('submit');
-//     expect(wrapper.state('status')).toBeTruthy();
-//     expect(ipcRenderer.on).toBeCalledWith('asynchronous-reply', expect.any(Function));
-//     expect(ipcRenderer.send).toBeCalledWith('update', 'value');
-//   });
-//   it('should handle submit without setting status to true', () => {
-//     ipcRenderer.on.mockImplementationOnce((event, callback) => {
-//       callback(event, 'failure');
-//     });
-//     wrapper.find('form').simulate('submit');
-//     expect(wrapper.state('status')).toBeFalsy();
-//     expect(ipcRenderer.on).toBeCalledWith('asynchronous-reply', expect.any(Function));
-//     expect(ipcRenderer.send).toBeCalledWith('update', 'value');
-//   });
-// });
+});
+
+describe('to get rebuild api key', () => {
+  it('should render', () => {
+    let key = expect(Utils.getRebuildApiKey()).not.
+      toBe('null');
+  });
+
+});
+
+describe('to get rebuild image', () => {
+  it('should render', () => {
+    let key = expect(Utils.getRebuildImage()).
+      toBe("glasswallsolutions/evaluationsdk");
+  });
+
+});
+
+describe('to get rebuild image tag', () => {
+  it('should render', () => {
+    let key = expect(Utils.getRebuildImageTag()).
+      toBe("rebuild");
+  });
+
+});
+
+describe('to get logs', () => {
+  it('should render', () => {
+    let logs = expect(Utils.getLogs()).not.toBe('null') ;
+  });
+
+});
+
+describe('to get log time', () => {
+  it('should render', () => {
+    let logTime = expect(Utils.getLogTime()).not.toBe('null') ;
+  });
+
+});
+
+describe('to get log path', () => {
+  it('should render', () => {
+    let logPath = expect(Utils.getLogsPath()).not.
+      toBe('null') ;
+  });
+
+});
+
+describe('to get guid', () => {
+  it('should render', () => {
+    let id = expect(Utils.guid()).not.toBe('null') ;
+  });
+
+});
+
+describe('to get word wrap', () => {
+  it('should render', () => {
+    let wrap = expect(Utils.wordwrap("test is running", 4, "is", true)).
+      toBe("tesist isis runisning") ;
+  });
+
+});
+
+describe('to get file hash', () => {
+  it('should render', () => {
+    let hash = expect(Utils.getFileHash("test is running")).not.toBe("null") ;
+  });
+
+});
+
+describe('to get path seperation', () => {
+  it('should render', () => {
+    let path = expect(Utils.getPathSep()).toBe("/") ;
+  });
+
+});
+
+describe('to get report path', () => {
+  it('should render', () => {
+    let path = expect(Utils.getReportPath()).not.
+      toBe('null') ;
+  });
+
+});
+
+describe('to get clean path', () => {
+  it('should render', () => {
+    let path = expect(Utils.getCleanPath()).
+      toBe('null') ;
+  });
+
+});
+
+
+
+
