@@ -1,4 +1,4 @@
-const DEBUG: boolean = false;
+//const DEBUG: boolean = false;
 
 const {
     app,
@@ -16,6 +16,7 @@ const { dialog }            = require('electron')
 const dir                   = path.resolve(__dirname, `..`)
 const { autoUpdater }       = require('electron-updater');
 const log                   = require('electron-log');
+const DEBUG                 = require('electron-is-dev');
 
 autoUpdater.logger = log;
 autoUpdater.logger.transports.file.level = 'debug';
