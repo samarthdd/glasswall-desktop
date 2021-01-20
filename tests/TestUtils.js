@@ -1,8 +1,12 @@
-const { Application }  = require('spectron');
-const { should, use } = require('chai');
-const chaiAsPromised = require('chai-as-promised');
-const electron = require('electron');
-const path = require('path');
+'use strict';
+
+const { Application }   = require('spectron');
+const assert            = require('assert')
+const { should, use }   = require('chai');
+const chaiAsPromised    = require('chai-as-promised');
+const electron          = require('electron');
+const path              = require('path');
+
 
 global.before(() => {
   should();
@@ -24,6 +28,20 @@ async function stopApp(app) {
   }
 }
 
+
+describe('electron-app', () => {
+  it('runs in main process by default', () => {
+    assert.strictEqual(process.type, 'app')
+  })
+})
+
+// describe('search', () => {
+//   describe('#find', () => {
+//     it('should return results when a file matches a term');
+//   });
+// });
+
+
 describe('Check Window Count', () => {  
   let app;
 
@@ -44,6 +62,7 @@ describe('Check Window Count', () => {
 });
 
 
+
 describe('Check app visibility', () => {  
   let app;
 
@@ -59,6 +78,36 @@ describe('Check app visibility', () => {
     app.client.waitUntilWindowLoaded()
     app.client.browserWindow.isMinimized().should.eventually.be.false;
     app.client.browserWindow.isVisible().should.eventually.be.true;
+  });
+
+});
+
+
+describe('verifyWindowIsVisibleWithTitle', () => {  
+  let app;
+
+  beforeEach(async () => {
+    app = await startApp();
+  });
+
+  afterEach(async() => {
+    await stopApp(app);
+  });
+
+  it('checks window', async() => {
+    try {
+      // Check if the window is visible
+      const isVisible = await app.browserWindow.isVisible()
+      // Verify the window is visible
+      assert.strictEqual(isVisible, true)
+      // Get the window's title
+      const title = await app.client.getTitle()
+      // Verify the window's title
+      assert.strictEqual(title, 'Glasswall Desktop')
+    } catch (error) {
+      // Log any failures
+      console.error('Test failed', error.message)
+    }
   });
 
 });
