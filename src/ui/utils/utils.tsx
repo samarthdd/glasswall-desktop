@@ -123,7 +123,7 @@ export const addRawLogLine = (level:number, filename:string, sentence:string) =>
   log.transports.file.file        = getLogsPath();
   let levelStr : string;
   levelStr = "ERROR"
-  let lines  = wordwrap(sentence, 80, '\n', false);
+  let lines  = wordwrap(sentence, 100, '\n', false);
 
   if(level == 0){
     levelStr = "DEBUG"
@@ -197,12 +197,12 @@ export const addLogLine = (filename:string, sentence:string) => {
   const logs  = localStorage.getItem("logs");
   if(logs != null){
     var logsCopy = logs;
-    logsCopy +=  "\n"+getLogTime()+" - INFO - File-Name - "+filename+" --> "+wordwrap(sentence, 80, '\n', false)+"\n" 
+    logsCopy +=  "\n"+getLogTime()+" - INFO - File-Name - "+filename+" --> "+wordwrap(sentence, 100, '\n', false)+"\n" 
     localStorage.setItem("logs",logsCopy)
   }
   else{
     localStorage.setItem("logs","")
-    var logsCopy = "\n"+getLogTime()+" - INFO - File-Name - "+filename+" --> "+ wordwrap(sentence, 80, '\n', false)+"\n" 
+    var logsCopy = "\n"+getLogTime()+" - INFO - File-Name - "+filename+" --> "+ wordwrap(sentence, 100, '\n', false)+"\n" 
     console.log('adding log '+logsCopy)
     localStorage.setItem("logs",logsCopy)
   }
