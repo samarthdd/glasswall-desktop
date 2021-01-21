@@ -517,4 +517,32 @@ export const check_license = () =>{
         localStorage.setItem("healthLogs",oldLogs);            
         return 1;
     }         
-} 
+}
+
+/***
+ * Reurns glasswall cli version
+ */
+export const gwCliVersion = () =>{
+    var cmd = 'docker container run '+Utils.getRebuildImage()+':'+Utils.getRebuildImageTag()+' /usr/bin/glasswallCLI -v';
+    console.log("cmd" +cmd)
+    let version = 'NA';
+    exec(cmd, function (err:Error, stdout:string, stderr:string) {      
+        console.log('rebuild stdout ->'+stdout)
+        if(err){
+            Utils.addRawLogLine(0,'Get CLI version','Error during geting version -> \n '+err.stack+"\n")
+            Utils.addLogLine('Get CLI version','Error during geting version -> \n '+err.stack+"\n");            
+            console.log("Error during get cli version " +err.stack)
+            return version;
+        }
+        console.log('stdout - '+stdout)
+        let split = stdout.split("\n")
+        console.log('split length - '+split.length)
+        if(split.length > 0){
+            console.log('split[0] = '+split[0])
+            version =  split[0]            
+        }
+        Utils.addRawLogLine(0,'Get CLI version','Version -> '+version+"\n")
+        Utils.addLogLine('Get CLI version','Version -> '+version+"\n");            
+        return version;
+    })
+}
