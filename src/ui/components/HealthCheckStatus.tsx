@@ -74,6 +74,7 @@ const useStyles = makeStyles((theme) => ({
 
  type CurrentStatus = {
     status: number;
+    rebuildVersion: any;
     handleOpen  :  () => void;    
 }
 
@@ -84,10 +85,9 @@ const useStyles = makeStyles((theme) => ({
 // export const REBUILD_FAILED             =  5; // File failed rebuild
 // export const MISSING_OUTPUT_PROPERTY    =  6; //Does not have output property
 
-function HealthCheckStatus({status, handleOpen}:CurrentStatus){
+function HealthCheckStatus({rebuildVersion, status, handleOpen}:CurrentStatus){
     const classes = useStyles(); 
     Utils.addRawLogLine(2,"-","heatlh status:" + status)
-
     const getStatusUI =(status: number)=>{
 
         var uiDOM=null;
@@ -141,7 +141,7 @@ function HealthCheckStatus({status, handleOpen}:CurrentStatus){
     return(
         <div className={classes.docerIconGroup}>
             <div> 
-             <h3>Rebuild Files With Docker </h3>
+             <h3>Rebuild With Docker Glasswall CLI Version  {rebuildVersion} </h3> 
              {/* <button onClick={() =>handleOpen()}className={classes.logButton}>Logs</button> */}
             </div>
             <ul>

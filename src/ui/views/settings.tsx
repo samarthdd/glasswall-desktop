@@ -5,6 +5,7 @@ import SideDrawer               from '../components/SideDrawer';
 import VisibilityIcon           from '@material-ui/icons/Visibility';
 import VisibilityOffIcon        from '@material-ui/icons/VisibilityOff';
 import Footer                   from '../components/Footer';
+import * as SerialDockerUtils        from '../components/SerialDocker';
 
 import * as Utils               from '../utils/utils'
 
@@ -198,8 +199,7 @@ const removeHttps = (link: string) =>{
             <main className={classes.content}>
                 <div className={classes.toolbar} />  
                 <div className={classes.contentArea}>             
-                    <h3>Account Info</h3>
-                    <p>Cloud Configuration </p>
+                    <h3>Settings</h3>
                     <div className={classes.textContainer}>
                         <h4>REBUILD ENGINE URL</h4>
                         <div className={classes.urlBox}>
@@ -224,6 +224,10 @@ const removeHttps = (link: string) =>{
                         <div className={classes.urlBox}>
                             <input type="text" onChange={handleRebuildImageTagChange}  value={rebuildImageTag}/>
                         </div>    
+                        <h4>REBUILD Glasswall CLI Version</h4>   
+                        <div className={classes.urlBox}>
+                            <input type="text"   value={SerialDockerUtils.gwCliVersionSerial()}/>
+                        </div>
                         <div className={classes.btnBox}>
                             <a className={classes.submitBtn} href="https://glasswall-store.com/">Buy Token </a>
                        </div>                          
