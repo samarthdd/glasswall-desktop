@@ -16,3 +16,4 @@ temp/*
 config/config.ini
 config/config.xml
 Users/*
+coverage/*

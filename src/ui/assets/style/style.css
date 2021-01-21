@@ -45,3 +45,10 @@
     font-style: normal;
 
 }
+
+.readOnlys {
+    position:     absolute;
+    top: 9px;
+    font-weight: 600;
+}
+.pl-left-48{padding-left: 48px;}

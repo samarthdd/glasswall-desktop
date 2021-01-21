@@ -8,6 +8,7 @@ import TableHead                from '@material-ui/core/TableHead';
 import TableRow                 from '@material-ui/core/TableRow';
 import DeleteIcon               from '@material-ui/icons/Delete';
 import FolderIcon               from '@material-ui/icons/Folder';
+import {Redirect}                 from 'react-router-dom'
 import { CardActions,
         TablePagination,
         Switch,
@@ -20,19 +21,25 @@ import FileCopyIcon             from '@material-ui/icons/FileCopy';
 import DropIcon                 from '../assets/images/dropIcon.png'
 import SideDrawer               from '../components/SideDrawer';
 import * as DockerUtils         from '../components/DockerUtils'
+import * as SerialDocker        from '../components/SerialDocker'
 import Loader                   from '../components/Loader';
 import * as Utils               from '../utils/utils'
 import RawXml                   from '../components/RawXml';
+import Logs                     from '../components/Logs';
+import HealthCheckStatus        from '../components/HealthCheckStatus'
 const { dialog }                = require('electron').remote
+import preceiveThreats          from '../components/ThreatIntelligence'
+import ThreatAnalysisDialog     from '../components/ThreatAnalysisDialog'
 
 
 var fs                          = require('fs');
-const commonPath                = require('common-path');
+
 
 
 const useStyles = makeStyles((theme) => ({
     root:       {   
         display:                    'flex', 
+        background:                 '#fff'
     },    
     table: {
         minWidth:                   650,
@@ -68,6 +75,9 @@ const useStyles = makeStyles((theme) => ({
         marginBottom:               '20px',
         fontSize:                   '20px',
         alignItems:                 'center',    
+        width:                      '70%',
+        margin:                     '20px auto',
+        background:                 '#f3f8fe',
         '& p':{
             textAlign:              'center',    
             fontSize:               '25px',
@@ -113,15 +123,22 @@ const useStyles = makeStyles((theme) => ({
         width:                      '100%',
         textAlign:                  'center'
    },
+   successMsg:{
+    color:                      'green',
+    margin:                     '0px 0 10px 0',
+    fontSize:                   '15px',
+    display:                    'none',
+    textAlign:                  'center'
+},
    selectFileBtn:{
         display:                    'block',
         margin:                     '0px auto 30px auto',
         padding:                    '10px',
         minWidth:                   '154px',
         borderRadius:               '4px',
-        border:                     '2px solid #6ab8f0',
-        color:                      '#6ab8f0',
-        background:                 '#fff'
+        color:                      '#fff',
+        background:                 '#469ffd',
+        border:                     'none'
    },
    errMsg:{
         color:                      'red',
@@ -130,13 +147,6 @@ const useStyles = makeStyles((theme) => ({
         display:                    'none',
         textAlign:                  'center'
 },
-    successMsg:{
-        color:                      'green',
-        margin:                     '0px 0 10px 0',
-        fontSize:                   '15px',
-        display:                    'none',
-        textAlign:                  'center'
-    },
     toolbar: {
          display:                   'flex',
          alignItems:                'center',
@@ -150,6 +160,13 @@ const useStyles = makeStyles((theme) => ({
     contentArea:{
          minHeight:                 '85.7vh',
          padding:                   theme.spacing(3),
+         '& h3': {
+            marginTop:             '0',
+        }
+        
+    },
+    dropzoneArea:{
+        pointerEvents:             'none'
     },
      downloadLink:{
         maxWidth:                   '245px',
@@ -165,7 +182,7 @@ const useStyles = makeStyles((theme) => ({
         padding:                    '7px 10px',
         fontSize:                   '12px',
         fontWeight:                 'normal',
-        backgroundColor:            '#0c3451',
+        backgroundColor:            '#144e78 ',
         borderRadius:               '3px',
      },
      deleteBtn:{
@@ -197,9 +214,8 @@ const useStyles = makeStyles((theme) => ({
         fontSize:                  '13px',
         lineHeight:                '25px',
         background:                '#ddd',
-        position:                  'absolute',
         left:                      '5px',
-        marginTop:                 '10px',
+        marginTop:                 '20px',
     },
      outFolderBtn:{
         background:                 '#3cb371',
@@ -217,7 +233,7 @@ const useStyles = makeStyles((theme) => ({
             transition:             '0.5s'
         },
         '&:focus':{ 
-            outline:             '0'
+            outline:                '0'
         }
      },
      outFolderBtnDissabled:{
@@ -244,6 +260,22 @@ const useStyles = makeStyles((theme) => ({
             fontWeight:             'bold'
         }
      },
+     high:{
+        color:                  'red',
+        fontWeight:             'bold'
+     },
+     medium:{
+        color:                  'orange',
+        fontWeight:             'bold'
+     },
+     low:{
+        color:                  'blue',
+        fontWeight:             'bold'
+     },
+     ok_unknown:{
+        color:                  '#098c44',
+        fontWeight:             'bold'
+     },
      tableField:{
          position:                  'relative',
         '& h3':{
@@ -265,7 +297,6 @@ const useStyles = makeStyles((theme) => ({
         fontSize:                   '15px'
     },
     settings:{
-        borderBottom:               '1px solid #ccc',
         paddingBottom:              '20px',
         float:                      'left',
         width:                      '100%',
@@ -280,12 +311,11 @@ const useStyles = makeStyles((theme) => ({
         width:                      '100%',
         '& h4':{
             position:               'relative',
-            float:                  'left',            
-        },
-        '& span':{
-            color:                  'red',
-            float:                  'left',
-            margin:                 '14px 5px 0 0px',
+            float:                  'left',  
+            '& span':{
+                color:                  'red',
+                margin:                 '14px 5px 0 0px',
+            },
         },
     },
     headingGroup:{
@@ -336,6 +366,14 @@ const useStyles = makeStyles((theme) => ({
             marginRight:            '10px'
         }
     },
+    submitBtn:{
+        background:                 '#0c3451',
+        color:                      '#fff',
+        border:                     'none',
+        padding:                    '10px 20px',
+        borderRadius:               '3px',
+        cursor:                     'pointer'
+    },
     alertContainer:{
         width:                      '100%',
         position:                   'fixed',
@@ -355,17 +393,10 @@ const useStyles = makeStyles((theme) => ({
         borderRadius:               '5px',
         textAlign:                  'center'
     },
-    submitBtn:{
-        background:                 '#0c3451',
-        color:                      '#fff',
-        border:                     'none',
-        padding:                    '10px 20px',
-        borderRadius:               '3px',
-        cursor:                     'pointer'
-    },
     toggleContainer:{
         float:                      'right',
         position:                   'relative',
+        marginTop:                  '5px',
         '& span':{
             fontWeight:             'bold',
             
@@ -394,16 +425,17 @@ const useStyles = makeStyles((theme) => ({
     },
     toggleToolTipTitle:{
         display:                    'none',
-        position:                   'fixed',
+        position:                   'absolute',
         background:                 '#0c3451',
         color:                      '#fff',
         margin:                     '10px',
         padding:                    '10px',
         fontSize:                   '12px',
-        borderRadius:               '5px', 
+        borderRadius:               '5px',      
         right:                      '30px',
         maxWidth:                   '300px',
         fontWeight:                 'normal',
+        width:                      '300',
         '&::before':{
             content:                '" "',
             height:                 '10px',
@@ -415,9 +447,23 @@ const useStyles = makeStyles((theme) => ({
             transform:              'rotate(45deg)',
         }
     },
-    infobBtn:{}
- }));
+    infobBtn:{},
+    tableContainer:{
+        background:                 '#f9f9f9',
+        borderRadius:               '20px',
+        padding:                    '20px',
+        boxShadow:                  '0px 0px 5px #ccc',
+        width:                      '100%',
+        marginBottom:               '20px',
+        float:                      'left'
+    },
+    docerIconGroup:{
+        '& h3':{
 
+        }
+    },
+
+ }));
 
 
 function DockerRebuildFiles(){
@@ -430,6 +476,7 @@ function DockerRebuildFiles(){
     const [id, setId]                               = useState("");  
     const [open, setOpen]                           = useState(false);  
     const [xml, setXml]                             = useState("");  
+    const [logView, setLogView]                     = useState(false);      
     const [page, setPage]                           = useState(0); 
     const [rowsPerPage, setRowsPerPage]             = useState(10);  
     const [folderId, setFolderId]                   = useState("");  
@@ -438,7 +485,12 @@ function DockerRebuildFiles(){
     const [masterMetaFile, setMasterMetaFile]       = useState<Array<Metadata>>([]);
     const [showAlertBox, setshowAlertBox]           = useState(false);  
     const [files, setFiles]                         = useState<Array<DockerRebuildResult>>([]);
-    const [flat, setFlat]                           = React.useState(true);
+    const [flat, setFlat]                           = React.useState(false);
+    const [parallel, setParallel]                   = React.useState(true);
+    const [openThreatDialog, setOpenThreatDialog]   = React.useState(false);
+    const [threatAnalysis, setThreatAnalysis]       = useState(null);  
+    const [healthCheckStatus, setHealthCheckStatus] = React.useState( Number(sessionStorage.getItem("docker_status")) || 0); 
+    const [allPath, setAllPath]                     = React.useState<Array<string>>([]);    
 
     interface DockerRebuildResult {
         id              : string,
@@ -450,20 +502,48 @@ function DockerRebuildFiles(){
         xmlResultDocker : string;
         path?           : string;
         cleanFile?      : any;
+        threat?         : boolean;
+        threat_level?   : string;
+        threat_analysis?: any;
       }
-
-    
+   
     interface Metadata {
         original_file       : string,
         clean_file?         : string;
         report?             : string;
+        policy_file?         : string;
         status?             : string;
         message?            : string;
-        time?               : string;
+        time?               : number;
         userTargetFolder?   : string;
+        rebuildSource       : string;
+        isThreat            : boolean;
+        threatLevel         : string;
     }
-
    
+    
+    React.useEffect(() => {
+        console.log("health_chk" + sessionStorage.getItem(Utils.DOCKER_HEALTH_STATUS_KEY))
+        setShowLoader(true)
+        setUserTargetDir(Utils.getDockerDefaultOutputFOlder()||"");
+        var status = healthCheckStatus;
+        if(sessionStorage.getItem(Utils.DOCKER_HEALTH_STATUS_KEY) == null){
+            const timer = setTimeout(() => {
+                status = DockerUtils.health_chk();
+                sessionStorage.setItem(Utils.DOCKER_HEALTH_STATUS_KEY, "" + status )
+                setHealthCheckStatus(status)
+                setShowLoader(false)
+               
+              }, 100);
+            
+        } else{
+            status = Number(sessionStorage.getItem(Utils.DOCKER_HEALTH_STATUS_KEY));
+            setHealthCheckStatus(status)
+            setShowLoader(false)
+        }
+        
+    }, []);
+
     React.useEffect(() => {
         if(folderId!=''){
             var rootFolder = Utils.getProcessedPath() + Utils.getPathSep() +folderId
@@ -475,34 +555,20 @@ function DockerRebuildFiles(){
         }
     }, [folderId]);
 
-
     React.useEffect(() => {
         if (counter == 0 && loader == true) {
             setShowLoader(false);
+            sessionStorage.removeItem("docker_session_runnning")
             Utils.saveTextFile(JSON.stringify(masterMetaFile),  targetDir , 'metadata.json');
-
-            if(userTargetDir !="" && !flat){
-                let PATHS: string[];
-                PATHS=[]
-                rebuildFileNames.map(rebuild=>{
-                    if(rebuild.path)
-                        PATHS.push(rebuild.path);
-                });
-                const common = commonPath(PATHS);
-                common.parsedPaths.map((cPath:any)=>{
-                    Utils.saveBase64File( getRebuildFileContent(cPath.original), userTargetDir +  Utils.getPathSep() + cPath.subdir, cPath.basePart );
-            });
-        }
         }
       }, [counter]);
-
-    
     
     React.useEffect(() => {
         let rebuildFile: DockerRebuildResult| undefined;
         rebuildFile = rebuildFileNames.find((rebuildFile) => rebuildFile.id ==id);
         if(rebuildFile){            
             setXml(rebuildFile.xmlResultDocker);
+            setThreatAnalysis(rebuildFile.threat_analysis)
           }
          }, [id, xml, open]);
 
@@ -513,27 +579,25 @@ function DockerRebuildFiles(){
         }, [rowsPerPage, page, rebuildFileNames]);
 
 
-
     //callback for rebuild and analysis
-    const downloadResult =(result: any)=>{
-    
-        setRebuildFileNames(rebuildFileNames =>[...rebuildFileNames,  {
-                id:result.id,
-                url: result.url,
-                name: result.filename,
-                sourceFileUrl: result.source,
-                isError: result.isError,
-                msg: result.msg,
-                xmlResultDocker:result.xmlResult,
-                path: result.path,
-                cleanFile: result.cleanFile
-                }]);
-
-        setCounter(state=>state-1);
+    const downloadResult = async (result: any)=>{            
+        console.log("***************downloadResult****************")
         let fileHash: string;
         fileHash = Utils.getFileHash(result.original)
-          
+        let isThreat = false
+        let threatLevel = "Unknown" 
+        let threat: any;
+
         if(!result.isError){
+
+            if(flat){
+                Utils.saveBase64File(result.cleanFile, userTargetDir, result.filename );
+            }else{
+                let filePath: string;
+                filePath = Utils.getHieracyPath(result.path, userTargetDir, allPath);
+                Utils.saveBase64File(result.cleanFile, filePath , result.filename );
+            }
+            
             var cleanFilePath = Utils.getProcessedPath() + Utils.getPathSep()
                                  + result.targetDir + Utils.getPathSep() + fileHash
                                   + Utils.getPathSep() + Utils._CLEAN_FOLDER;
@@ -551,85 +615,150 @@ function DockerRebuildFiles(){
 
             var metadataFilePath =  Utils.getProcessedPath() + Utils.getPathSep() + 
                                     result.targetDir + Utils.getPathSep() + fileHash;
+
             let content: Metadata;
-            content ={
+            content = {
                 original_file       : Utils._ORIGINAL_FOLDER + Utils.getPathSep() + result.filename,
                 clean_file          : Utils._CLEAN_FOLDER + Utils.getPathSep()+ result.filename,
                 report              : Utils._REPORT_FOLDER + Utils.getPathSep() + Utils.stipFileExt(result.filename)+'.xml',
+                policy_file         : "config.xml",
                 status              : "Success",
-                time                : new Date().toLocaleDateString(),
+                time                : new Date().getTime(),
                 userTargetFolder    : userTargetDir,
+                rebuildSource       : Utils.REBUILD_TYPE_DOCKER,
+                isThreat            : isThreat,
+                threatLevel         : threatLevel
             }
-            Utils.saveTextFile(JSON.stringify(content), metadataFilePath, 'metadata.json');
+            let metaContentCopy = content            
         
             content.original_file = fileHash + Utils.getPathSep() + Utils._ORIGINAL_FOLDER + Utils.getPathSep() + result.filename
             content.clean_file = fileHash +Utils.getPathSep() + Utils._CLEAN_FOLDER + Utils.getPathSep() + result.filename
             content.report = fileHash + Utils.getPathSep() + Utils._REPORT_FOLDER + Utils.getPathSep() + Utils.stipFileExt(result.filename)+'.xml'
             content.userTargetFolder = userTargetDir;
+            content.policy_file = fileHash +Utils.getPathSep() + "config.xml";
             
             masterMetaFile.push(content);
-            if(userTargetDir !=""){
-                var filepath = userTargetDir;
-                if(flat){
-                    Utils.saveBase64File(result.cleanFile, filepath, result.filename );
+            
+            // TI Reporting         
+            let basePath = Utils.getProcessedPath() + Utils.getPathSep() + result.targetDir + Utils.getPathSep() + fileHash + Utils.getPathSep()
+            let xml = result.xmlResult   
+            let reportPath = Utils.stipFileExt(result.filename)+'.xml'
+            threat = await preceiveThreats(xml,reportFilePath, reportPath, cleanFilePath, result.filename,basePath)
+            console.log('threat level '+threat.threat_level)
+            console.log('threats '+JSON.stringify(threat.threats))
+            console.log('threats analysis '+JSON.stringify(threat.threat_analysis))
+            if(threat){                
+                threatLevel = threat.threat_level.toUpperCase() 
+                if(threatLevel != "OK" && threatLevel != "UNKNOWN"){
+                    isThreat = true
                 }
+                threat.filename= result.filename;
+                threat.fileSize = result.original.length;
             }
- 
-        }else{
+            metaContentCopy.isThreat    = isThreat
+            metaContentCopy.threatLevel = threatLevel
+            // Save policy
+            Utils.saveAppliedPolicy(metadataFilePath);
+            Utils.saveTextFile(JSON.stringify(metaContentCopy), metadataFilePath, 'metadata.json');
+        } 
+        else{
+            let originalRequest= result.request
+            let payload = SerialDocker.getAnalysisPayload(originalRequest)
+            let xml = SerialDocker.docker_exec_analysis(payload,originalRequest.filename)
+            console.log('XML Report for file with reuild error - '+xml)
             var OriginalFilePath =Utils.getProcessedPath() +  Utils.getPathSep()
                                 + result.targetDir + Utils.getPathSep() + fileHash +  Utils.getPathSep() + 
                                     Utils._ORIGINAL_FOLDER;
             console.log("Error case:" +OriginalFilePath + ", result.targetDir:" + result.targetDir)
             Utils.saveBase64File(result.original, OriginalFilePath, result.filename);
             let content: Metadata;
-            content ={
+            content = {
                 original_file       : fileHash + Utils.getPathSep() + Utils._ORIGINAL_FOLDER + Utils.getPathSep() + result.filename,
                 clean_file          : '',
                 report              : '',
                 status              : "Failure",
-                time                : new Date().toLocaleDateString(),
+                time                : new Date().getTime(),
                 userTargetFolder    : userTargetDir,
-                message             : result.msg
+                message             : result.msg,
+                rebuildSource       : Utils.REBUILD_TYPE_DOCKER,
+                isThreat            : isThreat,
+                threatLevel         : threatLevel
             }
             masterMetaFile.push(content);
         }        
+        setRebuildFileNames(rebuildFileNames =>[...rebuildFileNames,  {
+            id:result.id,
+            url: result.url,
+            name: result.filename,
+            sourceFileUrl: result.source,
+            isError: result.isError,
+            msg: result.msg,
+            xmlResultDocker:result.xmlResult,
+            path: result.path,
+            cleanFile: result.cleanFile,
+            threat: isThreat,
+            threat_level: threatLevel,
+            threat_analysis: threat
+            }]);
+        setCounter(state=>state-1);
+
     }
 
-   
-
-    const getRebuildFileContent =(filePath: string)=>{
-        var rebuild = rebuildFileNames.find(rebuild=>rebuild.path === filePath);
-        if(rebuild)
-            return rebuild.cleanFile;
-        else    
-            return null;
-    }
-
-     
-    //Multi file drop callback 
-    const handleDrop = async (acceptedFiles:any) =>{
-        let outputDirId: string;
-        if(userTargetDir ==""){
-            setshowAlertBox(true);
+     const renderRedirect = () => {
+        if (healthCheckStatus) {
+          return <Redirect to='/configure' />
         }
-        else {            
-            setCounter((state: any)=>state + acceptedFiles.length)
-            setRebuildFileNames([]);
-            setPage(0);
-            masterMetaFile.length =0;
-            outputDirId = Utils.guid()
-            setFolderId(outputDirId);
-            setShowLoader(true);            
-            acceptedFiles.map((file: File) => {
+      }
+
+    const processFiles =(files: any)=>{
+
+        let outputDirId: string;
+        sessionStorage.setItem("docker_session_runnning", "true");     
+        setCounter((state: any)=>state + files.length)
+        setRebuildFileNames([]);
+        setPage(0);
+        masterMetaFile.length =0;
+        outputDirId = Utils.guid()
+        setFolderId(outputDirId);
+        setShowLoader(true); 
+        setAllPath([]);     
+        files.map((file: any) => {
+            allPath.push(file.path);
+            if(parallel){
                 DockerUtils.getFile(file).then(async (data: any) => {
+                    Utils.addLogLine(file.name,"Starting rebuild");
                     setFileNames((fileNames: any) =>[...fileNames, file.name]);
                     var url = window.webkitURL.createObjectURL(file);
                     let guid: string;
                     guid =  Utils.guid();                                    
                     DockerUtils.makeRequest(data, url, guid, outputDirId, downloadResult);
                 })
-            })
+            }
+            else{
+                SerialDocker.getFile(file).then(async (data: any) => {
+                    Utils.addLogLine(file.name,"Starting rebuild");
+                    setFileNames((fileNames: any) =>[...fileNames, file.name]);
+                    var url = window.webkitURL.createObjectURL(file);
+                    let guid: string;
+                    guid =  Utils.guid();                                    
+                    SerialDocker.makeRequest(data, url, guid, outputDirId, downloadResult);
+                })
+            }
+        })
+        console.log("FILE PATH" + allPath)
+    }
+
+    //Multi file drop callback 
+    const handleDrop = async (acceptedFiles:any) =>{
+        Utils.initLogger();
+        if(userTargetDir ==""){
+            setshowAlertBox(true);
         }
+        else 
+        {      
+             setTimeout(processFiles, 100, acceptedFiles);
+        }        
+
     }  
 
     //view XML
@@ -640,7 +769,9 @@ function DockerRebuildFiles(){
     const openXml =(open:boolean)=>{
         setOpen(open);
     }
-
+    const openLogView =()=>{
+        setLogView(!logView);
+    }
     const handleChangePage = (event: any, newPage: number) => {
         setPage(newPage);
     };
@@ -654,6 +785,7 @@ function DockerRebuildFiles(){
         setRebuildFileNames([])
         setMasterMetaFile([]);
         setCounter(0);
+        sessionStorage.removeItem("docker_session_runnning")
     }
 
     const closeAlertBox = () => {
@@ -661,8 +793,12 @@ function DockerRebuildFiles(){
     }
 
     const successCallback =(result: any)=>{
-     
-        setUserTargetDir(result.filePaths[0])
+        console.log(result.filePaths)
+        if(result.filePaths != undefined && result.filePaths.length>0){
+            console.log(result.filePaths[0])
+            setUserTargetDir(result.filePaths[0])
+            localStorage.setItem(Utils.DOCKER_OUPUT_DIR_KEY, result.filePaths[0]);
+        }
     }
     const failureCallback =(error: any)=>{
         alert(`An error ocurred selecting the directory :${error.message}`) 
@@ -678,164 +814,205 @@ function DockerRebuildFiles(){
         promise = dialog.showOpenDialog(options)
         promise.then(successCallback, failureCallback);
     }
-
    
+    
     const changeDownloadmode = (event:any) => {
         setFlat((prev) => !prev);
+    };
+
+    const changeProcessingMode = (event:any) => {
+        setParallel((prev) => !prev);
     };   
+
+   
+    const handleThreadDialogOpen =(open:boolean)=>{
+        setOpenThreatDialog(open);
+    }
+
+    const viewThreadAnalysis=(id: string)=>{
+        setId(id);
+        setOpenThreatDialog(!openThreatDialog);
+    }
+
+    const getFormattedThreatValue =(threat: boolean| undefined, threatValue: string| undefined)=>{
+        console.log("threat" +threat)
+        console.log("threatValue" +threatValue)
+        var uiDOM=null;
+        if(threat){
+            switch(threatValue){
+                case "HIGH":{
+                    uiDOM =  <span className ={classes.high} >{threatValue}</span>;
+                }break;
+                case "MEDIUM":{
+                    uiDOM =  <span className ={classes.medium}>{threatValue}</span>;
+                }break;
+                case "LOW":{
+                    uiDOM =  <span className ={classes.low}>{threatValue}</span>;
+                }break;
+            }
+        }else{
+            uiDOM =  <span className ={classes.ok_unknown}>{threatValue}</span>;
+        }
+        
+        return uiDOM
+    }
 
     return(
         <div>   
-            {open && <RawXml content={'\'' + xml + '\''} isOpen={open} handleOpen={openXml}/>   }                
+            {open && <RawXml content={'\'' + xml + '\''} isOpen={open} handleOpen={openXml}/>   }
+            {openThreatDialog && <ThreatAnalysisDialog threat ={threatAnalysis} isOpen={openThreatDialog} handleOpen={handleThreadDialogOpen}/>   }
+            {logView && <Logs content={ localStorage.getItem("logs") || ""} isOpen={logView} handleOpen={openLogView}/>   }                
             <div className={classes.root}> 
                 <SideDrawer showBack={false}/>
+                {healthCheckStatus !=0 && healthCheckStatus !=5 && renderRedirect()}
+                
                 <main className={classes.content}>
+                {loader  && <Loader/> }  
                     <div className={classes.toolbar} />  
-                    <div className={classes.contentArea}>             
-                    <h3>Rebuild Files With Docker
-                    <div className={classes.toggleContainer}>
-                    <FormControlLabel className={classes.toggleToolTip}
-                        //title={flat ? "Flat" : "Hierarchy"}
-                        value={flat ? "Flat" : "Hierarchy"}
-                        control={<Switch color="primary" checked={flat} onChange={changeDownloadmode}/>} 
-                        label={flat ? " Flat   " : "Hierarchy"} />
-                        <div className={classes.toggleToolTipTitle}>
-                        The hierarchical filesystems option to save processed files in a tree structure of directories,
-flat filesystem option to saves in a single directory that contains all files with no subdirectories
-                        </div>
-                    </div>
-                    </h3>
-                        <Dropzone onDrop={handleDrop} >
-                            {({ getRootProps, getInputProps }) => (
-                            <div {...getRootProps()} className={classes.dropzone}>
-                                <input {...getInputProps()} />
-                                    <div className={classes.dropField}>
-                                    <p>Drag and drop files</p>
-                                    <img src={DropIcon} className={classes.icons}/> 
-                                    <button className={classes.selectFileBtn}>Select files</button>
+                    <div className={classes.contentArea}>   
+                             
+                        <HealthCheckStatus handleOpen={openLogView} status={healthCheckStatus}/> 
+                            <Dropzone onDrop={handleDrop} >
+                                {({ getRootProps, getInputProps }) => (
+                                <div {...getRootProps()} className={classes.dropzone}>
+                                    <input {...getInputProps()} />
+                                        <div className={classes.dropField}>
+                                        <p>Drag and drop files</p>
+                                        <img src={DropIcon} className={classes.icons}/> 
+                                        <button className={classes.selectFileBtn}>Select files</button>
+                                    </div>
                                 </div>
-                            </div>
-                        )}
-                    </Dropzone>
+                            )}
+                            </Dropzone>
                     <div className={classes.errMsg}> Failed to upload </div>
                     <div className={classes.successMsg}>File uploaded successuly </div>
-                    <div>
-                    {showAlertBox && 
+                    <div className={classes.tableContainer}>
+                   
+                        <div>
+                            {showAlertBox && 
                                 <div className={classes.alertContainer}>
                                     <div className={classes.alertModel}>              
                                         <h3>Please Select Target Directory</h3>               
                                         <button className={classes.submitBtn} onClick={closeAlertBox}>ok</button>
                                     </div>
                                 </div>   
-                    }                       
-                        {loader  && <Loader/> }   
-                        
-                            <div className={classes.tableField}>
-                                <div className={classes.settings}>  
-                                    {/* <h2>Settings</h2> */}
-                                    <div className={classes.btnHeading}>                                                                           
-                                    <div className={classes.headingGroup}>                                                                         
-                                            <h4>Select Directory Path </h4>
-                                            <span>*</span> 
-                                            {/* <Tooltip title="Add" aria-label="add" className={classes.infoIcon}>                                            
-                                                <InfoOutlinedIcon className={classes.infobBtn}/>
-                                            </Tooltip> */}
-                                        </div>   
-                                        <div className={classes.saveFileBtn}>
-                                            <input 
-                                                readOnly        = {true} 
-                                                type            = "text"
-                                                placeholder     = "Directory Path"
-                                                defaultValue    = {userTargetDir}
-                                            />
-                                            <button onClick={selectUserTargetDir}>
-                                                <FolderIcon className={classes.btnIcon}/> 
-                                                Select Target Directory
-                                             </button>
-                                        </div>
+                            }                       
+                            
+                            
+                                <div className={classes.tableField}>
+                                    <div className={classes.settings}>  
+                                        <div className={classes.btnHeading}>                                                                           
+                                        <div className={classes.headingGroup}>                                                                         
+                                                <h4>Select Directory Path  <span>*</span> </h4>
+                                               
+                                                <div className={classes.toggleContainer}>
+                                                    <FormControlLabel className={classes.toggleToolTip}
+                                                        //title={flat ? "Flat" : "Hierarchy"}
+                                                        value={flat ? "Flat" : "Hierarchy"}
+                                                        control={<Switch color="primary" checked={flat} onChange={changeDownloadmode}/>} 
+                                                        label={flat ? " Flat   " : "Hierarchy"} />
+                                                        <div className={classes.toggleToolTipTitle}>
+                                                        The hierarchical filesystems option to save processed files in a tree structure of directories,
+                                flat filesystem option to saves in a single directory that contains all files with no subdirectories
+                                                        </div>
+                                                    </div>
+                                                    <div className={classes.toggleContainer}>
+                                                    <FormControlLabel className={classes.toggleToolTip}
+                                                        value={parallel ? Utils.TEXT_PARALLEL : Utils.TEXT_SEQUENTIAL}
+                                                        control={<Switch color="primary" checked={parallel} 
+                                                        onChange={changeProcessingMode}/>} 
+                                                        label={parallel ? Utils.TEXT_PARALLEL : Utils.TEXT_SEQUENTIAL} />
+                                                      
+                                                    </div>
+                                            </div>   
+                                            <div className={classes.saveFileBtn}>
+                                                <input 
+                                                    readOnly        = {true} 
+                                                    type            = "text"
+                                                    placeholder     = "Directory Path"
+                                                    defaultValue    = {userTargetDir}
+                                                />
+                                                <button onClick={selectUserTargetDir}>
+                                                    <FolderIcon className={classes.btnIcon}/> 
+                                                    Select Target Directory
+                                                </button>
+                                            </div>
+                                        </div>                                        
                                     </div>
-                                    {/* <div className={classes.fileType}>
-                                        <h4>Output Type</h4>
-                                        <div className={classes.fileOption}>
-                                            <input  type        = "radio" 
-                                                    checked     = {outputDirType == Utils.OUTPUT_DIR_FLAT} 
-                                                    onChange    = {handleChange}
-                                                    value       = {Utils.OUTPUT_DIR_FLAT} 
-                                                    name        = "fileoption"/>
-                                            <span>Flat</span>
-                                        </div>
-                                        <div className={classes.fileOption}>
-                                            <input  type        = "radio" 
-                                                    value       = {Utils.OUTPUT_DIR_HIERARCY}
-                                                    onChange    = {handleChange}
-                                                    checked     = {outputDirType == Utils.OUTPUT_DIR_HIERARCY} 
-                                                    name        = "fileoption"/>
-                                            <span>Hierarchy</span>
-                                        </div>
-                                    </div> */}
-                                 </div>
-                                 {rebuildFileNames.length>0 && 
-                                <div> 
-                                <h3>Rebuild Files  With Docker
-                                    <button onClick={()=>Utils.open_file_exp(targetDir)} className={rebuildFileNames.length>0? classes.outFolderBtn:classes.outFolderBtnDissabled}><FolderIcon className={classes.btnIcon}/> Browse Output Folder</button>
-                                </h3>
-                                <Table className={classes.table} size="small" aria-label="a dense table">
-                                    <TableHead>
-                                    <TableRow>
-                                        <TableCell className={classes.texttBold}>Status</TableCell>
-                                        <TableCell align="left" className={classes.texttBold}>Original</TableCell>
-                                        <TableCell align="left" className={classes.texttBold}>Rebuilt</TableCell>
-                                        <TableCell align="left" className={classes.texttBold}>XML</TableCell>
-                                    </TableRow>
-                                    </TableHead>
-                                    <TableBody>
-                                    {files.map((row) => (
-                                        <TableRow key={row.id}>
-                                        <TableCell align="left" className={classes.status}>{row.isError == true? <span>Failed</span>:<p>Success</p>}</TableCell>
-                                        <TableCell align="left"><a id="download_link" href={row.sourceFileUrl} download={row.name} className={classes.downloadLink} title={row.name}><FileCopyIcon className={classes.fileIcon}/> {row.name}</a></TableCell>
-                                        {
-                                            !row.isError ?
-                                                <TableCell align="left"><a id="download_link" href={row.url} download={row.name} className={classes.downloadLink} title={row.name}><FileCopyIcon className={classes.fileIcon}/>{row.name}</a></TableCell>
-                                                : <TableCell align="left">{row.msg}</TableCell>
-                                        }
-                                         {
-                                            !row.isError ?
-                                            <TableCell align="left"><button  onClick={() => viewXML(row.id)} className={classes.viewBtn}>{!row.isError?'View Report':''}</button></TableCell>
-                                                : <TableCell align="left"></TableCell>
-                                        }
-                                             
+                                    {rebuildFileNames.length>0 && 
+                                    <div> 
+                                    <h3>Rebuild Files  With Docker
+                                        <button onClick={()=>Utils.open_file_exp(targetDir)} className={rebuildFileNames.length>0? classes.outFolderBtn:classes.outFolderBtnDissabled}><FolderIcon className={classes.btnIcon}/> Browse Output Folder</button>
+                                    </h3>
+                                    <Table className={classes.table} size="small" aria-label="a dense table">
+                                        <TableHead>
+                                        <TableRow>
+                                            <TableCell className={classes.texttBold}>Status</TableCell>
+                                            <TableCell align="left" className={classes.texttBold}>Original</TableCell>
+                                            <TableCell align="left" className={classes.texttBold}>Rebuilt</TableCell>
+                                            <TableCell align="left" className={classes.texttBold}>Threat Level</TableCell>
+                                            <TableCell align="left" className={classes.texttBold}>XML</TableCell>
+                                            <TableCell align="left" className={classes.texttBold}>Analysis</TableCell>
                                         </TableRow>
-                                    ))}
-                                    </TableBody>
-                                </Table>
-                                <button onClick={clearAll} className={files.length>0?classes.deleteBtn:classes.deleteBtnDisabled}><DeleteIcon className={classes.btnIcon}/> Clear All</button>
+                                        </TableHead>
+                                        <TableBody>
+                                        {files.map((row) => (
+                                            <TableRow key={row.id}>
+                                            <TableCell align="left" className={classes.status}>{row.isError == true? <span>Failed</span>:<p>Success</p>}</TableCell>
+                                            <TableCell align="left"><a id="download_link" href={row.sourceFileUrl} download={row.name} className={classes.downloadLink} title={row.name}><FileCopyIcon className={classes.fileIcon}/> {row.name}</a></TableCell>
+                                            
+                                            {
+                                                !row.isError ?
+                                                    <TableCell align="left"><a id="download_link" href={row.url} download={row.name} className={classes.downloadLink} title={row.name}><FileCopyIcon className={classes.fileIcon}/>{row.name}</a></TableCell>
+                                                    : <TableCell align="left">{row.msg}</TableCell>
+                                            }
+                                            
+                                            <TableCell align="left" >{getFormattedThreatValue(row.threat, row.threat_level)}</TableCell>
+                                            {
+                                                !row.isError ?
+                                                <TableCell align="left"><button  onClick={() => viewXML(row.id)} className={classes.viewBtn}>{!row.isError?'View Report':''}</button></TableCell>
+                                                    : <TableCell align="left"></TableCell>
+                                            }
+
+                                             {
+                                                !row.isError ?
+                                                <TableCell align="left"><button  onClick={() => viewThreadAnalysis(row.id)} className={classes.viewBtn}>{!row.isError?'File Analysis':''}</button></TableCell>
+                                                    : <TableCell align="left"></TableCell>
+                                            }   
+                                            </TableRow>
+                                        ))}
+                                        </TableBody>
+                                    </Table>
+                                    <button onClick={clearAll} className={files.length>0?classes.deleteBtn:classes.deleteBtnDisabled}><DeleteIcon className={classes.btnIcon}/> Clear All</button>
+                                    </div>
+                                    }
                                 </div>
-                                }
-                            </div>
-                            </div>
-                       
-                        {
-                        files.length>0 &&
-                         <CardActions className={classes.actions}>
-                             <TablePagination
-                                  onChangePage        ={handleChangePage }
-                                  onChangeRowsPerPage ={handleChangeRowsPerPage}
-                                  component           ="div"
-                                  count               ={rebuildFileNames.length                   }
-                                  page                ={page                           }
-                                  rowsPerPage         ={rowsPerPage                    }
-                                  rowsPerPageOptions  ={[5, 10, 25, { label: 'All', value: -1 }]     }               
-                                  SelectProps         ={{
-                                                          inputProps: { 'aria-label': 'rows per page' },
-                                                          native: true,
-                                                        }}
-                              />
-                          </CardActions> 
+                                </div>
+                        
+                            {
+                            files.length>0 &&
+                            <CardActions className={classes.actions}>
+                                <TablePagination
+                                    onChangePage        ={handleChangePage }
+                                    onChangeRowsPerPage ={handleChangeRowsPerPage}
+                                    component           ="div"
+                                    count               ={rebuildFileNames.length                   }
+                                    page                ={page                           }
+                                    rowsPerPage         ={rowsPerPage                    }
+                                    rowsPerPageOptions  ={[5, 10, 25, { label: 'All', value: -1 }]     }               
+                                    SelectProps         ={{
+                                                            inputProps: { 'aria-label': 'rows per page' },
+                                                            native: true,
+                                                            }}
+                                />
+                            </CardActions> 
                           }
                     </div>
-                    <Footer/>
+                    </div>
+                   
                 </main>
-            </div>   
+            </div>  
+            <Footer/>
         </div>
        
         

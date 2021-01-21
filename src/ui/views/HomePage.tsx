@@ -14,6 +14,7 @@ const { ipcRenderer } = require('electron');
 const useStyles = makeStyles((theme) => ({
     root:       {
         display:        'flex',
+        background:     '#fff'
     },
     fullWidth:{
         maxWidth:       '100%',
@@ -102,7 +103,7 @@ const useStyles = makeStyles((theme) => ({
     },
     contentArea:{
         minHeight:       '81vh',
-        padding:         theme.spacing(3),
+        padding:         theme.spacing(0),
     },
     gridMainContainer:{
 
@@ -115,8 +116,7 @@ function HomePage(){
     const [version, setVersion] = React.useState("0.1.0")
     
     const getVersion = () =>{   
-        ipcRenderer.send('app_version');
-        console.log("Added version element");
+        ipcRenderer.send('app_version');        
         ipcRenderer.on('app_version', (event:any, arg:any) => {
             setVersion(arg.version);
         });
@@ -127,7 +127,13 @@ function HomePage(){
       }, []);
 
 
+      const getStarted =()=>{
+        console.log("localStorage" + localStorage.getItem(Utils.WELCOME_PAGE_VISTIED_KEY));
+        localStorage.setItem(Utils.WELCOME_PAGE_VISTIED_KEY, Utils.WELCOME_PAGE_VISTIED_VAL);
+    }
+
     return(
+        <>
         <div className={classes.root}> 
                 <SideDrawer showBack={false}/>
                 <main className={classes.content}>
@@ -142,7 +148,7 @@ function HomePage(){
                                     <h6 className={classes.version}>{version}</h6>
                                     <p className={classes.abtContent}>Glasswall Desktop is a desktop application that provides multi file drag and drop rebuild workflow.</p>
                                 </div>
-                                <div className={classes.btnGroup}>
+                                <div onClick={getStarted} className={classes.btnGroup}>
                                     <Link to="/rebuildFiles" className={classes.getStartBtn}>Get Started</Link>                        
                                 </div>
                                 <footer>
@@ -154,10 +160,11 @@ function HomePage(){
                             </Grid>  
                         </Grid>
                     </div>
-                    <Footer/>
+                   
                 </main>
             </div>   
-        
+            <Footer/>
+            </>
     )
 }
 
