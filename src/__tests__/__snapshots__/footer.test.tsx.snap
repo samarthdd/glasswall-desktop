@@ -1,0 +1,34 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should test Header component 1`] = `
+<div
+  className="makeStyles-footerNav-2"
+>
+  <ul>
+    <li>
+      <span
+        className="makeStyles-copyrightText-8"
+      >
+        © Copyright 2020 - Glasswall Solutions Ltd. All Rights Reserved
+      </span>
+    </li>
+    <li
+      className="makeStyles-footerNavItem-3"
+    >
+      <a
+        className="makeStyles-navBtn-5"
+        href="https://github.com/k8-proxy/glasswall-desktop/blob/master/LICENSE"
+      >
+         View License
+      </a>
+    </li>
+    <li
+      className="makeStyles-version-7"
+    >
+       v 
+      0.1
+       
+    </li>
+  </ul>
+</div>
+`;

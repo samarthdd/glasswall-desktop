@@ -1,0 +1,45 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should test Header component 1`] = `
+<div
+  className="makeStyles-modalContainer-1"
+>
+  <div
+    className="makeStyles-issueForm-2"
+  >
+    <div
+      className="makeStyles-errorMsg-5"
+    >
+      Please Enter Title
+    </div>
+    <div
+      className="makeStyles-successMsg-6"
+    >
+      Issue has been created successuly 
+    </div>
+    <h3>
+      Create Issue
+    </h3>
+    <input
+      placeholder="title"
+      type="text"
+    />
+    <div
+      className="makeStyles-errorMsg-5"
+    >
+      Title can not be empty
+    </div>
+    <textarea />
+    <div
+      className="makeStyles-errorMsg-5"
+    >
+       This field can not be empty
+    </div>
+    <button
+      className="makeStyles-submitBtn-4"
+    >
+      Submit New Issue
+    </button>
+  </div>
+</div>
+`;

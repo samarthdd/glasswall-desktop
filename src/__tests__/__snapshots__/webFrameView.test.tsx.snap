@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should test Header component 1`] = `
+<WithStyles(ForwardRef(Grid))>
+  <Iframe
+    className="makeStyles-iframe-1"
+    height="600"
+    url="https://www.glasswalldesktop.com"
+    width="100%"
+  />
+</WithStyles(ForwardRef(Grid))>
+`;

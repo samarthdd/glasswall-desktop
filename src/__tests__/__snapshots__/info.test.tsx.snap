@@ -1,0 +1,63 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should test Header component 1`] = `
+<WithStyles(ForwardRef(Card))
+  className="makeStyles-root-1"
+>
+  <WithStyles(ForwardRef(CardContent))>
+    <WithStyles(ForwardRef(Grid))
+      container={true}
+      justify="space-between"
+      spacing={3}
+    >
+      <WithStyles(ForwardRef(Grid))
+        item={true}
+      >
+        <WithStyles(ForwardRef(Typography))
+          color="textSecondary"
+          gutterBottom={true}
+          variant="h6"
+        >
+          BUDGET
+        </WithStyles(ForwardRef(Typography))>
+        <WithStyles(ForwardRef(Typography))
+          color="textPrimary"
+          variant="h3"
+        >
+          $24,000
+        </WithStyles(ForwardRef(Typography))>
+      </WithStyles(ForwardRef(Grid))>
+      <WithStyles(ForwardRef(Grid))
+        item={true}
+      >
+        <WithStyles(ForwardRef(Avatar))
+          className="makeStyles-avatar-2"
+        >
+          <Memo(ForwardRef(MoneyIcon)) />
+        </WithStyles(ForwardRef(Avatar))>
+      </WithStyles(ForwardRef(Grid))>
+    </WithStyles(ForwardRef(Grid))>
+    <Styled(MuiBox)
+      alignItems="center"
+      display="flex"
+      mt={2}
+    >
+      <Memo(ForwardRef(ArrowDownwardIcon))
+        className="makeStyles-differenceIcon-3"
+      />
+      <WithStyles(ForwardRef(Typography))
+        className="makeStyles-differenceValue-4"
+        variant="body2"
+      >
+        12%
+      </WithStyles(ForwardRef(Typography))>
+      <WithStyles(ForwardRef(Typography))
+        color="textSecondary"
+        variant="caption"
+      >
+        Since last month
+      </WithStyles(ForwardRef(Typography))>
+    </Styled(MuiBox)>
+  </WithStyles(ForwardRef(CardContent))>
+</WithStyles(ForwardRef(Card))>
+`;

@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should test Header component 1`] = `
+<div
+  className="makeStyles-navbar-2"
+>
+  <ul>
+    <li
+      className="makeStyles-navItem-3"
+    >
+      <a
+        className="makeStyles-navBtn-4"
+        onClick={[Function]}
+      >
+        <Memo(ForwardRef(BugReportIcon))
+          className="makeStyles-matIcon-5"
+        />
+         Report issue 
+      </a>
+    </li>
+  </ul>
+</div>
+`;

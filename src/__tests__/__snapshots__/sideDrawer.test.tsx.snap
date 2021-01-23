@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should test Header component 1`] = `
+<div
+  className="makeStyles-header-4"
+>
+  <div
+    className="makeStyles-logoSection-5"
+  >
+    <img
+      className="makeStyles-logo-6"
+      src={null}
+    />
+  </div>
+  <Navbar />
+</div>
+`;

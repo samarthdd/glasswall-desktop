@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`\`Header Snapshots should render our Snapshots correctly 1`] = `
+exports[`should test Header component 1`] = `
 <div>
   <WithStyles(ForwardRef(Dialog))
     aria-describedby="scroll-dialog-description"
@@ -8,13 +8,13 @@ exports[`\`Header Snapshots should render our Snapshots correctly 1`] = `
     fullWidth={true}
     maxWidth="lg"
     onClose={[Function]}
-    open={false}
+    open={true}
     scroll="paper"
   >
     <WithStyles(ForwardRef(DialogTitle))
       id="scroll-dialog-title"
     >
-      Rebuild Events
+      RAW XML
       <WithStyles(ForwardRef(IconButton))
         aria-label="close"
         className="makeStyles-closeButton-4"
@@ -31,9 +31,9 @@ exports[`\`Header Snapshots should render our Snapshots correctly 1`] = `
         tabIndex={-1}
       >
         <Highlight
-          language="javascript"
+          language="xml"
         >
-          This is a test for logs
+          This is a raw xml test
         </Highlight>
       </WithStyles(ForwardRef(DialogContentText))>
     </WithStyles(ForwardRef(DialogContent))>

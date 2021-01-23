@@ -40,6 +40,7 @@ type xmlContent ={
     handleOpen  :  (value: boolean) => void;
     isOpen      : boolean;
 }
+
 export default function ScrollDialog({isOpen, content, handleOpen }: xmlContent) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(isOpen);
