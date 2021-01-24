@@ -5,6 +5,7 @@
   "main": "./out/electron/index.js",
   "scripts": {
     "test-ut": "jest --detectOpenHandles --color",
+    "test-ut-watch ": "jest --watch --detectOpenHandles --color ",
     "test": "node ./node_modules/mocha/bin/_mocha --require esm --timeout 20000 \"./tests/Test*.js\"",
     "test:coverage": "npm run test-ut -- --coverage",
     "build": "webpack --config webpack.ui.config.js --config webpack.electron.config.js",
@@ -45,12 +46,18 @@
     "@types/react": "^16.9.49",
     "@types/react-dom": "^16.9.8",
     "@types/react-router-dom": "^5.1.5",
+    "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1",
     "css-loader": "^4.3.0",
     "electron": "^10.1.2",
     "electron-builder": "^22.8.0",
     "electron-reload": "^1.5.0",
+    "eslint": "^7.15.0",
+    "esm": "^3.2.25",
     "file-loader": "^6.1.0",
     "html-webpack-plugin": "^4.4.1",
+    "identity-obj-proxy": "^3.0.0",
+    "mocha": "^8.2.1",
     "protractor": "^7.0.0",
     "react-iframe": "^1.8.0",
     "spectron": "^13.0.0",
@@ -58,12 +65,7 @@
     "ts-loader": "^8.0.3",
     "typescript": "^4.0.2",
     "webpack": "^4.44.1",
-    "webpack-cli": "^3.3.12",
-    "chai": "^4.2.0",
-    "chai-as-promised": "^7.1.1",
-    "eslint": "^7.15.0",
-    "esm": "^3.2.25",
-    "mocha": "^8.2.1"
+    "webpack-cli": "^3.3.12"
   },
   "dependencies": {
     "@material-ui/core": "^4.11.0",
@@ -72,6 +74,8 @@
     "@testing-library/jest-dom": "^5.11.9",
     "@testing-library/react": "^11.2.3",
     "@types/enzyme": "^3.10.8",
+    "@types/enzyme-adapter-react-15": "^1.0.6",
+    "@types/enzyme-adapter-react-16": "^1.0.6",
     "@types/jest": "^26.0.20",
     "@types/react-highlight.js": "^1.0.0",
     "axios": "^0.21.1",
@@ -82,6 +86,7 @@
     "electron-log": "^1.3.0",
     "electron-updater": "^4.0.6",
     "enzyme": "^3.11.0",
+    "enzyme-adapter-react-15": "^1.4.3",
     "enzyme-adapter-react-16": "^1.15.5",
     "fix-path": "^3.0.0",
     "jest": "^26.6.3",
@@ -103,11 +108,12 @@
   },
   "jest": {
     "collectCoverage": true,
-    "coverageReporters": ["html"],
+    "coverageReporters": [
+      "html"
+    ],
     "coverageDirectory": "coverage/report"
-}
-,
-"wallaby": {
-  "autoDetect": true
-}
+  },
+  "wallaby": {
+    "autoDetect": true
+  }
 }

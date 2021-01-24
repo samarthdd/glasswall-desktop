@@ -440,7 +440,7 @@ const useStyles = makeStyles((theme) => ({
         padding:                    '20px',
         boxShadow:                  '0px 0px 5px #ccc',
         width:                      '100%',
-        marginBottom:               '20px',
+        marginBottom:               '60px',
         float:                      'left'
     },
     docerIconGroup:{

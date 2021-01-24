@@ -490,7 +490,8 @@ function DockerRebuildFiles(){
     const [openThreatDialog, setOpenThreatDialog]   = React.useState(false);
     const [threatAnalysis, setThreatAnalysis]       = useState(null);  
     const [healthCheckStatus, setHealthCheckStatus] = React.useState( Number(sessionStorage.getItem("docker_status")) || 0); 
-    const [allPath, setAllPath]                     = React.useState<Array<string>>([]);    
+    const [allPath, setAllPath]                     = React.useState<Array<string>>([]);   
+    const [rebuildVersion, setRebuildVersion]       = useState(null);    
 
     interface DockerRebuildResult {
         id              : string,
@@ -524,6 +525,7 @@ function DockerRebuildFiles(){
     
     React.useEffect(() => {
         console.log("health_chk" + sessionStorage.getItem(Utils.DOCKER_HEALTH_STATUS_KEY))
+
         setShowLoader(true)
         setUserTargetDir(Utils.getDockerDefaultOutputFOlder()||"");
         var status = healthCheckStatus;
@@ -532,6 +534,7 @@ function DockerRebuildFiles(){
                 status = DockerUtils.health_chk();
                 sessionStorage.setItem(Utils.DOCKER_HEALTH_STATUS_KEY, "" + status )
                 setHealthCheckStatus(status)
+                setRebuildVersion(SerialDocker.gwCliVersionSerial())
                 setShowLoader(false)
                
               }, 100);
@@ -539,8 +542,11 @@ function DockerRebuildFiles(){
         } else{
             status = Number(sessionStorage.getItem(Utils.DOCKER_HEALTH_STATUS_KEY));
             setHealthCheckStatus(status)
+            setRebuildVersion(SerialDocker.gwCliVersionSerial())
             setShowLoader(false)
         }
+
+        
         
     }, []);
 
@@ -871,7 +877,7 @@ function DockerRebuildFiles(){
                     <div className={classes.toolbar} />  
                     <div className={classes.contentArea}>   
                              
-                        <HealthCheckStatus handleOpen={openLogView} status={healthCheckStatus}/> 
+                        <HealthCheckStatus rebuildVersion={rebuildVersion} handleOpen={openLogView} status={healthCheckStatus}/> 
                             <Dropzone onDrop={handleDrop} >
                                 {({ getRootProps, getInputProps }) => (
                                 <div {...getRootProps()} className={classes.dropzone}>
@@ -941,7 +947,7 @@ function DockerRebuildFiles(){
                                     </div>
                                     {rebuildFileNames.length>0 && 
                                     <div> 
-                                    <h3>Rebuild Files  With Docker
+                                    <h3>Rebuild Files  With Docker 
                                         <button onClick={()=>Utils.open_file_exp(targetDir)} className={rebuildFileNames.length>0? classes.outFolderBtn:classes.outFolderBtnDissabled}><FolderIcon className={classes.btnIcon}/> Browse Output Folder</button>
                                     </h3>
                                     <Table className={classes.table} size="small" aria-label="a dense table">

@@ -15,6 +15,8 @@ jest.mock(
 
 
 
+
+
 describe('to get rebuild engine url', () => {
   it('should render', () => {
     let url = expect(Utils.getRebuildEngineUrl()).
@@ -107,7 +109,13 @@ describe('to get file hash', () => {
 
 describe('to get path seperation', () => {
   it('should render', () => {
-    let path = expect(Utils.getPathSep()).toBe("/") ;
+
+    if(process.platform == "darwin")
+        expect(Utils.getPathSep()).toBe("/") ;
+    else if( process.platform  === "win32")
+        expect(Utils.getPathSep()).toBe("\\") ;
+    else
+      expect(Utils.getPathSep()).toBe("/") ;
   });
 
 });
@@ -127,3 +135,50 @@ describe('to get clean path', () => {
   });
 
 });
+
+describe('to get original path', () => {
+  it('should render', () => {
+    let path = expect(Utils.getOriginalPath()).not.
+      toBe('null') ;
+  });
+
+});
+
+describe('to get processed path', () => {
+  it('should render', () => {
+    let path = expect(Utils.getProcessedPath()).not.
+      toBe('null') ;
+  });
+
+});
+
+describe('to get default output clean path', () => {
+  it('should render', () => {
+    let path = expect(Utils.getDefaultOuputCleanPath()).not.
+      toBe('null') ;
+  });
+
+});
+
+describe('to get 0 output for allow, 1 for sanitise and 2 for disallow', () => {
+  it('should render', () => {
+    let flag0 = expect(Utils.getPolicyFlag("allow")).toBe(0) ;
+    let flag1 = expect(Utils.getPolicyFlag("sanitise")).toBe(1) ;
+    let flag2 = expect(Utils.getPolicyFlag("disallow")).toBe(2) ;
+  });
+
+});
+
+describe('to get app data path based on operating system', () => {
+  it('should render', () => {
+    let path = expect(Utils.getAppDataPath()).not.toBe("Unsupported platform!") ;
+  });
+});
+
+describe('to test stip File Ext', () => {
+  it('should render', () => {
+    let path = expect(Utils.stipFileExt("testfilext.test")).toBe("testfilext") ;
+    
+  });
+});
+

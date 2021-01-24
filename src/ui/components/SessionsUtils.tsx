@@ -23,7 +23,6 @@ export const readSessions = (sessions: string[], resultCallback: Function)=>{
               resultCallback({"id":id, "metadata":null, "error":true, "msg":err.message })
               return;
             }
-            console.log(data);
             resultCallback({"id":id, "metadata":data, "error":false, "msg":"" })
           });
     })

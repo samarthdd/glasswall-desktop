@@ -20,20 +20,6 @@ const getPayload = (data: any) => {
     return json;
 }
 
-const getAnalysisPayload = (data: any) => {
-    let buffer = Buffer.from(data.content, 'base64');
-    let size_of_file = buffer.length / 1000000;
-    var json = {
-            Base64 : data.content,
-            fileSize : size_of_file,
-        };
-        return json;
-}
-
-const getLocalUpload = (data: any) => {
-    return {"fileName":data.original_file_name,"fileBody":data.content};
-}
-
 const decodeBase64Image=(dataString: string) =>{
     let response: any;
     response = dataString.split(';base64,').pop();
@@ -60,21 +46,6 @@ const writeDecodedBase64File = (baseBase64Response: string, xmlReport:string, re
        cleanFile:decodedBase64, xmlResult: xmlReport, id:requestId, targetDir:targetFolder,
         original:request.content, path:request.path,request:request})
    
-}
-
-const writeBinaryFile = (bytes: any,  xmlReport:string, request: any, sourceFileUrl: string, requestId: string,
-    targetFolder:string, resultCallback: Function) => {
-   var bs = bytes;
-   var buffer = new ArrayBuffer(bs.length);
-   var ba = new Uint8Array(buffer);
-   for (var i = 0; i < bs.length; i++) {
-       ba[i] = bs.charCodeAt(i);
-   }
-   var file = new Blob([ba], { type: request.type });
-   var url = window.webkitURL.createObjectURL(file);
-   resultCallback({'source':sourceFileUrl,  'url':url, 'filename':request.filename, isError: false, msg:'',
-     cleanFile:buffer, xmlResult: xmlReport, id:requestId, targetDir:targetFolder, original:request.content,path:request.paths,reques:request })
-  
 }
 
 const getBase64 = (file: File) => {
@@ -286,10 +257,6 @@ export const analyseAnalyzed = async (stdout:string, stderr:string, cmd:string, 
           });
     }
   
-
-const new_guid = () => {
-        return new UUID(4).format()
-}
 
 /****
  * Returns
@@ -517,4 +484,5 @@ export const check_license = () =>{
         localStorage.setItem("healthLogs",oldLogs);            
         return 1;
     }         
-} 
+}
+
