@@ -217,7 +217,7 @@ export const analyseAnalyzed = async (stdout:string, stderr:string, cmd:string, 
         if(stdout.indexOf("error during connect") > -1){
             Utils.addLogLine(request.filename,"Docker Daemon is not started");
             resultCallback({'source':sourceFileUrl, 'url':'TBD', 'filename':request.filename, isError:true,
-                msg:'Docker Daemon is not started', id:requestId, targetDir:folderId, original:request.content});
+                msg:'Docker Daemon is not starte', id:requestId, targetDir:folderId, original:request.content});
             return;
         }
         fs.stat(outputDir+'/Managed', function(err:Error,stat:any) { 
