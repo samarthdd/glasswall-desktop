@@ -18,3 +18,4 @@ config/config.xml
 Users/*
 coverage/*
 *.snap
+.vscode/launch.json

@@ -7,7 +7,7 @@ module.exports = function () {
     ],
 
     tests: [
-      'tests/**/Test*.js'
+      'src/__tests__/*.test*.tsx'
     ],
 
     setup: function () {
@@ -15,8 +15,12 @@ module.exports = function () {
     },
 
     env: {
-      type: 'node',
-      runner: 'node'
-    }
+      kind: 'chrome'
+    },
+    env: {
+      kind: 'chrome'
+    },
+    debug: true
+    
   };
 };
