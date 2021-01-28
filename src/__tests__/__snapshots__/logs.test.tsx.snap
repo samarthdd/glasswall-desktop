@@ -1,17 +1,50 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`\`Header Snapshots should render our Snapshots correctly 1`] = `
-<div
-  className="makeStyles-header-4"
->
-  <div
-    className="makeStyles-logoSection-5"
+<div>
+  <WithStyles(ForwardRef(Dialog))
+    aria-describedby="scroll-dialog-description"
+    aria-labelledby="scroll-dialog-title"
+    fullWidth={true}
+    maxWidth="lg"
+    onClose={[Function]}
+    open={false}
+    scroll="paper"
   >
-    <img
-      className="makeStyles-logo-6"
-      src={null}
-    />
-  </div>
-  <Navbar />
+    <WithStyles(ForwardRef(DialogTitle))
+      id="scroll-dialog-title"
+    >
+      Rebuild Events
+      <WithStyles(ForwardRef(IconButton))
+        aria-label="close"
+        className="makeStyles-closeButton-4"
+        onClick={[Function]}
+      >
+        <Memo([object Object]) />
+      </WithStyles(ForwardRef(IconButton))>
+    </WithStyles(ForwardRef(DialogTitle))>
+    <WithStyles(ForwardRef(DialogContent))
+      dividers={true}
+    >
+      <WithStyles(ForwardRef(DialogContentText))
+        id="scroll-dialog-description"
+        tabIndex={-1}
+      >
+        <Highlight
+          language="javascript"
+        >
+          This is a test for logs
+        </Highlight>
+      </WithStyles(ForwardRef(DialogContentText))>
+    </WithStyles(ForwardRef(DialogContent))>
+    <WithStyles(ForwardRef(DialogActions))>
+      <WithStyles(ForwardRef(Button))
+        color="primary"
+        onClick={[Function]}
+      >
+        Close
+      </WithStyles(ForwardRef(Button))>
+    </WithStyles(ForwardRef(DialogActions))>
+  </WithStyles(ForwardRef(Dialog))>
 </div>
 `;
