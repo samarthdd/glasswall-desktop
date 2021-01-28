@@ -109,7 +109,13 @@ describe('to get file hash', () => {
 
 describe('to get path seperation', () => {
   it('should render', () => {
-    let path = expect(Utils.getPathSep()).toBe("/") ;
+
+    if(process.platform == "darwin")
+        expect(Utils.getPathSep()).toBe("/") ;
+    else if( process.platform  === "win32")
+        expect(Utils.getPathSep()).toBe("\\") ;
+    else
+      expect(Utils.getPathSep()).toBe("/") ;
   });
 
 });
@@ -168,3 +174,11 @@ describe('to get app data path based on operating system', () => {
     let path = expect(Utils.getAppDataPath()).not.toBe("Unsupported platform!") ;
   });
 });
+
+describe('to test stip File Ext', () => {
+  it('should render', () => {
+    let path = expect(Utils.stipFileExt("testfilext.test")).toBe("testfilext") ;
+    
+  });
+});
+
