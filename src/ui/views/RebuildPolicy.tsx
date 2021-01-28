@@ -1,14 +1,15 @@
 import  React, {useState}       from 'react';
 import { makeStyles,createMuiTheme }           from '@material-ui/core/styles';
 import SideDrawer               from '../components/SideDrawer';
-import Highlight                from 'react-highlight.js';
 import * as Utils               from '../utils/utils'
-import { Button, FormControl, FormHelperText, Grid, Input, InputLabel, MenuItem, MuiThemeProvider, Select, Snackbar } from '@material-ui/core';
-import LibraryBooksIcon         from '@material-ui/icons/LibraryBooks';
-import Loader                   from '../components/Loader'
+import { Button, FormControl, 
+  Grid, Input, InputLabel,
+  MenuItem, MuiThemeProvider,
+  Select, Snackbar }
+                                from '@material-ui/core';
 import MuiAlert                 from '@material-ui/lab/Alert';
-import Badge from '@material-ui/core/Badge';
-import Footer from '../components/Footer';
+import Badge                    from '@material-ui/core/Badge';
+import Footer                   from '../components/Footer';
 
 function Alert(props: any) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;

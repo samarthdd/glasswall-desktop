@@ -182,3 +182,9 @@ describe('to test stip File Ext', () => {
   });
 });
 
+describe('to test create config', () => {
+  it('should render', () => {
+    (Utils.create_config);
+    
+  });
+});

@@ -3,38 +3,23 @@ import { makeStyles }           from '@material-ui/core/styles';
 
 import Table                    from '@material-ui/core/Table';
 import TableBody                from '@material-ui/core/TableBody';
-import TableCell, { SortDirection }                from '@material-ui/core/TableCell';
+import TableCell                from '@material-ui/core/TableCell';
 import TableHead                from '@material-ui/core/TableHead';
 import TableRow                 from '@material-ui/core/TableRow';
-import DeleteIcon               from '@material-ui/icons/Delete';
 import FolderIcon               from '@material-ui/icons/Folder';
-import {Redirect}                 from 'react-router-dom'
 import { CardActions,
         TablePagination,
-        Switch,
-        FormControlLabel,
-        Tooltip, 
         TableSortLabel
     }                           from '@material-ui/core';
 import Footer                   from '../components/Footer';
-import Dropzone                 from "react-dropzone";
-import FileCopyIcon             from '@material-ui/icons/FileCopy';
-import DropIcon                 from '../assets/images/dropIcon.png'
 import SideDrawer               from '../components/SideDrawer';
-import * as DockerUtils         from '../components/DockerUtils'
-import * as SerialDocker        from '../components/SerialDocker'
 import Loader                   from '../components/Loader';
 import * as Utils               from '../utils/utils'
 import * as SessionsUtils               from '../components/SessionsUtils'
-const { dialog }                = require('electron').remote
+
 import RebuildIcon              from '../assets/images/rebuildIcon.png'
 import DockerIcon               from '../assets/images/dockerColored.png'
-import { FormatListBulletedOutlined } from '@material-ui/icons';
 
-
-
-var fs                          = require('fs');
-const commonPath                = require('common-path');
 
 
 const useStyles = makeStyles((theme) => ({
