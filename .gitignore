@@ -17,14 +17,5 @@ config/config.ini
 config/config.xml
 Users/*
 coverage/*
-src/__tests__/__snapshots__/footer.test.tsx.snap
-src/__tests__/__snapshots__/header.test.tsx.snap
-src/__tests__/__snapshots__/info.test.tsx.snap
-src/__tests__/__snapshots__/loader.test.tsx.snap
-src/__tests__/__snapshots__/modalContent.test.tsx.snap
-src/__tests__/__snapshots__/navbar.test.tsx.snap
-src/__tests__/__snapshots__/popupBtn.test.tsx.snap
-src/__tests__/__snapshots__/rawXml.test.tsx.snap
-src/__tests__/__snapshots__/sideDrawer.test.tsx.snap
-src/__tests__/__snapshots__/threatAnalysisDialog.test.tsx.snap
-src/__tests__/__snapshots__/webFrameView.test.tsx.snap
+
+*.snap
