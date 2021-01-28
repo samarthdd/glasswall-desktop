@@ -5,7 +5,7 @@
   "main": "./out/electron/index.js",
   "scripts": {
     "test-ut": "jest --detectOpenHandles --color",
-    "test-ut-watch ": "jest --watch --detectOpenHandles --color ",
+    "test-ut-watch": "jest --watch --detectOpenHandles --color ",
     "test": "node ./node_modules/mocha/bin/_mocha --require esm --timeout 20000 \"./tests/Test*.js\"",
     "test:coverage": "npm run test-ut -- --coverage",
     "build": "webpack --config webpack.ui.config.js --config webpack.electron.config.js",
