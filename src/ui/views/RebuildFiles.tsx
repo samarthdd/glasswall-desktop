@@ -10,8 +10,7 @@ import FolderIcon               from '@material-ui/icons/Folder';
 import { CardActions,
         TablePagination,
         Switch,
-        FormControlLabel,
-        Tooltip,         
+        FormControlLabel
     }                           from '@material-ui/core';
 import Footer                   from '../components/Footer';
 import Dropzone                 from "react-dropzone";
@@ -25,7 +24,7 @@ import RawXml                   from '../components/RawXml';
 import preceiveThreats          from '../components/ThreatIntelligence'
 import ThreatAnalysisDialog     from '../components/ThreatAnalysisDialog'
 
-const { dialog }                = require('electron').remote
+const { dialog }                = require('electron')
 var fs                          = require('fs');
 
 
@@ -961,10 +960,9 @@ flat filesystem option to saves in a single directory that contains all files wi
                           }
                     </div>
                     </div>
-                   
+                    <Footer/>
                 </main>
             </div>   
-            <Footer/>
         </div>
        
         

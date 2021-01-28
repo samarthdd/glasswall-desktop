@@ -12,8 +12,7 @@ import {Redirect}                 from 'react-router-dom'
 import { CardActions,
         TablePagination,
         Switch,
-        FormControlLabel,
-        Tooltip 
+        FormControlLabel
     }                           from '@material-ui/core';
 import Footer                   from '../components/Footer';
 import Dropzone                 from "react-dropzone";
@@ -27,7 +26,7 @@ import * as Utils               from '../utils/utils'
 import RawXml                   from '../components/RawXml';
 import Logs                     from '../components/Logs';
 import HealthCheckStatus        from '../components/HealthCheckStatus'
-const { dialog }                = require('electron').remote
+const { dialog }                = require('electron')
 import preceiveThreats          from '../components/ThreatIntelligence'
 import ThreatAnalysisDialog     from '../components/ThreatAnalysisDialog'
 

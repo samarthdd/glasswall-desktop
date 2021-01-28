@@ -9,57 +9,12 @@ function original_extension(file_name:string) {
 }
 
 
-// function parse_xml_report(xml_report,setResult) {
-//     if (xml_report === 'report not found')
-//         return
-
-//     var XMLParser = require("react-xml-parser");
-//     var analysisReport  = new XMLParser().parseFromString(xml_report)
-//     if (analysisReport) {
-//         var sanitisations   = analysisReport.getElementsByTagName("gw:SanitisationItem");
-//         var remediations    = analysisReport.getElementsByTagName("gw:RemedyItem");
-//         var issues          = analysisReport.getElementsByTagName("gw:IssueItem");
-//         var fileType        = analysisReport.getElementsByTagName("gw:FileType")[0].value;
-//         var fileSize        = analysisReport.getElementsByTagName("gw:TotalSizeInBytes")[0].value;
-//         var fileVersion     = analysisReport.getElementsByTagName("gw:Version")[0].value;
-//         //const target = remediations
-//         setResult({ 'sanitisations': sanitisations,
-//                     'remediations' : remediations ,
-//                     'issues'       : issues       ,
-//                     'fileType'     : fileType     ,
-//                     'fileSize'     : fileSize     ,
-//                     'fileVersion'  : fileVersion  })
-//     }
-
-
-// }
-
 type AnalysisResult ={
     analysis      : any| undefined
 }
 
 export default function FileAnalysis({analysis}:AnalysisResult)  {
     const [result , setResult] = React.useState(analysis);
-
-    // useEffect(() => {
-    //     console.log("analysis.threats " + analysis.threats )
-    //     analysis.threats =  analysis.threats.map((threat:any)=>{
-    //         if(threat.name = "File Extensions match"){
-    //             if(analysis.threat_analysis.fileType == original_extension(analysis.filename)){
-    //                 threat.value = "ok"
-                    
-    //             }else{
-    //                 threat.value = "extensions didn't match" +  original_extension(analysis.filename) +"!= " + analysis.threat_analysis.fileTyp
-    //             }
-    //             console.log("analysis.threats value " +threat.value )
-    //         }
-    //         return threat;
-    //     });
-    //     console.log("analysis.threats out " + analysis.threats )
-
-    // },[])
-    
-    
 
     return (
         <div id='file-stats'>

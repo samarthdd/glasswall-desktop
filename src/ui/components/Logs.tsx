@@ -9,7 +9,6 @@ import DialogContent            from '@material-ui/core/DialogContent';
 import DialogContentText        from '@material-ui/core/DialogContentText';
 import DialogTitle              from '@material-ui/core/DialogTitle';
 import Highlight                from 'react-highlight.js';
-//import                          'react-highlight.js/node_modules/highlight.js/styles/dark.css'
 
 
 

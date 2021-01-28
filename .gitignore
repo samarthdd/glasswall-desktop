@@ -18,4 +18,3 @@ config/config.xml
 Users/*
 coverage/*
 *.snap
-*.snap

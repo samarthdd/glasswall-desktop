@@ -1,12 +1,14 @@
-import  React, {useState}       from 'react';
-import { makeStyles,createMuiTheme }           from '@material-ui/core/styles';
-import SideDrawer               from '../components/SideDrawer';
-import Highlight                from 'react-highlight.js';
-import * as Utils               from '../utils/utils'
-import { Button, FormControl, FormHelperText, Grid, Input, InputLabel, MenuItem, MuiThemeProvider, Select, Snackbar } from '@material-ui/core';
-import LibraryBooksIcon         from '@material-ui/icons/LibraryBooks';
-import Loader                   from '../components/Loader'
-import MuiAlert                 from '@material-ui/lab/Alert';
+import  React, {useState}             from 'react';
+import { makeStyles,createMuiTheme }  from '@material-ui/core/styles';
+import SideDrawer                     from '../components/SideDrawer';
+import * as Utils                     from '../utils/utils'
+import { FormControl, 
+  FormHelperText, Grid, Input,
+  InputLabel, MenuItem,
+  MuiThemeProvider, Select,
+  Snackbar }                       from '@material-ui/core';
+import LibraryBooksIcon               from '@material-ui/icons/LibraryBooks';
+import MuiAlert                       from '@material-ui/lab/Alert';
 import Badge from '@material-ui/core/Badge';
 import Footer from '../components/Footer';
 

@@ -11,47 +11,17 @@ import      DockerConfiguration   from './views/DockerConfiguration'
 import      Sessions              from './views/Sessions'
 import      RebuildPolicy         from './views/RebuildPolicy'
 import      PastRebuildPolicy     from './views/PastRebuildPolicy'
-
-import   * as Utils               from './utils/utils'
-const resolve                     = require('path').resolve
-const fs                          = require('fs-extra')
-const path                        = require('path')
+import      * as Utils            from './utils/utils'
 
 
-const create_config = () =>{
-  let configDir = resolve(Utils.getAppDataPath() + Utils.getPathSep() + 'config');
-    if (!fs.existsSync(configDir)){
-        fs.mkdirSync(configDir);
-    }
-    if (!fs.existsSync(configDir+"/config.ini")){
-        fs.openSync(path.join(configDir,"config.ini"),'w');
-        fs.writeFileSync(path.join(configDir,"config.ini"),Utils.CONFIG_INI);        
-    }    
-    if (!fs.existsSync(configDir+"/config.xml")){
-        fs.openSync(path.join(configDir,"config.xml"),'w');
-        fs.writeFileSync(path.join(configDir,"config.xml"),Utils.CONFIG_XML);    
-    }
-    //Rebuild
-    let configDirR = resolve(Utils.getAppDataPath() + Utils.getPathSep() + 'configR');
-    if (!fs.existsSync(configDirR)){
-        fs.mkdirSync(configDirR);
-    }
-    if (!fs.existsSync(configDirR+"/config.ini")){
-        fs.openSync(path.join(configDirR,"config.ini"),'w');
-        fs.writeFileSync(path.join(configDirR,"config.ini"),Utils.CONFIG_INI_REBUILD);        
-    }    
-    if (!fs.existsSync(configDirR+"/config.xml")){
-        fs.openSync(path.join(configDirR,"config.xml"),'w');
-        fs.writeFileSync(path.join(configDirR,"config.xml"),Utils.CONFIG_XML_REBUILD);    
-    }
-}
+
 
 const App = () => (    
     <HashRouter>      
       <div>
       {/* <Route path="/"                       exact component=  { localStorage.getItem(Utils.WELCOME_PAGE_VISTIED_KEY) != Utils.WELCOME_PAGE_VISTIED_VAL ? WelcomePage:DockerRebuildFiles} /> */}
        
-      {create_config()}
+      {Utils.create_config()}
       {
         localStorage.getItem(Utils.WELCOME_PAGE_VISTIED_KEY) != Utils.WELCOME_PAGE_VISTIED_VAL?
         <Redirect to="/home"               
