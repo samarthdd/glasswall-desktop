@@ -26,7 +26,7 @@
     
     coverageDirectory:'coverage',
     collectCoverageFrom:['<rootDir>/src/ui/**/*.tsx', '<rootDir>/src/electron/**/*.ts'],
-    coverageReporters: ['html'],
+    coverageReporters: ['lcov'],
     modulePathIgnorePatterns: ['<rootDir>/src/import-undefined-issue'],
     snapshotSerializers: [
       "enzyme-to-json/serializer"

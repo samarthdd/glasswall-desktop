@@ -4,6 +4,7 @@ const { ipcRenderer } = require('electron');
 import * as SessionUtils from '../ui/components/SessionsUtils'
 import * as Utils from '../ui/utils/utils';
 import "@testing-library/jest-dom/extend-expect";
+import Sessions from '../ui/views/Sessions';
 
 jest.mock(
   'electron',
@@ -31,10 +32,16 @@ describe('get session list', () => {
             expect(result.id).not.toBeNull();
             done();
         }
-        SessionUtils.getSessionList(Utils.getProcessedPath()).then(function(results:any){
-            if(results.length>0){
-               
+        SessionUtils.getSessionList(Utils.getProcessedPath()).then(function(results:string[]){
+          console.log('results.length = '+results.length)
+            if(results.length>0){    
+              results.map(id=>{
+                    console.log("id = "+id)
+                  });            
                 SessionUtils.readSessions(results, readSessionResult);
+            }
+            else{
+              done();
             }
         });
     });
