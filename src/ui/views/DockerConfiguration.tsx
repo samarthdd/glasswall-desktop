@@ -11,7 +11,9 @@ import Paper                    from '@material-ui/core/Paper';
 import CheckCircleIcon          from '@material-ui/icons/CheckCircle';
 import CancelIcon               from '@material-ui/icons/Cancel';
 import * as Utils               from '../utils/utils'
-import * as DockerUtils         from '../components/DockerUtils'
+import * as RebuildUtils        from '../utils/RebuildUtils'
+import * as LoggerService       from '../services/LoggerService'
+import * as DockerUtils         from '../services/GWDockerService'
 import Loader                   from '../components/Loader';
 import Footer                   from '../components/Footer';
 import Logs                     from '../components/Logs';
@@ -151,7 +153,7 @@ function DockerConfiguration() {
 
     React.useEffect(() => {
        
-        Utils.addRawLogLine(1,'-',"DockerConfiguration health_chk" + sessionStorage.getItem(Utils.DOCKER_HEALTH_STATUS_KEY))
+        LoggerService.addRawLogLine(1,'-',"DockerConfiguration health_chk" + sessionStorage.getItem(Utils.DOCKER_HEALTH_STATUS_KEY))
         var status = healthCheckStatus;
         if(sessionStorage.getItem(Utils.DOCKER_HEALTH_STATUS_KEY) == null){
             status = DockerUtils.health_chk();
@@ -180,15 +182,15 @@ function DockerConfiguration() {
          const timer = setTimeout(() => {
             var ouput = DockerUtils.pull_image();
             console.log("pullDockerImage" + ouput)
-            if(ouput.includes(Utils.GW_DOCKER_PULL_IMG_OUTPUT + Utils.getRebuildImage()) || ouput.includes(Utils.GW_DOCKER_PULL_IMG_OUTPUT_2 + Utils.getRebuildImage())){
+            if(ouput.includes(RebuildUtils.GW_DOCKER_PULL_IMG_OUTPUT + RebuildUtils.getRebuildImage()) || ouput.includes(RebuildUtils.GW_DOCKER_PULL_IMG_OUTPUT_2 + RebuildUtils.getRebuildImage())){
                 ouput = DockerUtils.check_license();
                 if(ouput != 0){
                     setHealthCheckStatus(4)
                     sessionStorage.setItem(Utils.DOCKER_HEALTH_STATUS_KEY, "" + 4 )                    
                 }
                 else{
-                    setHealthCheckStatus(Utils.DOCKER_RUNNING)
-                    sessionStorage.setItem(Utils.DOCKER_HEALTH_STATUS_KEY, "" + Utils.DOCKER_RUNNING )                    
+                    setHealthCheckStatus(RebuildUtils.DOCKER_RUNNING)
+                    sessionStorage.setItem(Utils.DOCKER_HEALTH_STATUS_KEY, "" + RebuildUtils.DOCKER_RUNNING )                    
                 }
                 setShowLoader(false)
             }else{
@@ -243,7 +245,7 @@ function DockerConfiguration() {
         setLogView(!logView);
     }
 
-    Utils.addRawLogLine(1,'-',"health loader" + loader)
+    LoggerService.addRawLogLine(1,'-',"health loader" + loader)
     return (
         <>
         <div className={classes.root}>

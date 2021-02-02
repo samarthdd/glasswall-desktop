@@ -1,7 +1,5 @@
 import  React, {useState}       from 'react';
 import { makeStyles,createMuiTheme }           from '@material-ui/core/styles';
-import SideDrawer               from '../components/SideDrawer';
-import * as Utils               from '../utils/utils'
 import { Button, FormControl, 
   Grid, Input, InputLabel,
   MenuItem, MuiThemeProvider,
@@ -10,6 +8,10 @@ import { Button, FormControl,
 import MuiAlert                 from '@material-ui/lab/Alert';
 import Badge                    from '@material-ui/core/Badge';
 import Footer                   from '../components/Footer';
+import SideDrawer               from '../components/SideDrawer';
+import * as Utils               from '../utils/utils'
+import * as RebuildUtils        from '../utils/RebuildUtils'
+import * as PolicyService       from '../services/PolicyService'
 
 function Alert(props: any) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -430,7 +432,7 @@ function RebuildPolicy(){
   },[ policy, readyForRender]);
  
   React.useEffect(()=>{
-    Utils.getPolicy().then((policyJson:any) => {
+    PolicyService.getPolicy().then((policyJson:any) => {
       console.log('policy - '+JSON.stringify(policyJson))
       let pdfPolicy = {
         watermark : policyJson.config.pdfConfig[0].watermark[0],
@@ -493,8 +495,8 @@ function RebuildPolicy(){
    const savePolicy =()=>{
       console.log('Saving policy - '+JSON.stringify(policy))
       setLoader(true)
-      Utils.savePolicy({"config":policy})
-      Utils.savePastPolicy({"config":prevPolicy})
+      PolicyService.savePolicy({"config":policy})
+      PolicyService.savePastPolicy({"config":prevPolicy})
       setPrevPolicy(JSON.parse(JSON.stringify(policy)));
       //setPastPolicy(JSON.parse(JSON.stringify(policy)));
       sessionStorage.removeItem("policy_changes")

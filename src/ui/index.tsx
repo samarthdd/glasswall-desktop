@@ -12,6 +12,7 @@ import      Sessions              from './views/Sessions'
 import      RebuildPolicy         from './views/RebuildPolicy'
 import      PastRebuildPolicy     from './views/PastRebuildPolicy'
 import      * as Utils            from './utils/utils'
+import      * as RebuildUtils            from './utils/RebuildUtils'
 
 
 
@@ -21,7 +22,7 @@ const App = () => (
       <div>
       {/* <Route path="/"                       exact component=  { localStorage.getItem(Utils.WELCOME_PAGE_VISTIED_KEY) != Utils.WELCOME_PAGE_VISTIED_VAL ? WelcomePage:DockerRebuildFiles} /> */}
        
-      {Utils.create_config()}
+      {RebuildUtils.create_config()}
       {
         localStorage.getItem(Utils.WELCOME_PAGE_VISTIED_KEY) != Utils.WELCOME_PAGE_VISTIED_VAL?
         <Redirect to="/home"               

@@ -12,16 +12,19 @@ import { CardActions,
         Switch,
         FormControlLabel
     }                           from '@material-ui/core';
-import Footer                   from '../components/Footer';
 import Dropzone                 from "react-dropzone";
 import FileCopyIcon             from '@material-ui/icons/FileCopy';
+import Footer                   from '../components/Footer';
 import DropIcon                 from '../assets/images/dropIcon.png'
 import SideDrawer               from '../components/SideDrawer';
-import * as FileUploadUtils     from '../components/FileUploadUtils'
+import * as FileUploadUtils     from '../services/GWCloudRebuildService'
 import Loader                   from '../components/Loader';
 import * as Utils               from '../utils/utils'
+import * as RebuildUtils        from '../utils/RebuildUtils'
+import * as LoggerService       from '../services/LoggerService'
+import * as PolicyService       from '../services/PolicyService'
 import RawXml                   from '../components/RawXml';
-import preceiveThreats          from '../components/ThreatIntelligence'
+import preceiveThreats          from '../services/ThreatIntelligenceService'
 import ThreatAnalysisDialog     from '../components/ThreatAnalysisDialog'
 
 const { dialog }                = require('electron')
@@ -504,12 +507,12 @@ function RebuildFiles(){
     }
 
     React.useEffect(()=>{
-        setUserTargetDir(Utils.getCloudDefaultOutputFOlder()||"");
+        setUserTargetDir(RebuildUtils.getCloudDefaultOutputFOlder()||"");
     },[]);
    
     React.useEffect(() => {
         if(folderId!=''){
-            var rootFolder = Utils.getProcessedPath() + Utils.getPathSep() +folderId
+            var rootFolder = RebuildUtils.getProcessedPath() + Utils.getPathSep() +folderId
             if (!fs.existsSync(rootFolder)){
                 fs.promises.mkdir(rootFolder, { recursive: true });
             }
@@ -579,29 +582,29 @@ const downloadResult = async(result: any)=>{
             Utils.saveBase64File(result.cleanFile, filePath , result.filename );
         }
 
-        var cleanFilePath = Utils.getProcessedPath() + Utils.getPathSep()
+        var cleanFilePath = RebuildUtils.getProcessedPath() + Utils.getPathSep()
                              + result.targetDir + Utils.getPathSep() + fileHash
-                              + Utils.getPathSep() + Utils._CLEAN_FOLDER;
+                              + Utils.getPathSep() + RebuildUtils._CLEAN_FOLDER;
         Utils.saveBase64File(result.cleanFile, cleanFilePath, result.filename );
 
-        var OriginalFilePath = Utils.getProcessedPath()  +  Utils.getPathSep()
+        var OriginalFilePath = RebuildUtils.getProcessedPath()  +  Utils.getPathSep()
                                 + result.targetDir +  Utils.getPathSep()
-                                 + fileHash +  Utils.getPathSep() + Utils._ORIGINAL_FOLDER;
+                                 + fileHash +  Utils.getPathSep() + RebuildUtils._ORIGINAL_FOLDER;
         Utils.saveBase64File(result.original, OriginalFilePath, result.filename);  
 
-        var reportFilePath =  Utils.getProcessedPath() +  Utils.getPathSep()
+        var reportFilePath =  RebuildUtils.getProcessedPath() +  Utils.getPathSep()
                              + result.targetDir +  Utils.getPathSep()
-                              + fileHash +   Utils.getPathSep() + Utils._REPORT_FOLDER;
+                              + fileHash +   Utils.getPathSep() + RebuildUtils._REPORT_FOLDER;
         Utils.saveTextFile(result.xmlResult, reportFilePath, Utils.stipFileExt(result.filename)+'.xml');
 
-        var metadataFilePath =  Utils.getProcessedPath() + Utils.getPathSep()  + 
+        var metadataFilePath =  RebuildUtils.getProcessedPath() + Utils.getPathSep()  + 
                                 result.targetDir + Utils.getPathSep() + fileHash;
 
         let content: Metadata;
         content ={
-            original_file       : Utils._ORIGINAL_FOLDER + Utils.getPathSep() + result.filename,
-            clean_file          : Utils._CLEAN_FOLDER + Utils.getPathSep()+ result.filename,
-            report              : Utils._REPORT_FOLDER + Utils.getPathSep() + Utils.stipFileExt(result.filename)+'.xml',
+            original_file       : RebuildUtils._ORIGINAL_FOLDER + Utils.getPathSep() + result.filename,
+            clean_file          : RebuildUtils._CLEAN_FOLDER + Utils.getPathSep()+ result.filename,
+            report              : RebuildUtils._REPORT_FOLDER + Utils.getPathSep() + Utils.stipFileExt(result.filename)+'.xml',
             policy_file         : "config.xml",
             status              : "Success",
             time                : new Date().getTime(),
@@ -611,18 +614,18 @@ const downloadResult = async(result: any)=>{
             threatLevel         : threatLevel
         }
         let metaContentCopy = content
-        Utils.saveAppliedPolicy(metadataFilePath);
+        PolicyService.saveAppliedPolicy(metadataFilePath);
         Utils.saveTextFile(JSON.stringify(content), metadataFilePath, 'metadata.json');
     
-        content.original_file = fileHash + Utils.getPathSep() + Utils._ORIGINAL_FOLDER + Utils.getPathSep() + result.filename
-        content.clean_file = fileHash +Utils.getPathSep() + Utils._CLEAN_FOLDER + Utils.getPathSep() + result.filename
-        content.report = fileHash + Utils.getPathSep() + Utils._REPORT_FOLDER + Utils.getPathSep() + Utils.stipFileExt(result.filename)+'.xml'
+        content.original_file = fileHash + Utils.getPathSep() + RebuildUtils._ORIGINAL_FOLDER + Utils.getPathSep() + result.filename
+        content.clean_file = fileHash +Utils.getPathSep() + RebuildUtils._CLEAN_FOLDER + Utils.getPathSep() + result.filename
+        content.report = fileHash + Utils.getPathSep() + RebuildUtils._REPORT_FOLDER + Utils.getPathSep() + Utils.stipFileExt(result.filename)+'.xml'
         content.userTargetFolder = userTargetDir;
         content.policy_file = fileHash +Utils.getPathSep() + "config.xml";
         
         masterMetaFile.push(content);
         // TI Reporting         
-        let basePath = Utils.getProcessedPath() + Utils.getPathSep() + result.targetDir + Utils.getPathSep() + fileHash + Utils.getPathSep()
+        let basePath = RebuildUtils.getProcessedPath() + Utils.getPathSep() + result.targetDir + Utils.getPathSep() + fileHash + Utils.getPathSep()
         let xml = result.xmlResult   
         let reportPath = Utils.stipFileExt(result.filename)+'.xml'
         threat = await preceiveThreats(xml,reportFilePath, reportPath, cleanFilePath, result.filename,basePath)
@@ -642,14 +645,14 @@ const downloadResult = async(result: any)=>{
         Utils.saveTextFile(JSON.stringify(metaContentCopy), metadataFilePath, 'metadata.json');
 
     }else{
-        var OriginalFilePath =Utils.getProcessedPath() +  Utils.getPathSep()
+        var OriginalFilePath =RebuildUtils.getProcessedPath() +  Utils.getPathSep()
                             + result.targetDir + Utils.getPathSep() + fileHash +  Utils.getPathSep() + 
-                                Utils._ORIGINAL_FOLDER;
-        Utils.addRawLogLine(1,result.filename,"Error case:" +OriginalFilePath + ", result.targetDir:" + result.targetDir)
+                            RebuildUtils._ORIGINAL_FOLDER;
+        LoggerService.addRawLogLine(1,result.filename,"Error case:" +OriginalFilePath + ", result.targetDir:" + result.targetDir)
         Utils.saveBase64File(result.original, OriginalFilePath, result.filename);
         let content: Metadata;
         content ={
-            original_file       : fileHash + Utils.getPathSep() + Utils._ORIGINAL_FOLDER + Utils.getPathSep() + result.filename,
+            original_file       : fileHash + Utils.getPathSep() + RebuildUtils._ORIGINAL_FOLDER + Utils.getPathSep() + result.filename,
             clean_file          : '',
             report              : '',
             status              : "Failure",
@@ -755,7 +758,7 @@ const downloadResult = async(result: any)=>{
         if(result.filePaths != undefined && result.filePaths.length>0){
             console.log(result.filePaths[0])
             setUserTargetDir(result.filePaths[0])
-            localStorage.setItem(Utils.CLOUD_OUPUT_DIR_KEY, result.filePaths[0]);
+            localStorage.setItem(RebuildUtils.CLOUD_OUPUT_DIR_KEY, result.filePaths[0]);
         } 
        
     }
