@@ -4,9 +4,10 @@ import SideDrawer               from '../components/SideDrawer';
 import VisibilityIcon           from '@material-ui/icons/Visibility';
 import VisibilityOffIcon        from '@material-ui/icons/VisibilityOff';
 import Footer                   from '../components/Footer';
-import * as SerialDockerUtils        from '../components/SerialDocker';
+import * as SerialDockerUtils   from '../services/GWSerialDockerService';
 
 import * as Utils               from '../utils/utils'
+import * as RebuildUtils        from '../utils/RebuildUtils'
 
 const useStyles = makeStyles((theme) => ({
     root:       {   
@@ -128,21 +129,21 @@ btnBox:{
 function Settings(){
     const classes = useStyles(); 
     const [hide, setHide] = useState(true);
-    const [rebuildUrl, setRebuildUrl] = useState(Utils.getRebuildEngineUrl());
-    const [analysisUrl, setAnalysisUrl] = useState(Utils.getRebuildAnalysisUrl());
-    const [apiKey, setApiKey] = useState(Utils.getRebuildApiKey());
-    const [rebuildImage, setRebuildImage] = useState(Utils.getRebuildApiKey());
-    const [rebuildImageTag, setRebuildImageTag] = useState(Utils.getRebuildImageTag());
+    const [rebuildUrl, setRebuildUrl] = useState(RebuildUtils.getRebuildEngineUrl());
+    const [analysisUrl, setAnalysisUrl] = useState(RebuildUtils.getRebuildAnalysisUrl());
+    const [apiKey, setApiKey] = useState(RebuildUtils.getRebuildApiKey());
+    const [rebuildImage, setRebuildImage] = useState(RebuildUtils.getRebuildApiKey());
+    const [rebuildImageTag, setRebuildImageTag] = useState(RebuildUtils.getRebuildImageTag());
 
     React.useEffect(() => {
-        console.log("settings1" + Utils.getRebuildEngineUrl())
-        let url = removeHttps(Utils.getRebuildEngineUrl());
+        console.log("settings1" + RebuildUtils.getRebuildEngineUrl())
+        let url = removeHttps(RebuildUtils.getRebuildEngineUrl());
         setRebuildUrl(url);
-        url = removeHttps(Utils.getRebuildAnalysisUrl());
+        url = removeHttps(RebuildUtils.getRebuildAnalysisUrl());
         setAnalysisUrl(url);
-        setApiKey(Utils.getRebuildApiKey());
-        setRebuildImage(Utils.getRebuildImage())
-        setRebuildImageTag(Utils.getRebuildImageTag())
+        setApiKey(RebuildUtils.getRebuildApiKey());
+        setRebuildImage(RebuildUtils.getRebuildImage())
+        setRebuildImageTag(RebuildUtils.getRebuildImageTag())
     }, []);
 
 const removeHttps = (link: string) =>{ 
@@ -157,26 +158,26 @@ const removeHttps = (link: string) =>{
     console.log("settings2" + e.target.value);
     setRebuildUrl(e.target.value)
     let url ="https://"+e.target.value;
-    localStorage.setItem(Utils.REBUILD_URL_KEY, url )
+    localStorage.setItem(RebuildUtils.REBUILD_URL_KEY, url )
    }
 
    const handleAnalysisUrlChange =(e:any)=>{
     console.log(e.target.value);
     setAnalysisUrl(e.target.value)
     let url ="https://"+e.target.value;
-    localStorage.setItem(Utils.ANALYSIS_URL_KEY, url )
+    localStorage.setItem(RebuildUtils.ANALYSIS_URL_KEY, url )
    }
 
    const handleApiIKeyChange =(e:any)=>{
     console.log(e.target.value);
     setApiKey(e.target.value)
-    localStorage.setItem(Utils.APIKEY_KEY, e.target.value )
+    localStorage.setItem(RebuildUtils.APIKEY_KEY, e.target.value )
    }
 
    const handleRebuildImageChange =(e:any)=>{
     console.log(e.target.value);
     setRebuildImage(e.target.value)
-    localStorage.setItem(Utils.REBUILD_IMAGE_KEY, e.target.value )
+    localStorage.setItem(RebuildUtils.REBUILD_IMAGE_KEY, e.target.value )
    }
    
    const handleRedirect = () => {
@@ -186,7 +187,7 @@ const removeHttps = (link: string) =>{
   const handleRebuildImageTagChange =(e:any)=>{
     console.log(e.target.value);
     setRebuildImageTag(e.target.value)
-    localStorage.setItem(Utils.REBUILD_IMAGE_TAG_KEY, e.target.value )
+    localStorage.setItem(RebuildUtils.REBUILD_IMAGE_TAG_KEY, e.target.value )
    }
     return(
         <>

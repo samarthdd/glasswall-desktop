@@ -15,8 +15,8 @@ import Footer                   from '../components/Footer';
 import SideDrawer               from '../components/SideDrawer';
 import Loader                   from '../components/Loader';
 import * as Utils               from '../utils/utils'
-import * as SessionsUtils               from '../components/SessionsUtils'
-
+import * as RebuildUtils        from '../utils/RebuildUtils'
+import * as SessionsUtils       from '../services/RebuildSessionsService'
 import RebuildIcon              from '../assets/images/rebuildIcon.png'
 import DockerIcon               from '../assets/images/dockerColored.png'
 
@@ -557,7 +557,7 @@ function Sessions(){
     }
     React.useEffect(() => {
         const timer = setTimeout(() => {
-            SessionsUtils.getSessionList(Utils.getProcessedPath()).then(function(results:any){
+            SessionsUtils.getSessionList(RebuildUtils.getProcessedPath()).then(function(results:any){
             console.log("getSessilengthonList" + results);
             setCounter(results.length);
             if(results.length>0){
@@ -655,7 +655,7 @@ function Sessions(){
                                     {sessions.length>0 && 
                                     <div> 
                                     <h3>Sessions 
-                                        <button onClick={()=>Utils.open_file_exp(Utils.getProcessedPath())} className={sessions.length>0? classes.outFolderBtn:classes.outFolderBtnDissabled}><FolderIcon className={classes.btnIcon}/> Browse Sessions Folder</button>
+                                        <button onClick={()=>Utils.open_file_exp(RebuildUtils.getProcessedPath())} className={sessions.length>0? classes.outFolderBtn:classes.outFolderBtnDissabled}><FolderIcon className={classes.btnIcon}/> Browse Sessions Folder</button>
                                     </h3>
                                     <Table className={classes.table} size="small" aria-label="a dense table">
                                         <TableHead>
@@ -686,7 +686,7 @@ function Sessions(){
                                         <TableBody>
                                         {sessionsPerPage.map((row) => (
                                             <TableRow key={row.id}>
-                                                <TableCell align="left"><a onClick={()=>Utils.open_file_exp(Utils.getProcessedPath() + Utils.getPathSep() + row.id)} target="_blank" className={classes.hlink}>{row.id}</a></TableCell>
+                                                <TableCell align="left"><a onClick={()=>Utils.open_file_exp(RebuildUtils.getProcessedPath() + Utils.getPathSep() + row.id)} target="_blank" className={classes.hlink}>{row.id}</a></TableCell>
                                             <TableCell align="left" className={classes.status}><img className={classes.dockerImage} src={row.type =="Docker"?DockerIcon:RebuildIcon}></img></TableCell>
                                             <TableCell align="left"> {row.count}</TableCell>
                                             <TableCell align="left">{row.successCount}</TableCell>

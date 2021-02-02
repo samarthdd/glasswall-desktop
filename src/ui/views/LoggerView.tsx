@@ -2,7 +2,7 @@ import  React, {useState}       from 'react';
 import { makeStyles }           from '@material-ui/core/styles';
 import SideDrawer               from '../components/SideDrawer';
 import Highlight                from 'react-highlight.js';
-import * as Utils               from '../utils/utils'
+import * as LoggerService       from '../services/LoggerService'
 
 const useStyles = makeStyles((theme) => ({
     root:       {   
@@ -112,7 +112,7 @@ function LoggerView(){
     const [logView, setLogView]                     = useState(true);  
 
     const clearLogs =()=>{
-        Utils.cleanRawLogger()
+        LoggerService.cleanRawLogger()
         setLogView(!logView)
     }
 
@@ -125,10 +125,8 @@ function LoggerView(){
                 <div className={classes.contentArea}>             
                     <div> 
                     <h3>Raw Logs </h3>                    
-                    <Highlight language='javascript'>{Utils.getRawLogs() || ""}</Highlight>
+                    <Highlight language='javascript'>{LoggerService.getRawLogs() || ""}</Highlight>
                     </div>
-                   
-                    
                 </div>   
             </main>   
         </div>
