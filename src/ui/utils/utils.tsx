@@ -44,7 +44,7 @@ export const sleepDelay = (milliseconds: number) => {
 
 export const sleep = (delay: number) => {
   var start = new Date().getTime();
-  while (new Date().getTime() < start + delay)
+  while (new Date().getTime() < start + delay);
 }
 
 const _p8 = (s: boolean) => {
@@ -191,7 +191,6 @@ export const sanitize_file_name = (file_name: string) => {
   }
   return file_name.replace(REGEX_SAFE_FILE_NAME, '_')
 }
-
 
 
 

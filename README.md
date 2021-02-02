@@ -226,3 +226,8 @@ Please change DEBUG variable to true and restart the app to start the electron d
 
 ## Contributing
 Bug reports are welcome on GitHub at https://github.com/k8-proxy/glasswall-desktop
+
+## Code Coverage
+<a href='https://coveralls.io/github/k8-proxy/glasswall-desktop?branch=main'><img src='https://coveralls.io/repos/github/k8-proxy/glasswall-desktop/badge.svg?branch=main' alt='Coverage Status' /></a>
+
+
