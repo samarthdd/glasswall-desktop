@@ -239,3 +239,7 @@ export const isBlockedByPolicyMsg = (message: string) => {
 }
 
 
+export const removeHttps = (link: string) =>{ 
+  return link.replace(/^(https?:|)\/\//, '');
+  };
+

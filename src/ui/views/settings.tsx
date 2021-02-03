@@ -134,22 +134,30 @@ function Settings(){
     const [apiKey, setApiKey] = useState(RebuildUtils.getRebuildApiKey());
     const [rebuildImage, setRebuildImage] = useState(RebuildUtils.getRebuildApiKey());
     const [rebuildImageTag, setRebuildImageTag] = useState(RebuildUtils.getRebuildImageTag());
+    const [gwCliVersionSerial, setGWCliVersionSerial] = useState("");
 
     React.useEffect(() => {
+   
         console.log("settings1" + RebuildUtils.getRebuildEngineUrl())
-        let url = removeHttps(RebuildUtils.getRebuildEngineUrl());
+        let url = Utils.removeHttps(RebuildUtils.getRebuildEngineUrl());
         setRebuildUrl(url);
-        url = removeHttps(RebuildUtils.getRebuildAnalysisUrl());
+        url = Utils.removeHttps(RebuildUtils.getRebuildAnalysisUrl());
         setAnalysisUrl(url);
+        setGWCliVersion();
         setApiKey(RebuildUtils.getRebuildApiKey());
         setRebuildImage(RebuildUtils.getRebuildImage())
         setRebuildImageTag(RebuildUtils.getRebuildImageTag())
+       
     }, []);
 
-const removeHttps = (link: string) =>{ 
-    return link.replace(/^(https?:|)\/\//, '');
-    };
-
+    const setGWCliVersion=()=>{
+        const timer = setTimeout(() => {
+            var version =SerialDockerUtils.gwCliVersionSerial();
+            setGWCliVersionSerial(version)
+            
+            }, 1);
+    }
+    
    const showApiKey = ()=> {
     setHide(!hide)
    }
@@ -180,15 +188,12 @@ const removeHttps = (link: string) =>{
     localStorage.setItem(RebuildUtils.REBUILD_IMAGE_KEY, e.target.value )
    }
    
-   const handleRedirect = () => {
-    window.open('https://glasswall-store.com/');
-  };
-
   const handleRebuildImageTagChange =(e:any)=>{
     console.log(e.target.value);
     setRebuildImageTag(e.target.value)
     localStorage.setItem(RebuildUtils.REBUILD_IMAGE_TAG_KEY, e.target.value )
    }
+   
     return(
         <>
         <div className={classes.root}> 
@@ -201,7 +206,7 @@ const removeHttps = (link: string) =>{
                         <h4>REBUILD ENGINE URL</h4>
                         <div className={classes.urlBox}>
                         <label className="readOnlys">https://</label>
-                            <input className="pl-left-48" onChange={handleRebuildUrlChange} type="text" value={rebuildUrl}/>
+                            <input className="pl-left-48"  onChange={handleRebuildUrlChange} type="text" value={rebuildUrl}/>
                         </div>  
                         <h4>REBUILD ANALYSIS URL</h4>
                         <div className={classes.urlBox}>
@@ -223,20 +228,17 @@ const removeHttps = (link: string) =>{
                         </div>    
                         <h4>REBUILD Glasswall CLI Version</h4>   
                         <div className={classes.urlBox}>
-                            <input type="text"   value={SerialDockerUtils.gwCliVersionSerial()}/>
+                            <input type="text"   value={gwCliVersionSerial}/>
                         </div>
                         <div className={classes.btnBox}>
                             <a className={classes.submitBtn} href="https://glasswall-store.com/">Buy Token </a>
                        </div>                          
                         </div>
-                  
                 </div>   
             </main>   
-            
         </div>
         <Footer/>
         </>
-       
         
     )
 }
