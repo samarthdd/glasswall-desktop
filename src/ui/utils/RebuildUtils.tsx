@@ -3,11 +3,11 @@ var fs                  = require('fs');
 const resolve           = require('path').resolve
 
 
-const GW_DOCKER_IMG_NAME                  = 'glasswallsolutions/evaluationsdk';
-const GW_DOCKER_IMG_TAG                   = 'rebuild';
-const REBUILD_ENGINE_URL                  =  'https://8oiyjy8w63.execute-api.us-west-2.amazonaws.com/Prod/api/rebuild/base64';
-const REBUILD_ANALYSIS_URL                =  'https://o7ymnow6vf.execute-api.us-west-2.amazonaws.com/Prod/api/Analyse/base64'
-const REBUILD_API_KEY_VALUE               =  'dp2Ug1jtEh4xxFHpJBfWn9V7fKB3yVcv60lhwOAG';
+export const GW_DOCKER_IMG_NAME           = 'glasswallsolutions/evaluationsdk';
+export const GW_DOCKER_IMG_TAG            = 'rebuild';
+export const REBUILD_ENGINE_URL           =  'https://8oiyjy8w63.execute-api.us-west-2.amazonaws.com/Prod/api/rebuild/base64';
+export const REBUILD_ANALYSIS_URL         =  'https://o7ymnow6vf.execute-api.us-west-2.amazonaws.com/Prod/api/Analyse/base64'
+export const REBUILD_API_KEY_VALUE        =  'dp2Ug1jtEh4xxFHpJBfWn9V7fKB3yVcv60lhwOAG';
 
 export const GW_DOCKER_PULL_IMG_OUTPUT    = 'Downloaded newer image for ';//glasswallsolutions/evaluationsdk';
 export const GW_DOCKER_PULL_IMG_OUTPUT_2  = 'Image is up to date for ';//glasswallsolutions/evaluationsdk';

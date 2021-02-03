@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
         }
    },
    textContainer:{
-        margin:                    '20px auto',
+        margin:                    '20px auto 40px',
         width:                     '60%',
         background:                '#ffffff',
         padding:                   '25px 25px',
@@ -56,6 +56,8 @@ const useStyles = makeStyles((theme) => ({
     background:                '#e9f3fd',
     padding:                   '5px 10px', 
     position:                  'relative',
+    borderRadius:              '5px',
+    border:                    '1px solid #b5d3e3',
     '& input':{
         border:                'none',
         background:            'transparent',
@@ -71,6 +73,8 @@ const useStyles = makeStyles((theme) => ({
         background:                '#e9f3fd',
         padding:                   '5px 10px', 
         position:                  'relative',
+        borderRadius:              '5px',
+        border:                    '1px solid #b5d3e3',
         '& input':{
             border:                'none',
             background:            'transparent',
@@ -102,7 +106,7 @@ const useStyles = makeStyles((theme) => ({
     background:                 '#0c3451',
     color:                      '#fff',
     border:                     'none',
-    padding:                    '12px 50px',
+    padding:                    '12px 30px',
     borderRadius:               '3px',
     cursor:                     'pointer',
     marginTop:                  '15px',
@@ -112,6 +116,23 @@ const useStyles = makeStyles((theme) => ({
     
     
 },
+
+resetBtn:{
+    background:                 '#555',
+    color:                      '#fff',
+    border:                     'none',
+    padding:                    '12px 30px',
+    borderRadius:               '3px',
+    cursor:                     'pointer',
+    marginTop:                  '15px',
+    marginLeft:                 '15px',
+    fontSize:                   '15px',
+    textDecoration:             'none',
+    display:                    'inline-block',
+    
+    
+},
+
 btnBox:{
    textDecoration:             'none', 
    display:                    'block',
@@ -189,6 +210,20 @@ const removeHttps = (link: string) =>{
     setRebuildImageTag(e.target.value)
     localStorage.setItem(RebuildUtils.REBUILD_IMAGE_TAG_KEY, e.target.value )
    }
+
+   const handleReset = () =>{
+        setRebuildUrl(RebuildUtils.REBUILD_ENGINE_URL);
+        setAnalysisUrl(RebuildUtils.REBUILD_ANALYSIS_URL);
+        setApiKey(RebuildUtils.REBUILD_API_KEY_VALUE);
+        setRebuildImage(RebuildUtils.GW_DOCKER_IMG_NAME);
+        setRebuildImageTag(RebuildUtils.GW_DOCKER_IMG_TAG);
+        localStorage.setItem(RebuildUtils.REBUILD_URL_KEY, RebuildUtils.REBUILD_ENGINE_URL );
+        localStorage.setItem(RebuildUtils.ANALYSIS_URL_KEY, RebuildUtils.REBUILD_ANALYSIS_URL );
+        localStorage.setItem(RebuildUtils.APIKEY_KEY, RebuildUtils.REBUILD_API_KEY_VALUE );
+        localStorage.setItem(RebuildUtils.REBUILD_IMAGE_KEY, RebuildUtils.GW_DOCKER_IMG_NAME );
+        localStorage.setItem(RebuildUtils.REBUILD_IMAGE_TAG_KEY, RebuildUtils.GW_DOCKER_IMG_TAG );
+   }
+
     return(
         <>
         <div className={classes.root}> 
@@ -227,7 +262,9 @@ const removeHttps = (link: string) =>{
                         </div>
                         <div className={classes.btnBox}>
                             <a className={classes.submitBtn} href="https://glasswall-store.com/">Buy Token </a>
-                       </div>                          
+                            <button className={classes.resetBtn} onClick={handleReset} >Reset </button>
+                       </div>       
+                                        
                         </div>
                   
                 </div>   

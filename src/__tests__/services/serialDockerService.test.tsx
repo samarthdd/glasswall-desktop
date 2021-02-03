@@ -4,11 +4,10 @@ const { ipcRenderer } = require('electron');
 import * as GWSerialDockerService from '../../ui/services/GWSerialDockerService'
 import "@testing-library/jest-dom/extend-expect";
 
-describe('get rebuild cli version', () => {
-    // it('should render', () => {
-    //     let res = GWSerialDockerService.gwCliVersionSerial();
-    //   expect(res).toBe("1.139")
-    // });
-  
+describe('Serial Docker Service', () => {
+  it('should render', () => {
+      let res = GWSerialDockerService.gwCliVersionSerial();
   });
+
+});
 
