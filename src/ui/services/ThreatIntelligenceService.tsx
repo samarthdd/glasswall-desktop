@@ -95,7 +95,7 @@ const apply_rules = (file_data:any, originalFileName:string) =>  {
     return {"threat_level" : threat_level, "threats" : threats}
 }
 
-const calculate_threat_level = (threats:any) =>  {
+export const calculate_threat_level = (threats:any) =>  {
     let level = 'ok'
     threats.forEach((value:any) =>{
         if (value.level === 'medium') level = 'medium'

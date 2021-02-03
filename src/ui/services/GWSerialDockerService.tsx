@@ -334,7 +334,7 @@ export const gwCliVersionSerial = ():any =>{
      let version = 'NA';  
      if(spawned.hasOwnProperty("output")){        
         version = '';
-        for(var i=0;i<spawned["output"].length;i++){
+        for(var i=0;i<spawned["output"] && spawned["output"].length;i++){
             var output = spawned["output"][i];            
             if(output != null && output != ""){
                 version = version+output;
