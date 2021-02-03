@@ -7,7 +7,7 @@ import Adapter from 'enzyme-adapter-react-16';
 
 configure({ adapter: new Adapter() });
 
-test('should test Header component', () => {
+test('should test Session view snapshot', () => {
   const wrapper = shallow(<Sessions />);
   expect(wrapper).toMatchSnapshot();
 });

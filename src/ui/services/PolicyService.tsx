@@ -80,7 +80,7 @@ export const getPolicyFlag = (action:string) => {
   
     return configPolicy;
   }
-  
+
   export const getPolicy = async () =>{
     let configDir = resolve(Utils.getAppDataPath() + Utils.getPathSep() + 'config');
       if (!fs.existsSync(configDir)){
@@ -124,8 +124,8 @@ export const getPolicyFlag = (action:string) => {
         }
         if (fs.existsSync(configDir+"/past_config.xml")){        
           const xml = fs.readFileSync(configDir+"/past_config.xml",{encoding:'utf8', flag:'r'});    
-          console.log('File = '+(configDir+"/past_config.xml"))     
-          console.log('xml = '+xml)     
+          //console.log('File = '+(configDir+"/past_config.xml"))     
+          //console.log('xml = '+xml)     
           const json_data = await Utils.xml_parser(xml)
           console.log('json out = '+JSON.stringify(json_data))     
           return json_data    

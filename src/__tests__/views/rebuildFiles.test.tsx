@@ -7,7 +7,7 @@ import Adapter from 'enzyme-adapter-react-16';
 
 configure({ adapter: new Adapter() });
 
-test('should test Header component', () => {
+test('should test RebuildFiles view snapshot', () => {
   const wrapper = shallow(<RebuildFiles />);
   expect(wrapper).toMatchSnapshot();
 });
