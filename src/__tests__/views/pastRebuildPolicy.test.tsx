@@ -7,7 +7,7 @@ import Adapter from 'enzyme-adapter-react-16';
 
 configure({ adapter: new Adapter() });
 
-test('should test Header component', () => {
+test('should test PastRebuildPolicy snapshot', () => {
   const wrapper = shallow(<PastRebuildPolicy />);
   expect(wrapper).toMatchSnapshot();
 });
