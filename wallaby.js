@@ -1,8 +1,9 @@
 module.exports = function () {
   return {
+    name: 'Glasswall Desktop',
     files: [
-      {pattern: 'src/__tests__/**/*.tsx',  instrument: false, load: false, ignore: false },
-      {pattern: 'src/App.test.js', ignore: true },
+      { pattern: 'src/__tests__/**/*.tsx', instrument: false, load: false, ignore: false },
+      { pattern: 'src/App.test.js', ignore: true },
       'src/**/*.ts',
       'src/**/*.tsx'
     ],
@@ -17,16 +18,17 @@ module.exports = function () {
       'src/__tests__/services/threatIntelligenceService.test.tsx',
       'src/__tests__/utils/utils.test.tsx',
     ],
-
-    testFramework: 'mocha',
-
+    filesWithNoCoverageCalculated: [],
+    testFramework: 'jest',
     env: {
-      kind: 'chrome'
+      type: 'node',
+      runner: 'node'  // or full path to any node executable
     },
-    env: {
-      kind: 'chrome'
+    workers: {
+      recycle: true
     },
-    debug: true
-    
+    debug: true,
+    reportConsoleErrorAsError: true,
+    slowTestThreshold: 300 // 200 ms
   };
 };
