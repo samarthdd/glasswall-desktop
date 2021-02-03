@@ -88,10 +88,10 @@ export const getPolicyFlag = (action:string) => {
       }
       if (fs.existsSync(configDir+"/config.xml")){        
         const xml = fs.readFileSync(configDir+"/config.xml",{encoding:'utf8', flag:'r'});    
-        console.log('File = '+(configDir+"/config.xml"))     
-        console.log('xml = '+xml)     
+        //console.log('File = '+(configDir+"/config.xml"))     
+        //console.log('xml = '+xml)     
         const json_data = await Utils.xml_parser(xml)
-        console.log('json out = '+JSON.stringify(json_data))     
+        //console.log('json out = '+JSON.stringify(json_data))     
         return json_data    
       }
       return null;

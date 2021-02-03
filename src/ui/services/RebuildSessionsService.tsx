@@ -3,6 +3,7 @@ import * as RebuildUtils    from '../utils/RebuildUtils'
 
 const { readdir, stat }     = require("fs").promises
 const { join }              = require("path")
+const fs                    = require('fs')
 
 
 export const getSessionList = async (path: string ) => {
@@ -16,7 +17,7 @@ export const getSessionList = async (path: string ) => {
 }
 
 export const readSessions = (sessions: string[], resultCallback: Function)=>{
-    const fs = require('fs')
+   
     sessions.map(id=>{
         fs.readFile( RebuildUtils.getProcessedPath() + Utils.getPathSep() + id+ Utils.getPathSep() + "metadata.json", 'utf8', function (err:any,data:string) {
             if (err) {

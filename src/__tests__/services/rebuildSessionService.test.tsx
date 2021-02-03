@@ -8,12 +8,12 @@ describe('get session list', () => {
     it('should render', async()  => {
         let res: string[];
         res = await RebuildSessionsService.getSessionList(RebuildUtils.getProcessedPath());
-      expect(res.length).toBeGreaterThanOrEqual(0);
+        expect(res.length).toBeGreaterThanOrEqual(0);
     });
   
   });
 
-  describe('get session list', () => {
+  describe('get session', () => {
     
     it('should render', done => {
         const readSessionResult =(result: any)=>{ 

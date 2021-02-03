@@ -6,7 +6,7 @@ import Adapter from 'enzyme-adapter-react-16';
 
 configure({ adapter: new Adapter() });
 
-test('should test Header component', () => {
+test('should test PopupBtn component', () => {
     const wrapper = shallow(<PopupBtn />);
     expect(wrapper).toMatchSnapshot();
 });

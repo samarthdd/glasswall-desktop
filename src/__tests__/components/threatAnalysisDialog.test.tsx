@@ -6,7 +6,7 @@ import Adapter from 'enzyme-adapter-react-16';
 
 configure({ adapter: new Adapter() });
 
-test('should test Header component', () => {
+test('should test ThreatAnalysisDialog component', () => {
     const wrapper = shallow(<ThreatAnalysisDialog threat={"low platform security threat"} 
         isOpen={false} handleOpen={()=>void(true)}/>);
     expect(wrapper).toMatchSnapshot();

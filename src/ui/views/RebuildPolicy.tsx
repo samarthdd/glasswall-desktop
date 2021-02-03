@@ -422,7 +422,7 @@ function RebuildPolicy(){
    
 
     React.useEffect(()=>{
-      console.log("value React.useEffect called")
+      //console.log("value React.useEffect called")
      
       if(JSON.stringify(policy) !== JSON.stringify(prevPolicy)){
         sessionStorage.setItem("policy_changes", "true")
@@ -433,7 +433,7 @@ function RebuildPolicy(){
  
   React.useEffect(()=>{
     PolicyService.getPolicy().then((policyJson:any) => {
-      console.log('policy - '+JSON.stringify(policyJson))
+      //console.log('policy - '+JSON.stringify(policyJson))
       let pdfPolicy = {
         watermark : policyJson.config.pdfConfig[0].watermark[0],
         external_hyperlinks: policyJson.config.pdfConfig[0].external_hyperlinks[0],
@@ -484,7 +484,7 @@ function RebuildPolicy(){
         policy.xlsConfig = excelPolicy
         policy.tiffConfig = tiffPolicy;
       }
-      console.log('policy set-> '+policy)
+      //console.log('policy set-> '+policy)
       setPolicy(policy)
       setPrevPolicy(JSON.parse(JSON.stringify(policy)))
       //setPastPolicy(JSON.parse(JSON.stringify(policy)));
@@ -493,7 +493,7 @@ function RebuildPolicy(){
     },[]);
 
    const savePolicy =()=>{
-      console.log('Saving policy - '+JSON.stringify(policy))
+      //console.log('Saving policy - '+JSON.stringify(policy))
       setLoader(true)
       PolicyService.savePolicy({"config":policy})
       PolicyService.savePastPolicy({"config":prevPolicy})
@@ -521,8 +521,8 @@ function RebuildPolicy(){
       setReadyForRender(!readyForRender)
     }
     
-    console.log("current" + policy.pdfConfig.metadata)
-    console.log("old" + prevPolicy.pdfConfig.metadata)
+    //console.log("current" + policy.pdfConfig.metadata)
+    //console.log("old" + prevPolicy.pdfConfig.metadata)
     return(
       <>
         <div className={classes.root}> 

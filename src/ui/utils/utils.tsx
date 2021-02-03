@@ -108,13 +108,13 @@ export const getPathSep = () => {
 export const xml_parser = async (xml_data: string) => {
   return new Promise(function (resolve, reject) {
     const parser = new xml2js.Parser();
-    console.log('xml_data = ' + xml_data)
+    //console.log('xml_data = ' + xml_data)
     parser.parseString(xml_data, function (err: Error, result: any) {
       if (err) {
         console.log('xml_data err = ' + err.stack)
         reject(err);
       } else {
-        console.log('xml_data jsonresult = ' + JSON.stringify(result))
+        //console.log('xml_data jsonresult = ' + JSON.stringify(result))
         resolve(result);
       }
     });

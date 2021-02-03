@@ -6,7 +6,7 @@ import Adapter from 'enzyme-adapter-react-16';
 
 configure({ adapter: new Adapter() });
 
-test('should test Header component', () => {
+test('should test RawXml component', () => {
     const wrapper = shallow(<RawXml isOpen={true} content={"This is a raw xml test"}
         handleOpen={()=>void(true)}/>);
     expect(wrapper).toMatchSnapshot();

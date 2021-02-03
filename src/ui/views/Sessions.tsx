@@ -524,7 +524,7 @@ function Sessions(){
     
     const readSessionResult =(result: any)=>{ 
 
-        console.log("session result" + result)
+        //console.log("session result" + result)
         let metadata:string[] = [];
         let displayResult: DisplayInfo ={
             type:'unknown', 
@@ -534,7 +534,7 @@ function Sessions(){
             location:''
         };
 
-        console.log("session metadata" + metadata)
+        //console.log("session metadata" + metadata)
         if(!result.error){
             metadata = JSON.parse(result.metadata);
             displayResult = getSessionDisplayInfo(metadata);
@@ -558,7 +558,7 @@ function Sessions(){
     React.useEffect(() => {
         const timer = setTimeout(() => {
             SessionsUtils.getSessionList(RebuildUtils.getProcessedPath()).then(function(results:any){
-            console.log("getSessilengthonList" + results);
+            //console.log("getSessilengthonList" + results);
             setCounter(results.length);
             if(results.length>0){
                 setShowLoader(true);
