@@ -33,7 +33,7 @@ describe('to get rebuild api key', () => {
 describe('to get rebuild image', () => {
   it('rebuild image', () => {
     let key = expect(RebuildUtils.getRebuildImage()).
-      toBe("glasswallsolutions/evaluationsdk1");
+      toBe("glasswallsolutions/evaluationsdk");
   });
 
 });

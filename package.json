@@ -5,7 +5,7 @@
   "main": "./out/electron/index.js",
   "scripts": {
     "test": "jest --detectOpenHandles --color",
-    "test_ut": "jest --coverage",
+    "test_ut": "jest --coverage  --u",
     "coveralls": "cat ./coverage/lcov.info | coveralls",
     "test-ut-watch": "jest --watch --detectOpenHandles --color ",
     "test:coverage": "npm run test -- --coverage",
@@ -117,6 +117,6 @@
     "coverageDirectory": "coverage/"
   },
   "wallaby": {
-    "autoDetect": true
+    "autoDetect": false
   }
 }
