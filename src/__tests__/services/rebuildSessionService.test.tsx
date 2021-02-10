@@ -21,8 +21,7 @@ describe('get session list', () => {
             done();
         }
         RebuildSessionsService.getSessionList(RebuildUtils.getProcessedPath()).then(function(results:any){
-            if(results.length>0){
-               
+            if(results.length>0){               
                 RebuildSessionsService.readSessions(results, readSessionResult);
             }
         });
