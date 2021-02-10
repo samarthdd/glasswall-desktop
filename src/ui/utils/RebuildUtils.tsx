@@ -203,7 +203,7 @@ export const getRebuildEngineUrl=()=>{
     else
       key = localStorage.getItem(REBUILD_IMAGE_KEY) || ""
   
-   return key+1;
+   return key;
   }
   
   export const getRebuildImageTag=()=>{

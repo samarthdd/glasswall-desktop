@@ -31,19 +31,15 @@ const decodeBase64Image=(dataString: string) =>{
 
 const writeDecodedBase64File = (baseBase64Response: string, xmlReport:string, request: any, sourceFileUrl: string,
     requestId:string, targetFolder: string, resultCallback: Function) => {
-   var decodedBase64 = decodeBase64Image(baseBase64Response);   
-   //var bs = atob(decodedBase64);
-   //var bs = new Buffer(decodedBase64, 'base64').toString('utf8') 
-   var bs = atob(baseBase64Response);  
-   var buffer = new ArrayBuffer(bs.length);
-   var ba = new Uint8Array(buffer);
-   for (var i = 0; i < bs.length; i++) {
-       ba[i] = bs.charCodeAt(i);
-   }
-
-   
-   var file = new Blob([ba], { type: request.type });
-   var url = window.webkitURL.createObjectURL(file);    
+    var decodedBase64 = decodeBase64Image(baseBase64Response);       
+    var bs = new Buffer(decodedBase64, 'base64').toString('utf8')   
+    var buffer = new ArrayBuffer(bs.length);
+    var ba = new Uint8Array(buffer);
+    for (var i = 0; i < bs.length; i++) {
+        ba[i] = bs.charCodeAt(i);
+    }
+    var file = new Blob([ba], { type: request.type });
+    var url = window.webkitURL.createObjectURL(file);    
    LoggerService.addLogLine(request.filename,"Processing complete ");  
    resultCallback({'source':sourceFileUrl, 'url':url, 'filename':request.filename, isError:false, msg:'',
        cleanFile:decodedBase64, xmlResult: xmlReport, id:requestId, targetDir:targetFolder,

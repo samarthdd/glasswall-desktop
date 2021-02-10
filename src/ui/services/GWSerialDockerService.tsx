@@ -44,8 +44,7 @@ const decodeBase64Image=(dataString: string) =>{
 
 const writeDecodedBase64File = (baseBase64Response: string, xmlReport:string, request: any, sourceFileUrl: string,
     requestId:string, targetFolder: string, resultCallback: Function) => {
-   var decodedBase64 = decodeBase64Image(baseBase64Response);   
-   //var bs = atob(decodedBase64);
+   var decodedBase64 = decodeBase64Image(baseBase64Response);      
    var bs = new Buffer(decodedBase64, 'base64').toString('utf8')   
    var buffer = new ArrayBuffer(bs.length);
    var ba = new Uint8Array(buffer);
