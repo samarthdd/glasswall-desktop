@@ -91,15 +91,6 @@ const getBase64 = (file: File) => {
 
 export const makeRequest = async (request: any, sourceFileUrl: string, requestId: string, folderId: string,
       resultCallback: Function) => {
-      /*axiosRetry(axios, { retries: 5 , retryDelay: (retryCount) => {
-        console.log("http axiosRetry retryCount = "+retryCount)
-        return 2000;
-        },
-        retryCondition: (error:any) => {
-          return error.response.status === 429;
-        }
-        });*/
-
     let payload: string | any;
     let url : string| null;
     url = RebuildUtils.getRebuildEngineUrl();
@@ -111,7 +102,6 @@ export const makeRequest = async (request: any, sourceFileUrl: string, requestId
     payload = JSON.stringify(payload)
     let retries = NUM_RETRIES
     if(fileSize < 6){
-
         return url && await axios.post(url, payload, {
                 headers: {
                     "x-api-key": RebuildUtils.getRebuildApiKey(),
@@ -125,16 +115,7 @@ export const makeRequest = async (request: any, sourceFileUrl: string, requestId
         })
         .catch(async err => {
             LoggerService.addRawLogLine(2,"-","3:" + JSON.stringify(err));
-            await getAnalysisResult(false, true, err, request, sourceFileUrl, requestId, folderId, resultCallback);
-            // if(err.message.indexOf('422') > -1){
-            //     resultCallback({'source':sourceFileUrl, 'url':'TBD', 'filename':request.filename, isError:true,
-            //  msg:'File of this type cannot be processed - '+ err.message, id:requestId, targetDir:folderId, original:request.content})
-
-            // }
-            // else{
-            //     resultCallback({'source':sourceFileUrl, 'url':'TBD', 'filename':request.filename, isError:true,
-            //       msg:err.message, id:requestId, targetDir:folderId, original:request.content})
-            // }
+            await getAnalysisResult(false, true, err, request, sourceFileUrl, requestId, folderId, resultCallback);        
         }
 
         )
