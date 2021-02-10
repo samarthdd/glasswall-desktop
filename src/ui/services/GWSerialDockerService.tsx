@@ -339,10 +339,10 @@ export const gwCliVersionSerial = ():any =>{
                 version = version+output;
             }            
         }
-        let split = version.split("\n")
-        console.log('split length - '+split.length)
+        let split = (version !== "NA") ?version.split("\n"):[]
+        //console.log('split length - '+split.length)
         if(split.length > 0){
-            console.log('split[0] = '+split[0])
+            //console.log('split[0] = '+split[0])
             version =  split[0]            
         }
         LoggerService.addRawLogLine(0,'Get CLI version','Version -> '+version+"\n");
@@ -352,5 +352,8 @@ export const gwCliVersionSerial = ():any =>{
         LoggerService.addRawLogLine(0,'Get CLI version','Error during geting version '+spawned)
         LoggerService.addLogLine('Get CLI version','Error during geting version -> \n '+spawned+"\n");                    
     }
+    if(version === "")
+        version = 'NA'; 
+
     return version;    
 }

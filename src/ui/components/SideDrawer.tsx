@@ -22,13 +22,11 @@ import RebuildIcon              from '../assets/images/rebuild.png'
 import DockerIcon               from '../assets/images/docker.png'
 import SettingIcon              from '../assets/images/setting.png'
 import HomeIcon                 from '../assets/images/homeIcon.png';
-import Tooltip                  from '@material-ui/core/Tooltip';
-import dockerIcon               from '../assets/images/docker.png'
 import HealthCheck              from '../assets/images/healthcheck.png';
 import LOGICON                  from '../assets/images/log.png';
 import SessionIcon              from '../assets/images/session.png';
-import PolicyIcon              from '../assets/images/policyFlag.png';
-import PastPolicyIcon              from '../assets/images/pastpolicy.png';
+import PolicyIcon               from '../assets/images/policyFlag.png';
+import PastPolicyIcon           from '../assets/images/pastpolicy.png';
 
 import { useLocation }          from 'react-router-dom'
 

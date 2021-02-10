@@ -12,12 +12,14 @@ export const _LOGS_FOLDER                 = "gwlogs"
 export const _LOGS_FILE                   = "glasswall_0_1_6.log"
 
 export const getLogsPath = ()=>{
+    
     if(!fs.existsSync(Utils.getAppDataPath() + Utils.getPathSep() + _LOGS_FOLDER)){
       fs.mkdirSync(Utils.getAppDataPath() + Utils.getPathSep() + _LOGS_FOLDER);
     }  
     if(!fs.existsSync(Utils.getAppDataPath() + Utils.getPathSep() + _LOGS_FOLDER+Utils.getPathSep()+_LOGS_FILE)){
-      fs.openSync(Utils.getAppDataPath() + Utils.getPathSep() + _LOGS_FOLDER+Utils.getPathSep()+_LOGS_FILE,'w');
-      fs.closeSync(Utils.getAppDataPath() + Utils.getPathSep() + _LOGS_FOLDER+Utils.getPathSep()+_LOGS_FILE,'w');
+      let fd = fs.openSync(Utils.getAppDataPath() + Utils.getPathSep() + _LOGS_FOLDER+Utils.getPathSep()+_LOGS_FILE,'w');
+      if(fd !== null && typeof fd !== "undefined" )
+        fs.closeSync(Utils.getAppDataPath() + Utils.getPathSep() + _LOGS_FOLDER+Utils.getPathSep()+_LOGS_FILE,'w');
     }
     return Utils.getAppDataPath() + Utils.getPathSep() + _LOGS_FOLDER + Utils.getPathSep() + _LOGS_FILE
   }

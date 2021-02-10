@@ -14,11 +14,3 @@ describe('docker health check', () => {
     });
   
   });
-
-  // describe('check license', () => {
-  //   it('should render', () => {
-  //       let res = GWDockerService.check_license();
-  //       expect(res).toBe(0);
-  //   });
-  
-  // });
