@@ -59,6 +59,7 @@
     "file-loader": "^6.1.0",
     "html-webpack-plugin": "^4.4.1",
     "identity-obj-proxy": "^3.0.0",
+    "jest-localstorage-mock": "^2.4.6",
     "mocha": "^8.2.1",
     "mocha-lcov-reporter": "^1.3.0",
     "protractor": "^7.0.0",
