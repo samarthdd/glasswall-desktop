@@ -1,3 +1,5 @@
+import React from "react";
+
 var child_process       = require("child_process");
 const path              = require('path');
 var fs                  = require('fs');
@@ -243,3 +245,25 @@ export const removeHttps = (link: string) =>{
   return link.replace(/^(https?:|)\/\//, '');
   };
 
+export const getFormattedThreatValue =(threat: boolean| undefined, threatValue: string| undefined, classes:any )=>{
+  console.log("threat" +threat)
+  console.log("threatValue" +threatValue)
+  var uiDOM=null;
+  if(threat){
+      switch(threatValue){
+          case "HIGH":{
+              uiDOM =  <span className ={classes.high} >{threatValue}</span>;
+          }break;
+          case "MEDIUM":{
+              uiDOM =  <span className ={classes.medium}>{threatValue}</span>;
+          }break;
+          case "LOW":{
+              uiDOM =  <span className ={classes.low}>{threatValue}</span>;
+          }break;
+      }
+  }else{
+      uiDOM =  <span className ={classes.ok_unknown}>{threatValue}</span>;
+  }
+  
+  return uiDOM
+}

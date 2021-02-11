@@ -790,28 +790,7 @@ const downloadResult = async(result: any)=>{
         setOpenThreatDialog(!openThreatDialog);
     }
 
-    const getFormattedThreatValue =(threat: boolean| undefined, threatValue: string| undefined)=>{
-        console.log("threat" +threat)
-        console.log("threatValue" +threatValue)
-        var uiDOM=null;
-        if(threat){
-            switch(threatValue){
-                case "HIGH":{
-                    uiDOM =  <span className ={classes.high} >{threatValue}</span>;
-                }break;
-                case "MEDIUM":{
-                    uiDOM =  <span className ={classes.medium}>{threatValue}</span>;
-                }break;
-                case "LOW":{
-                    uiDOM =  <span className ={classes.low}>{threatValue}</span>;
-                }break;
-            }
-        }else{
-            uiDOM =  <span className ={classes.ok_unknown}>{threatValue}</span>;
-        }
-        
-        return uiDOM
-    }
+    
 
     return(
         <div>   
@@ -921,7 +900,7 @@ flat filesystem option to saves in a single directory that contains all files wi
                                                         <TableCell align="left"><a id="download_link" href={row.url} download={row.name} className={classes.downloadLink} title={row.name}><FileCopyIcon className={classes.fileIcon}/>{row.name}</a></TableCell>
                                                         : <TableCell align="left">{row.msg}</TableCell>
                                                 }
-                                                 <TableCell align="left" >{getFormattedThreatValue(row.threat, row.threat_level)}</TableCell>
+                                                 <TableCell align="left" >{Utils.getFormattedThreatValue(row.threat, row.threat_level, classes)}</TableCell>
                                                 {
                                                     !row.isError || row.xmlResult != "undefined" ?
                                                     <TableCell align="left"><button  onClick={() => viewXML(row.id)} className={classes.viewBtn}>{!row.isError||row.xmlResult != "undefined"?'View Report':''}</button></TableCell>
