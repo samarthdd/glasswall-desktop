@@ -12,20 +12,3 @@ describe('get session list', () => {
     });
   
   });
-
-  describe('get session', () => {
-    
-    it('should render', done => {
-        const readSessionResult =(result: any)=>{ 
-            expect(result.id).not.toBeNull();
-            done();
-        }
-        RebuildSessionsService.getSessionList(RebuildUtils.getProcessedPath()).then(function(results:any){
-            if(results.length>0){               
-                RebuildSessionsService.readSessions(results, readSessionResult);
-            }
-        });
-    });
-  
-  });
-
