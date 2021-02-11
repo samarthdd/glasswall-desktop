@@ -547,9 +547,6 @@ function DockerRebuildFiles(){
             setRebuildVersion(SerialDocker.gwCliVersionSerial())
             setShowLoader(false)
         }
-
-        
-        
     }, []);
 
     React.useEffect(() => {
@@ -842,28 +839,6 @@ function DockerRebuildFiles(){
         setOpenThreatDialog(!openThreatDialog);
     }
 
-    const getFormattedThreatValue =(threat: boolean| undefined, threatValue: string| undefined)=>{
-        console.log("threat" +threat)
-        console.log("threatValue" +threatValue)
-        var uiDOM=null;
-        if(threat){
-            switch(threatValue){
-                case "HIGH":{
-                    uiDOM =  <span className ={classes.high} >{threatValue}</span>;
-                }break;
-                case "MEDIUM":{
-                    uiDOM =  <span className ={classes.medium}>{threatValue}</span>;
-                }break;
-                case "LOW":{
-                    uiDOM =  <span className ={classes.low}>{threatValue}</span>;
-                }break;
-            }
-        }else{
-            uiDOM =  <span className ={classes.ok_unknown}>{threatValue}</span>;
-        }
-        
-        return uiDOM
-    }
 
     return(
         <div>   
@@ -975,7 +950,7 @@ function DockerRebuildFiles(){
                                                     : <TableCell align="left">{row.msg}</TableCell>
                                             }
                                             
-                                            <TableCell align="left" >{getFormattedThreatValue(row.threat, row.threat_level)}</TableCell>
+                                            <TableCell align="left" >{Utils.getFormattedThreatValue(row.threat, row.threat_level, classes)}</TableCell>
                                             {
                                                 !row.isError ?
                                                 <TableCell align="left"><button  onClick={() => viewXML(row.id)} className={classes.viewBtn}>{!row.isError?'View Report':''}</button></TableCell>
