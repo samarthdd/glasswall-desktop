@@ -15,10 +15,10 @@
 
     // Runs special logic, adding special
     // extended assertions to Jest
-    setupFilesAfterEnv: [
-      '@testing-library/jest-dom/extend-expect'
-    ],
-    // setupFiles: ["<rootDir>/jest.setup.js"],
+    // setupFilesAfterEnv: [
+    //   '@testing-library/jest-dom/extend-expect'
+    // ],
+    setupFiles: ["<rootDir>/src/setupTests.js"],
     // Test spec file resolution pattern
     // Matches parent folder `__tests__` and filename
     // should contain `test` or `spec`.

@@ -4,11 +4,11 @@
   "description": "Glasswall desktop application using Electron and React",
   "main": "./out/electron/index.js",
   "scripts": {
-    "test": "jest --detectOpenHandles --color",
+    "test": "jest --detectOpenHandles",
     "test_ut": "jest --coverage  --u",
     "coveralls": "cat ./coverage/lcov.info | coveralls",
     "test-ut-watch": "jest --watch --detectOpenHandles --color ",
-    "test:coverage": "npm run test -- --coverage",
+    "test:coverage": "npm run test -- --coverage ",
     "build": "webpack --config webpack.ui.config.js --config webpack.electron.config.js",
     "build:watch": "npm run build -- --watch",
     "build-server": "dotnet publish ./src/server/ --output ../../out/server",
@@ -114,7 +114,8 @@
     "coverageReporters": [
       "lcov"
     ],
-    "coverageDirectory": "coverage/"
+    "coverageDirectory": "coverage/",
+    "setupFilesAfterEnv": ["<rootDir>/src/setupTests.js"]
   },
   "wallaby": {
     "autoDetect": false
