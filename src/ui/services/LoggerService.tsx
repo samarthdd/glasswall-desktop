@@ -69,7 +69,8 @@ const archiveLog = (file:string) => {
   }
 
 
-export const addLogLine = (filename:string, sentence:string) => {     
+export const addLogLine = (filename:string, sentence:string) => {  
+  if(localStorage){   
     const logs  = localStorage.getItem("logs");
     if(logs != null){
       var logsCopy = logs;
@@ -83,6 +84,7 @@ export const addLogLine = (filename:string, sentence:string) => {
       localStorage.setItem("logs",logsCopy)
     }
   }
+}
   
   export const getLogs = () => {
     return localStorage.getItem("logs");

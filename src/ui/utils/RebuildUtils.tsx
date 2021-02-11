@@ -1,7 +1,7 @@
 import * as Utils       from './utils'
 var fs                  = require('fs');
 const resolve           = require('path').resolve
-
+const path              = require('path');
 
 export const GW_DOCKER_IMG_NAME           = 'glasswallsolutions/evaluationsdk';
 export const GW_DOCKER_IMG_TAG            = 'rebuild';

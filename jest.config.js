@@ -18,7 +18,7 @@
     setupFilesAfterEnv: [
       '@testing-library/jest-dom/extend-expect'
     ],
-    // setupFiles: ["<rootDir>/jest.setup.js"],
+      setupFiles: ["jest-localstorage-mock"],
     // Test spec file resolution pattern
     // Matches parent folder `__tests__` and filename
     // should contain `test` or `spec`.
