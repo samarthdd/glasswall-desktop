@@ -79,18 +79,29 @@ describe('to get processed path', () => {
 
 });
 
-describe('to get default output clean path', () => {
-  it('should render', () => {
+describe('to get default paths', () => {
+  it('Default Ouput Clean Path', () => {
     let path = expect(RebuildUtils.getDefaultOuputCleanPath()).not.
       toBe('null') ;
   });
+
+  it('Default Docker Output Folder', () => {
+    let path = expect(RebuildUtils.getDockerDefaultOutputFOlder()).not.
+      toBe('null') ;
+  });
+
+  it('Default Cloud Output Folder', () => {
+    let path = expect(RebuildUtils.getCloudDefaultOutputFOlder()).not.
+      toBe('null') ;
+  });
+  
 
 });
 
 
 describe('to test create config', () => {
-  it('should render', () => {
-    (RebuildUtils.create_config);
+  it('create config', () => {
+    (RebuildUtils.create_config());
     
   });
 });
