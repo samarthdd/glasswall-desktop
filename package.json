@@ -115,8 +115,7 @@
     "coverageReporters": [
       "lcov"
     ],
-    "coverageDirectory": "coverage/",
-    "setupFilesAfterEnv": ["src/setupTests.js"]
+    "coverageDirectory": "coverage/"
   },
   "wallaby": {
     "autoDetect": false
