@@ -14,5 +14,11 @@ describe('to get 0 output for allow, 1 for sanitise and 2 for disallow', () => {
       let flag2 = expect(PolicyService.getPolicyFlag("disallow")).toBe(2) ;
     });
   
+    it('test getPolicyInApiFormat', () => {
+      PolicyService.getPolicyInApiFormat()
+    });
+    it('test savePolicy', () => {
+      PolicyService.savePolicy({})
+    });
   });
   

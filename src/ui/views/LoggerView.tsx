@@ -111,12 +111,6 @@ function LoggerView(){
     const classes = useStyles(); 
     const [logView, setLogView]                     = useState(true);  
 
-    const clearLogs =()=>{
-        LoggerService.cleanRawLogger()
-        setLogView(!logView)
-    }
-
-   
     return(
         <div className={classes.root}> 
             <SideDrawer showBack={false}/>

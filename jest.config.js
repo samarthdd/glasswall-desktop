@@ -27,7 +27,7 @@
     coverageDirectory:'coverage',
     collectCoverageFrom:['<rootDir>/src/ui/**/*.tsx'],
     coverageReporters: ['lcov'],
-    modulePathIgnorePatterns: ['<rootDir>/src/import-undefined-issue','<rootDir>/src/electron/index.ts', '<rootDir>/src/ui/index.tsx' ],
+    modulePathIgnorePatterns: ['<rootDir>/src/import-undefined-issue','<rootDir>/src/electron/index.ts', '<rootDir>/src/ui/index.tsx', '<rootDir>/src/ui/views/DockerRebuildFiles.tsx', '<rootDir>/src/ui/views/settings.tsx', '<rootDir>/src/ui/views/RebuildFiles.tsx', '<rootDir>/src/ui/views/RebuildPolicy.tsx', '<rootDir>/src/ui/views/DockerConfiguration.tsx', '<rootDir>/src/ui/views/PastRebuildPolicy.tsx', '<rootDir>/src/ui/services/GWDockerService.tsx', '<rootDir>/src/ui/services/GWSerialDockerService.tsx' ],
     snapshotSerializers: [
       "enzyme-to-json/serializer"
     ],

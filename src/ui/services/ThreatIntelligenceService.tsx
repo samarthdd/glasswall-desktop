@@ -3,7 +3,7 @@ const fs                                = require('fs-extra')
 const moment                            = require('moment')
 const xpath                             = require("xml2js-xpath");
 
-const create_metadata_file = async (xmlReport:string, xmlFilePath:string, xmlFileName:string,
+export const create_metadata_file = async (xmlReport:string, xmlFilePath:string, xmlFileName:string,
      rebuiltFilePath:string, rebuiltFileName:string,basePath:string) =>  {
          
     if(!fs.existsSync(basePath+'/analysed')){
@@ -53,7 +53,7 @@ const create_metadata_file = async (xmlReport:string, xmlFilePath:string, xmlFil
     return {"threat_level" : "Unknown", "threats" : [],"threat_analysis":""}
 }
 
-const raw_analysis_create = async (xml_report:string,xmlFilePath:string,xmlFileName:string,rebuiltFileName:string,basePath:string) => {    
+export const raw_analysis_create = async (xml_report:string,xmlFilePath:string,xmlFileName:string,rebuiltFileName:string,basePath:string) => {    
     const analysis = await raw_analysis(xml_report)
     if(analysis) {
         let file_raw_analysis_json = basePath+"/analysed/"+rebuiltFileName+"_analysis.json"
@@ -62,7 +62,7 @@ const raw_analysis_create = async (xml_report:string,xmlFilePath:string,xmlFileN
     }
 }
 
-const raw_analysis = async (xml_data:string) => {
+export const raw_analysis = async (xml_data:string) => {
     if (!xml_data)
         return
 
@@ -81,7 +81,7 @@ const raw_analysis = async (xml_data:string) => {
                 'fileVersion'  : fileVersion    }
 }
 
-const apply_rules = (file_data:any, originalFileName:string) =>  {
+export const apply_rules = (file_data:any, originalFileName:string) =>  {
     const raw_analysis = file_data
     let threats = []
     if ( raw_analysis ) {

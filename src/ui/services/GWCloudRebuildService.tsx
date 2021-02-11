@@ -24,7 +24,7 @@ const getPayload = async (data: any) => {
     return json;
 }
 
-const getAnalysisPayload = async (data: any) => {
+export const getAnalysisPayload = async (data: any) => {
     let buffer = Buffer.from(data.content, 'base64');
     let size_of_file = buffer.length / 1000000;
     let policyflags = await PolicyService.getPolicyInApiFormat();
@@ -41,13 +41,13 @@ const getAnalysisPayload = async (data: any) => {
         return json;
 }
 
-const decodeBase64Image=(dataString: string) =>{
+export const decodeBase64Image=(dataString: string) =>{
     let response: any;
     response = dataString && dataString.split(';base64,').pop();
     return response;
 }
 
-const writeDecodedBase64File = (baseBase64Response: any, xmlReport:string, request: any, sourceFileUrl: string,
+export const writeDecodedBase64File = (baseBase64Response: any, xmlReport:string, request: any, sourceFileUrl: string,
     requestId:string, targetFolder: string, resultCallback: Function) => {
    var decodedBase64 = decodeBase64Image(baseBase64Response);
    var bs = atob(baseBase64Response);
@@ -63,22 +63,8 @@ const writeDecodedBase64File = (baseBase64Response: any, xmlReport:string, reque
    
 }
 
-const writeBinaryFile = (bytes: any,  xmlReport:string, request: any, sourceFileUrl: string, requestId: string,
-    targetFolder:string, resultCallback: Function) => {
-   var bs = bytes;
-   var buffer = new ArrayBuffer(bs.length);
-   var ba = new Uint8Array(buffer);
-   for (var i = 0; i < bs.length; i++) {
-       ba[i] = bs.charCodeAt(i);
-   }
-   var file = new Blob([ba], { type: request.type });
-   var url = window.webkitURL.createObjectURL(file);
-   resultCallback({'source':sourceFileUrl,  'url':url, 'filename':request.filename, isError: false, msg:'',
-     cleanFile:buffer, xmlResult: xmlReport, id:requestId, targetDir:targetFolder, original:request.content,path:request.paths })
-  
-}
 
-const getBase64 = (file: File) => {
+export const getBase64 = (file: File) => {
    let res = new Promise(resolve => {
        var reader = new FileReader();
        reader.onload = function (event: any) {
@@ -158,13 +144,9 @@ export const getAnalysisResult= async (isBinaryFile: boolean, rebuiltFailed: boo
                         msg:errMsg, cleanFile:null, xmlResult: response.data, id:requestId, targetDir:targetFolder, original:request.content, path:request.path})
                 }
                 
-
-               if(isBinaryFile){
-                    writeBinaryFile(reBuildResponse, response.data, request, sourceFile, requestId, targetFolder, resultCallback)
-               }else{
+               
                     writeDecodedBase64File(reBuildResponse, response.data, request, sourceFile, requestId,
                          targetFolder, resultCallback)
-               }
             }
         })
         .catch(err => {

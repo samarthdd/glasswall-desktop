@@ -1,0 +1,30 @@
+{
+  "threat_level": "medium",
+  "threats": [
+    {
+      "name": "File Extensions match",
+      "value": "ok",
+      "level": "ok"
+    },
+    {
+      "name": "Macros Detected",
+      "value": "none",
+      "level": "ok"
+    },
+    {
+      "name": "Javascript Detected",
+      "value": "none",
+      "level": "ok"
+    },
+    {
+      "name": "Metadata Detected",
+      "value": "metadata removed from original file",
+      "level": "medium"
+    },
+    {
+      "name": "Hyperlinks Detected",
+      "value": "none",
+      "level": "ok"
+    }
+  ]
+}

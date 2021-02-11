@@ -90,6 +90,45 @@ describe('to get guid', () => {
     expect(Utils.sleep(1))
   });
 
+  it('test High threat', () => {
+    expect(Utils.getFormattedThreatValue(true, "HIGH", {
+      color:                  'red',
+      fontWeight:             'bold'
+   })).not.
+    toBe('null') ;
+  });
+  
+  it('test High threat', () => {
+    expect(Utils.getFormattedThreatValue(true, "HIGH", {
+      color:                  'red',
+      fontWeight:             'bold'
+   })).not.
+    toBe('null') ;
+  });
+
+  it('test medium threat', () => {
+    expect(Utils.getFormattedThreatValue(true, "MEDIUM", {
+      color:                  'orange',
+      fontWeight:             'bold'
+   })).not.
+    toBe('null') ;
+  });
+
+  it('test LOW threat', () => {
+    expect(Utils.getFormattedThreatValue(true, "LOW", {
+      color:                  'blue',
+      fontWeight:             'bold'
+   })).not.
+    toBe('null') ;
+  });
+
+  it('test OK threat', () => {
+    expect(Utils.getFormattedThreatValue(false, "Unknown", {
+      color:                  '#098c44',
+      fontWeight:             'bold'
+   })).not.
+    toBe('null') ;
+  });
   
 });
 
