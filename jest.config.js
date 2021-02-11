@@ -25,9 +25,9 @@
     testRegex: '(/__tests__/.*|(\\.|/)(test|spec))\\.tsx?$',
     
     coverageDirectory:'coverage',
-    collectCoverageFrom:['<rootDir>/src/ui/**/*.tsx', '<rootDir>/src/electron/**/*.ts'],
+    collectCoverageFrom:['<rootDir>/src/ui/**/*.tsx'],
     coverageReporters: ['lcov'],
-    modulePathIgnorePatterns: ['<rootDir>/src/import-undefined-issue'],
+    modulePathIgnorePatterns: ['<rootDir>/src/import-undefined-issue','<rootDir>/src/electron/index.ts', '<rootDir>/src/ui/index.tsx' ],
     snapshotSerializers: [
       "enzyme-to-json/serializer"
     ],
