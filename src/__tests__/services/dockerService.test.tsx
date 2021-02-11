@@ -7,14 +7,7 @@ const path                              = require('path');
 import * as Utils                      from '../../ui/utils/utils'
 
 
-describe('docker health check', () => {
-    it('should render', () => {
-        let res = GWDockerService.health_chk();
-      expect(res).toBeGreaterThanOrEqual(0);
-      expect(res).toBeLessThanOrEqual(7);
-    });
-  
-  });
+
 
   
 describe('docker parallel rebuild', () => {
