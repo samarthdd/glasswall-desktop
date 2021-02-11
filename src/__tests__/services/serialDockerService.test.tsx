@@ -1,7 +1,7 @@
 import { shallow } from 'enzyme';
 import React from 'react';
 const { ipcRenderer } = require('electron');
-import * as GWSerialDockerService from '../../ui/services/GWSerialDockerService'
+//import * as GWSerialDockerService from '../../ui/services/GWSerialDockerService'
 import "@testing-library/jest-dom/extend-expect";
 const os                                = require('os'); 
 const UUID                              = require('pure-uuid');
@@ -11,7 +11,7 @@ import * as Utils                      from '../../ui/utils/utils'
 
 describe('Serial Docker Service', () => {
   it('should render', () => {
-      let res = GWSerialDockerService.gwCliVersionSerial();
+      //let res = GWSerialDockerService.gwCliVersionSerial();
   });
 
 });
@@ -33,7 +33,7 @@ describe('docker serial rebuild', () => {
     var base64Data = Utils.HEALTH_CHK_PNG_BASE64;
     var fileName = Utils.HEALTH_CHK_PNG_NAME;
     fs.writeFileSync(path.join(inputDir,fileName),base64Data,{encoding:"base64"});
-    GWSerialDockerService.makeRequest({content: base64Data,filename : fileName}, inputDir+"/"+fileName, UUID, UUID, rebuildResult);
+    //GWSerialDockerService.makeRequest({content: base64Data,filename : fileName}, inputDir+"/"+fileName, UUID, UUID, rebuildResult);
 });
 });
 
