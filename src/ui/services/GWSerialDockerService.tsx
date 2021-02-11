@@ -195,6 +195,8 @@ export const docker_exec_rebuild = (payload: any,fileName:string) => {
     LoggerService.addRawLogLine(0,fileName,'inputDir '+inputDir);
     LoggerService.addRawLogLine(0,fileName,'outputDir '+outputDir);
     var base64Data = payload.Base64.replace(/^data:image\/png;base64,/, "");
+    console.log('inputDir = '+inputDir)
+    console.log('fileName = '+fileName)
     fs.writeFileSync(path.join(inputDir,fileName),base64Data,{encoding:"base64"});
     LoggerService.addRawLogLine(0,fileName,"Created rebuild dirs in "+directory+", inputDir "+inputDir+", outputDir"+outputDir);          
     var options={"timeout":5000, "shell":false};
