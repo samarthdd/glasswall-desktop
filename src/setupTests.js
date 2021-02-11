@@ -1,9 +1,24 @@
+class LocalStorageMock {
+  constructor() {
+    this.store = {};
+  }
 
+  clear() {
+    this.store = {};
+  }
 
-const localStorageMock = {
-  getItem: jest.fn(),
-  setItem: jest.fn(),
-  removeItem: jest.fn(),
-  clear: jest.fn(),
+  getItem(key) {
+    return this.store[key] || null;
+  }
+
+  setItem(key, value) {
+    this.store[key] = String(value);
+  }
+
+  removeItem(key) {
+    delete this.store[key];
+  }
 };
-global.localStorage = localStorageMock;
+
+window.localStorage = new LocalStorageMock;
+global.localStorage = new LocalStorageMock;

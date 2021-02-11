@@ -231,9 +231,12 @@ export const getHieracyPath = (filePath: any, userTargetDir: string, allPath: st
 }
 
 export const isBlockedByPolicy = (filePath: string) => {
-  let data = fs.readFileSync(filePath,
-    { encoding: 'utf8', flag: 'r' });
-  return data.indexOf(POLICY_BLOCKED_TXT) > -1;
+  if (fs.existsSync(filePath)){
+    let data = fs.readFileSync(filePath,
+      { encoding: 'utf8', flag: 'r' });
+    return data.indexOf(POLICY_BLOCKED_TXT) > -1;
+  }
+  return false
 }
 
 export const isBlockedByPolicyMsg = (message: string) => {

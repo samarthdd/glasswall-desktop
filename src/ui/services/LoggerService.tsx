@@ -1,7 +1,7 @@
 const path                                = require('path');
 var fs                                    = require('fs');
 const log                                 = require('electron-log');
-import * as Utils               from '../utils/utils'
+import * as Utils                         from '../utils/utils'
 
 
 log.transports.file.level                 = 'debug';
@@ -69,7 +69,9 @@ const archiveLog = (file:string) => {
   }
 
 
-export const addLogLine = (filename:string, sentence:string) => {     
+export const addLogLine = (filename:string, sentence:string) => {  
+  
+  if(localStorage != null && typeof localStorage !== "undefined"){   
     const logs  = localStorage.getItem("logs");
     if(logs != null){
       var logsCopy = logs;
@@ -83,9 +85,14 @@ export const addLogLine = (filename:string, sentence:string) => {
       localStorage.setItem("logs",logsCopy)
     }
   }
+}
   
   export const getLogs = () => {
-    return localStorage.getItem("logs");
+    let logs: any;
+    if(typeof localStorage !== "undefined"){ 
+      logs = localStorage.getItem("logs");
+    }
+    return logs;
   }
   
   export const getLogTime = () => {
@@ -96,6 +103,8 @@ export const addLogLine = (filename:string, sentence:string) => {
   
   
   export const initLogger = () => {  
-    localStorage.removeItem("logs")
-    localStorage.setItem("logs","")
+    if(typeof localStorage !== "undefined"){ 
+      localStorage.removeItem("logs")
+      localStorage.setItem("logs","")
+    }
   }
