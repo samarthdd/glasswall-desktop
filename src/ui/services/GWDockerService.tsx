@@ -94,7 +94,8 @@ export const docker_exec_rebuild = async (payload: any,request:any,requestId:str
     LoggerService.addRawLogLine(0,request.filename,'inputDir '+inputDir);
     LoggerService.addRawLogLine(0,request.filename,'outputDir '+outputDir);
     var base64Data = payload.Base64.replace(/^data:image\/png;base64,/, "");
-    fs.writeFileSync(path.join(inputDir,request.filename),base64Data,{encoding:"base64"});
+    var f_path = inputDir + Utils.getPathSep() + request.filename;
+    fs.writeFileSync(f_path,base64Data,{encoding:"base64"});
     LoggerService.addRawLogLine(0,request.filename,"Created rebuild dirs in "+directory+", inputDir "+inputDir+", outputDir"+outputDir);  
     let configDir = resolve(Utils.getAppDataPath() + Utils.getPathSep() + 'configR');    
     LoggerService.addRawLogLine(1,request.filename,'Config dir - '+(configDir));

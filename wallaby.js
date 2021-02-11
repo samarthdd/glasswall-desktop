@@ -2,10 +2,12 @@ module.exports = function () {
   return {
     name: 'Glasswall Desktop',
     files: [
-      { pattern: 'src/__tests__/**/*.tsx', instrument: false, load: false, ignore: false },
+      { pattern: 'src/__tests__/**/*.tsx', instrument: false, load: false, ignore: true },
       { pattern: 'src/App.test.js', ignore: true },
       'src/**/*.ts',
-      'src/**/*.tsx'
+      'src/**/*.tsx',
+      { pattern: 'src/electron/index.ts', iinstrument: false, load: false, ignore: true },
+      { pattern: 'src/ui/index.tsx', iinstrument: false, load: false, ignore: true }
     ],
 
     tests: [
@@ -26,8 +28,8 @@ module.exports = function () {
     workers: {
       recycle: true
     },
-    debug: true,
-    reportConsoleErrorAsError: true,
+    debug: false,
+    // reportConsoleErrorAsError: true,
     slowTestThreshold: 300 // 200 ms
   };
 };

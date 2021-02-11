@@ -9,8 +9,6 @@ import MuiAlert                 from '@material-ui/lab/Alert';
 import Badge                    from '@material-ui/core/Badge';
 import Footer                   from '../components/Footer';
 import SideDrawer               from '../components/SideDrawer';
-import * as Utils               from '../utils/utils'
-import * as RebuildUtils        from '../utils/RebuildUtils'
 import * as PolicyService       from '../services/PolicyService'
 
 function Alert(props: any) {
