@@ -216,8 +216,8 @@ function Settings(){
    }
 
    const handleReset = () =>{
-        setRebuildUrl(RebuildUtils.REBUILD_ENGINE_URL);
-        setAnalysisUrl(RebuildUtils.REBUILD_ANALYSIS_URL);
+        setRebuildUrl(Utils.removeHttps(RebuildUtils.REBUILD_ENGINE_URL));
+        setAnalysisUrl(Utils.removeHttps(RebuildUtils.REBUILD_ANALYSIS_URL));
         setApiKey(RebuildUtils.REBUILD_API_KEY_VALUE);
         setRebuildImage(RebuildUtils.GW_DOCKER_IMG_NAME);
         setRebuildImageTag(RebuildUtils.GW_DOCKER_IMG_TAG);
