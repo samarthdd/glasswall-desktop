@@ -110,7 +110,7 @@ const useStyles = makeStyles((theme) => ({
 
 
 function ReleaseNote(){
-    const classes = useStyles(); 
+    const classes = useStyles()
     return(  
         <>
         <Grid container>   
