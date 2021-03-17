@@ -1,7 +1,7 @@
 {
   "name": "glasswall-desktop",
-  "version": "1.0.0",
-  "tagVersion": "v1.0.0",
+  "version": "1.0.1",
+  "tagVersion": "v1.0.1",
   "repo": "glasswall-desktop",
   "repo_owner": "k8-proxy",
   "app_name": "glasswall-desktop",

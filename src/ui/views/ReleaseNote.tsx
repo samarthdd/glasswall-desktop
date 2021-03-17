@@ -6,8 +6,8 @@ import Footer from '../components/Footer';
 
 const RELEAE_NOTES                 =[
     {
-      "date":"December 16th 2020",
-      "desc":"Integrated Geotiff file processing support with Cloud and Docker."
+      "date":"March 17th 2020",
+      "desc":"Added support for both Http and Https under setting"
     }, 
     {
       "date":"November 16th 2020",
