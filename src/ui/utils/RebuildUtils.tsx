@@ -19,6 +19,8 @@ export const ANALYSIS_URL_KEY             = "anaylsis_url"
 export const APIKEY_KEY                   = "apikey_key"
 export const REBUILD_IMAGE_KEY            = "rebuild_image_key_2"
 export const REBUILD_IMAGE_TAG_KEY        = "rebuild_image_tag_key_2"
+export const REBUILD_URL_PROTOCOL_KEY     = "rebuild_url_is_https_key"
+export const ANALYSIS_URL_PROTOCOL_KEY    = "analysis_url_is_https_key"
 
 //Rebuild folders
 export const _PROCESSED_FOLDER            = "processed"
@@ -28,6 +30,9 @@ export const _REPORT_FOLDER               = "report"
 export const _ANALYSIS_FOLDER             = "analysis"
 export const DOCKER_OUPUT_DIR_KEY         = "DOCKER_OUPUT_DIR"
 export const CLOUD_OUPUT_DIR_KEY          = "CLOUD_OUPUT_DIR"
+
+export const HTTPS          = "https"
+export const HTTP           = "http"
 
 
 export const DOCKER_RUNNING               =  0; // Docker running;
@@ -216,6 +221,26 @@ export const getRebuildEngineUrl=()=>{
    return key;
   }
   
+  export const getRebuildUrlProtocolType=()=>{
+    let key: string;
+    if(!localStorage.getItem(REBUILD_URL_PROTOCOL_KEY))
+      key = HTTPS;
+    else
+      key = localStorage.getItem(REBUILD_URL_PROTOCOL_KEY) || ""
+  
+   return key;
+  }
+
+   
+  export const getAnalysisUrlProtocolType=()=>{
+    let key: string;
+    if(!localStorage.getItem(ANALYSIS_URL_PROTOCOL_KEY))
+      key = HTTPS;
+    else
+      key = localStorage.getItem(ANALYSIS_URL_PROTOCOL_KEY) || ""
+  
+   return key;
+  }
 
   export const getDockerDefaultOutputFOlder =()=>{
     if(!fs.existsSync(getDefaultOuputCleanPath())){
