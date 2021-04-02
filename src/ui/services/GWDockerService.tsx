@@ -391,7 +391,7 @@ export const pull_image = () =>{
     totalOutput = "";
     var options={"timeout":120000, "shell":false};
     var pullResponse = spawnSync('docker', [ 'pull', RebuildUtils.getRebuildImage() +":" + RebuildUtils.getRebuildImageTag()], options);
-    if(pullResponse.hasOwnProperty("output")){            
+    if(pullResponse["output"] !== null && pullResponse.hasOwnProperty("output")){            
         for(var i=0;i<pullResponse["output"].length;i++){
             var output = pullResponse["output"][i];        
             if(output != null && output != ""){
