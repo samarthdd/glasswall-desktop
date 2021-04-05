@@ -6,6 +6,10 @@ import Footer from '../components/Footer';
 
 const RELEAE_NOTES                 =[
     {
+        "date":"April 5th 2020",
+        "desc":"Linux fixes"
+      },
+    {
       "date":"March 17th 2020",
       "desc":"Added support for both Http and Https under setting"
     }, 
