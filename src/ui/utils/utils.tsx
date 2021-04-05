@@ -16,7 +16,7 @@ export const FILE_DROP_URL = 'https://file-drop.co.uk/';
 export const REPO_GIT_ISSUE_URL = "https://github.com/k8-proxy/glasswall-desktop/issues/new";
 
 export const POLICY_BLOCKED_TXT = 'forbidden by content management policy'
-export const VERSION = '1.0.0'
+export const VERSION = '1.0.3'
 
 export const OUTPUT_DIR_FLAT = "flat";
 export const OUTPUT_DIR_HIERARCY = "hierarcy";
