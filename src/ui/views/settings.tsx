@@ -232,11 +232,13 @@ function Settings() {
     }
 
     const handleReset = () => {
-        setRebuildUrl(RebuildUtils.REBUILD_ENGINE_URL);
-        setAnalysisUrl(RebuildUtils.REBUILD_ANALYSIS_URL);
+        setRebuildUrl(removeHttps(RebuildUtils.REBUILD_ENGINE_URL));
+        setAnalysisUrl(removeHttps(RebuildUtils.REBUILD_ANALYSIS_URL));
         setApiKey(RebuildUtils.REBUILD_API_KEY_VALUE);
         setRebuildImage(RebuildUtils.GW_DOCKER_IMG_NAME);
         setRebuildImageTag(RebuildUtils.GW_DOCKER_IMG_TAG);
+        setRebuildUrlProtocolType(RebuildUtils.HTTPS)
+        setAnalysisUrlProtocolType(RebuildUtils.HTTPS)
         localStorage.setItem(RebuildUtils.REBUILD_URL_KEY, RebuildUtils.REBUILD_ENGINE_URL);
         localStorage.setItem(RebuildUtils.ANALYSIS_URL_KEY, RebuildUtils.REBUILD_ANALYSIS_URL);
         localStorage.setItem(RebuildUtils.APIKEY_KEY, RebuildUtils.REBUILD_API_KEY_VALUE);

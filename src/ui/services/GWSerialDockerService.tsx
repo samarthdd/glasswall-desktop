@@ -252,6 +252,45 @@ export const docker_exec_rebuild = (payload: any,fileName:string) => {
      return null;
 }
 
+
+/***
+ * Reurns glasswall cli version
+ */
+export const gwCliVersionSerial = ():any =>{
+    let options={"timeout":10000, "shell":false}; 
+    var spawned = spawnSync('docker', [ 'container',
+                                        'run',
+                                        '--rm',
+                                        RebuildUtils.getRebuildImage()+':'+RebuildUtils.getRebuildImageTag(),
+                                        '/usr/bin/glasswallCLI', '-v'], options);
+     let version = 'NA';  
+     console.log("spawned[output]" +spawned["output"]);
+
+     if(spawned["output"] !== null && spawned.hasOwnProperty("output")){        
+        version = '';
+        for(var i=0;i<spawned["output"].length;i++){
+            var output = spawned["output"][i];            
+            if(output != null && output != ""){
+                version = version+output;
+            }            
+        }
+        let split = version.split("\n");
+        console.log('split length - '+split.length)
+        if(split.length > 0){
+            console.log('split[0] = '+split[0])
+            version =  split[0]            
+        }
+        LoggerService.addRawLogLine(0,'Get CLI version','Version -> '+version+"\n");
+        LoggerService.addLogLine('Get CLI version','Version -> '+version+"\n");                    
+    }
+    else{
+        LoggerService.addRawLogLine(0,'Get CLI version','Error during geting version '+spawned)
+        LoggerService.addLogLine('Get CLI version','Error during geting version -> \n '+spawned+"\n");                    
+    }
+
+    return version;    
+}
+
 export const docker_exec_analysis = (payload: any,fileName:string) => {
     const id = new UUID(4).format();
     const directory = path.join(Utils.getAppDataPath() + Utils.getPathSep() +  'temp', id);
@@ -320,40 +359,4 @@ export const docker_exec_analysis = (payload: any,fileName:string) => {
 
 const new_guid = () => {
         return new UUID(4).format()
-}
-
-/***
- * Reurns glasswall cli version
- */
-export const gwCliVersionSerial = ():any =>{
-    let options={"timeout":10000, "shell":false}; 
-    var spawned = spawnSync('docker', [ 'container',
-                                        'run',
-                                        '--rm',
-                                        RebuildUtils.getRebuildImage()+':'+RebuildUtils.getRebuildImageTag(),
-                                        '/usr/bin/glasswallCLI', '-v'], options);
-     let version = 'NA';  
-     if(spawned.hasOwnProperty("output")){        
-        version = '';
-        for(var i=0;i<spawned["output"].length;i++){
-            var output = spawned["output"][i];            
-            if(output != null && output != ""){
-                version = version+output;
-            }            
-        }
-        let split = version.split("\n");
-        console.log('split length - '+split.length)
-        if(split.length > 0){
-            console.log('split[0] = '+split[0])
-            version =  split[0]            
-        }
-        LoggerService.addRawLogLine(0,'Get CLI version','Version -> '+version+"\n");
-        LoggerService.addLogLine('Get CLI version','Version -> '+version+"\n");                    
-    }
-    else{
-        LoggerService.addRawLogLine(0,'Get CLI version','Error during geting version '+spawned)
-        LoggerService.addLogLine('Get CLI version','Error during geting version -> \n '+spawned+"\n");                    
-    }
-
-    return version;    
 }

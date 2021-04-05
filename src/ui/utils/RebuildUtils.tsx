@@ -283,6 +283,10 @@ export const getReportPath =()=>{
   }
 
   export const create_config = () =>{
+    let homeDir = resolve(Utils.getAppDataPath());
+    if (!fs.existsSync(homeDir)){
+        fs.mkdirSync(homeDir);
+    }
     let configDir = resolve(Utils.getAppDataPath() + Utils.getPathSep() + 'config');
       if (!fs.existsSync(configDir)){
           fs.mkdirSync(configDir);

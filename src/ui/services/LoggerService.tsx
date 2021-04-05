@@ -19,27 +19,24 @@ export const getLogsPath = ()=>{
     if(!fs.existsSync(Utils.getAppDataPath() + Utils.getPathSep() + _LOGS_FOLDER+Utils.getPathSep()+_LOGS_FILE)){
       let fd = fs.openSync(Utils.getAppDataPath() + Utils.getPathSep() + _LOGS_FOLDER+Utils.getPathSep()+_LOGS_FILE,'w');
       if(fd !== null && typeof fd !== "undefined" )
-        fs.closeSync(Utils.getAppDataPath() + Utils.getPathSep() + _LOGS_FOLDER+Utils.getPathSep()+_LOGS_FILE,'w');
+        //fs.closeSync(Utils.getAppDataPath() + Utils.getPathSep() + _LOGS_FOLDER+Utils.getPathSep()+_LOGS_FILE,'w');
+        fs.closeSync(fd);
     }
     return Utils.getAppDataPath() + Utils.getPathSep() + _LOGS_FOLDER + Utils.getPathSep() + _LOGS_FILE
   }
 
   
-const archiveLog = (file:string) => {
-    file = file.toString();
-    const info = path.parse(file);
-    try {
-      fs.renameSync(file, path.join(info.dir, info.name + '.old' + info.ext));
-    } catch (e) {
-      console.warn('Could not rotate log', e);
-    }
-  }                                      
+// const archiveLog = (file:string) => {
+//     file = file.toString();
+//     const info = path.parse(file);
+//     try {
+//       fs.renameSync(file, path.join(info.dir, info.name + '.old' + info.ext));
+//     } catch (e) {
+//       console.warn('Could not rotate log', e);
+//     }
+//   }                                      
   
-  export const cleanRawLogger = () => {
-    let logFile = getLogsPath()
-    fs.open(logFile, 'w+')
-  }
-  
+ 
   export const getRawLogs = () => { 
     let data = fs.readFileSync(getLogsPath(), 
               {encoding:'utf8', flag:'r'}); 
@@ -69,6 +66,12 @@ const archiveLog = (file:string) => {
   }
 
 
+  export const cleanRawLogger = () => {
+    let logFile = getLogsPath()
+    fs.open(logFile, 'w+')
+  }
+  
+  
 export const addLogLine = (filename:string, sentence:string) => {  
   
   if(localStorage != null && typeof localStorage !== "undefined"){   
