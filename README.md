@@ -234,3 +234,4 @@ Bug reports are welcome on GitHub at https://github.com/k8-proxy/glasswall-deskt
 * MAC Application: Incase of cloud rebuild failure, follow below steps:
 * Delete the **config** folder under this path /Users/<system-user>/Library/Application\Support/glasswall-desktop
 * On command prompt run this command **rm -rf config* ** to delete all the content in above path
+* To run on Linux systems as non-root user, make sure to follow this link to allow the user to access docker - https://docs.docker.com/engine/install/linux-postinstall/
