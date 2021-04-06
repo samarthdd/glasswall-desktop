@@ -147,7 +147,7 @@ Allow by clicking "Share It".
 Once added, further rebuilds will not prompt to allow sharing the directory each time when using docker to rebuild files.
 
 
-### Linux Snap
+### Linux App Image
 
 Glasswall desktop is only available for 64-bit Linux systems.
 Download the latest [glasswall-desktop release](https://github.com/k8-proxy/glasswall-desktop/releases/download/v1.0.4/glasswall-desktop-1.0.4.AppImage)
