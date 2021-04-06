@@ -150,32 +150,19 @@ Once added, further rebuilds will not prompt to allow sharing the directory each
 ### Linux Snap
 
 Glasswall desktop is only available for 64-bit Linux systems.
-Download the latest [glasswall-desktop release](https://github.com/k8-proxy/glasswall-desktop/releases/download/v1.0.4/glasswall-desktop-1.0.4.snap)
+Download the latest [glasswall-desktop release](https://github.com/k8-proxy/glasswall-desktop/releases/download/v1.0.4/glasswall-desktop-1.0.4.AppImage)
 
 Linux/Ubuntu users will need to follow the below steps on the app when you first launch it.
 
 * **Step 1**
-Install the snapd package if not present in the linux/ubuntu version you are using.
+Make the downloaded package as an executable by running below command.
 
-![glasswall-desktop Screenshot](img/Linux_Snap_Install_Command.JPG)
-
+**Command :** chmod a+x glasswall-desktop-1.0.4.AppImage
 
 * **Step 2**
-Once snapd package has been installed verify it has been installed successfully by running below command.
-
-![glasswall-desktop Screenshot](img/Linux_SnapPackage_Verification_Command.JPG)
-
-
-* **Step 3**
-Unzip the downloaded desktop package and move inside the directory. And run below command to install the package
-
-![glasswall-desktop Screenshot2](img/Linux_DesktopApp_Install_Command.JPG)
-
-
-* **Step 4**
 Run below command to launch the desktop application
 
-![glasswall-desktop Screenshot](img/Linux_DesktopApp_Run_Command.JPG)
+**Command :** ./glasswall-desktop-1.0.4.AppImage
 
 
 ### Installing from source
