@@ -20,6 +20,7 @@ Glasswall Desktop is a desktop application that provides multi file drag and dro
 2. To support different directory structures, give freedom to save the files at custom directory structure or at default location by maintaining the same directory as that of the parent folder.
 3. To support different platforms (Windows, MAC and Linux)
 4. To provide online and offline file-rebuild support. The online version to use glasswall-rebuild cloud hosting of rebuild engine to rebuild files. The offline version to use glasswall docker image to provide the ame functions offline.
+5. So for running the offline mode user has to install the docker on the respective OS (Windows/MAC/Ubuntu) https://docs.docker.com/engine/install/
 
 # [Glasswall Desktop](https://k8-proxy.github.io/glasswall-desktop/)
 
@@ -221,4 +222,5 @@ Bug reports are welcome on GitHub at https://github.com/k8-proxy/glasswall-deskt
 * MAC Application: Incase of cloud rebuild failure, follow below steps:
 * Delete the **config** folder under this path /Users/<system-user>/Library/Application\Support/glasswall-desktop
 * On command prompt run this command **rm -rf config* ** to delete all the content in above path
+* Incase docker is not installed and user installs the docker, while desktop app is in running state, user is requested to relaunch the desktop app.
 * To run on Linux systems as non-root user, make sure to follow this link to allow the user to access docker - https://docs.docker.com/engine/install/linux-postinstall/
