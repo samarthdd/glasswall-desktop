@@ -29,7 +29,7 @@ import * as PolicyService       from '../services/PolicyService'
 import RawXml                   from '../components/RawXml';
 import Logs                     from '../components/Logs';
 import HealthCheckStatus        from '../components/HealthCheckStatus'
-const { dialog }                = require('electron')
+const { remote }                = require('electron')
 import preceiveThreats          from '../services/ThreatIntelligenceService'
 import ThreatAnalysisDialog     from '../components/ThreatAnalysisDialog'
 
@@ -816,7 +816,7 @@ function DockerRebuildFiles(){
             properties:["openDirectory"]
         };
         let promise: any;
-        promise = dialog.showOpenDialog(options)
+        promise = remote.dialog.showOpenDialog(options)
         promise.then(successCallback, failureCallback);
     }
    
