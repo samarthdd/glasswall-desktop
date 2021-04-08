@@ -27,7 +27,7 @@ import RawXml                   from '../components/RawXml';
 import preceiveThreats          from '../services/ThreatIntelligenceService'
 import ThreatAnalysisDialog     from '../components/ThreatAnalysisDialog'
 
-const { dialog }                = require('electron')
+const { remote }                = require('electron')
 var fs                          = require('fs');
 
 
@@ -773,7 +773,7 @@ const downloadResult = async(result: any)=>{
             properties:["openDirectory"]
         };
         let promise: any;
-        promise = dialog.showOpenDialog(options)
+        promise = remote.dialog.showOpenDialog(options)
         promise.then(successCallback, failureCallback);
     }
 
