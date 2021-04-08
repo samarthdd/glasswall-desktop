@@ -11,7 +11,7 @@ const shell                             = require('electron').shell
 
 describe('Rebuild Cloud Service', () => {
     it('should render', () => {
-        let res = GWCloudRebuildService.getFile(null);
+        let res = Utils.getFile(null);
     });
   
   });
@@ -104,7 +104,7 @@ describe('Rebuild Cloud Service', () => {
         var base64Data = Utils.HEALTH_CHK_PNG_BASE64;
         var fileName = Utils.HEALTH_CHK_PNG_NAME;
         fs.writeFileSync(path.join(inputDir,fileName),base64Data,{encoding:"base64"});
-        let res = GWCloudRebuildService.getBase64(path.join(inputDir,fileName));
+        let res = Utils.getBase64(path.join(inputDir,fileName));
     });
 
     

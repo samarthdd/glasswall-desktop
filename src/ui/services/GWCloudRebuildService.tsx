@@ -64,16 +64,7 @@ export const writeDecodedBase64File = (baseBase64Response: any, xmlReport:string
 }
 
 
-export const getBase64 = (file: File) => {
-   let res = new Promise(resolve => {
-       var reader = new FileReader();
-       reader.onload = function (event: any) {
-           resolve(event.target.result);
-       };
-       reader.readAsDataURL(file);
-   });
-   return res;
-}
+
 
 export const makeRequest = async (request: any, sourceFileUrl: string, requestId: string, folderId: string,
       resultCallback: Function) => {
@@ -87,7 +78,7 @@ export const makeRequest = async (request: any, sourceFileUrl: string, requestId
     // Files smaller than 6MB - Normal
     payload = JSON.stringify(payload)
     let retries = NUM_RETRIES
-    if(fileSize < 6){
+    // if(fileSize < 6){
         return url && await axios.post(url, payload, {
                 headers: {
                     "x-api-key": RebuildUtils.getRebuildApiKey(),
@@ -105,11 +96,11 @@ export const makeRequest = async (request: any, sourceFileUrl: string, requestId
         }
 
         )
-    }
-    else{
-        resultCallback({'source':sourceFileUrl, 'url':'TBD', 'filename':request.filename, isError:true,
-             msg:'File too big. 4 bytes to 6 MB file size bracket', id:requestId, targetDir:folderId, original:request.content})
-    }
+   // }
+    // else{
+    //     resultCallback({'source':sourceFileUrl, 'url':'TBD', 'filename':request.filename, isError:true,
+    //          msg:'File too big. 4 bytes to 6 MB file size bracket', id:requestId, targetDir:folderId, original:request.content})
+    // }
 }
 
 export const getAnalysisResult= async (isBinaryFile: boolean, rebuiltFailed: boolean, reBuildResponse: any, request: any, sourceFile: string,
@@ -125,7 +116,7 @@ export const getAnalysisResult= async (isBinaryFile: boolean, rebuiltFailed: boo
     payload = JSON.stringify(payload)
     Utils.sleep(500);
 
-    if(fileSize < 6){
+    // if(fileSize < 6){
         return url &&  await axios.post(url, payload, {
                 headers: {
                     "x-api-key": RebuildUtils.getRebuildApiKey(),
@@ -154,24 +145,10 @@ export const getAnalysisResult= async (isBinaryFile: boolean, rebuiltFailed: boo
             resultCallback({'source':sourceFile, 'url':'TBD', 'filename':request.filename, isError:true,
                  msg:err.message, id:requestId, targetDir:targetFolder, original:request.content})
         })
-    }
-    else{
-        resultCallback({'source':sourceFile, 'url':'TBD', 'filename':request.filename, isError:true,
-             msg:'File too big. 4 bytes to 30 MB file size bracket', id:requestId, targetDir:targetFolder, original:request.content})
-    }
+    // }
+    // else{
+    //     resultCallback({'source':sourceFile, 'url':'TBD', 'filename':request.filename, isError:true,
+    //          msg:'File too big. 4 bytes to 30 MB file size bracket', id:requestId, targetDir:targetFolder, original:request.content})
+    // }
 }
 
-
-export const getFile = (file: any) => {
-
-    return getBase64(file).then((result: any) => {
-        var encodedImage = result;
-        var data = {type:file.type, filename:file.name, originalFileSize:file.size, content:null, path:file.path};
-        if (file.type === "image/jpeg" || file.type === "image/jpg" || file.type === "image/png")
-            data.content = encodedImage.replace(/^data:image\/\w+;base64,/, "");
-        else
-            data.content = encodedImage.replace(/^data:.*?;base64,/, "")
-        return data;
-    });
-
-}
