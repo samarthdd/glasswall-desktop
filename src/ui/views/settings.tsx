@@ -173,9 +173,10 @@ function Settings() {
     const [rebuildImageTag, setRebuildImageTag] = useState(RebuildUtils.getRebuildImageTag());
     const [rebuildUrlProtocolType, setRebuildUrlProtocolType] = useState(RebuildUtils.getRebuildUrlProtocolType());
     const [analysisUrlProtocolType, setAnalysisUrlProtocolType] = useState(RebuildUtils.getAnalysisUrlProtocolType());
+    const [cliVersionSerial, setCliVersionSerial] = useState( "")
+   
 
     useEffect(() => {
-        console.log("settings1" + RebuildUtils.getRebuildEngineUrl())
         let url = removeHttps(RebuildUtils.getRebuildEngineUrl());
         setRebuildUrl(url);
         url = removeHttps(RebuildUtils.getRebuildAnalysisUrl());
@@ -184,6 +185,7 @@ function Settings() {
         setRebuildImage(RebuildUtils.getRebuildImage())
         setRebuildImageTag(RebuildUtils.getRebuildImageTag())
         setRebuildUrlProtocolType(RebuildUtils.getRebuildUrlProtocolType())
+        setCliVersionSerial(SerialDockerUtils.gwCliVersionSerial());
     }, []);
 
 
@@ -191,34 +193,45 @@ function Settings() {
         return link.replace(/^(https?:|)\/\//, '');
     };
 
-    const showApiKey = () => {
+    const showApiKey = (e: any) => {
+        e.preventDefault();
         setHide(!hide)
+        
+        
     }
 
     const handleRebuildUrlChange = (e: any) => {
+        e.preventDefault();
         console.log("settings2" + e.target.value);
         setRebuildUrl(e.target.value)
         let url = rebuildUrlProtocolType + "://" + e.target.value;
         localStorage.setItem(RebuildUtils.REBUILD_URL_KEY, url)
+        
     }
 
     const handleAnalysisUrlChange = (e: any) => {
+        e.preventDefault();
         console.log(e.target.value);
         setAnalysisUrl(e.target.value)
         let url = analysisUrlProtocolType + "://" + e.target.value;
-        localStorage.setItem(RebuildUtils.ANALYSIS_URL_KEY, url)
+        localStorage.setItem(RebuildUtils.ANALYSIS_URL_KEY, url);
+       
     }
 
     const handleApiIKeyChange = (e: any) => {
+        e.preventDefault();
         console.log(e.target.value);
         setApiKey(e.target.value)
         localStorage.setItem(RebuildUtils.APIKEY_KEY, e.target.value)
+       
     }
 
     const handleRebuildImageChange = (e: any) => {
+        e.preventDefault();
         console.log(e.target.value);
         setRebuildImage(e.target.value)
         localStorage.setItem(RebuildUtils.REBUILD_IMAGE_KEY, e.target.value)
+       
     }
 
     const handleRedirect = () => {
@@ -226,12 +239,15 @@ function Settings() {
     };
 
     const handleRebuildImageTagChange = (e: any) => {
+        e.preventDefault();
         console.log(e.target.value);
         setRebuildImageTag(e.target.value)
         localStorage.setItem(RebuildUtils.REBUILD_IMAGE_TAG_KEY, e.target.value)
+        
     }
 
-    const handleReset = () => {
+    const handleReset = (e:any) => {
+        e.preventDefault();
         setRebuildUrl(removeHttps(RebuildUtils.REBUILD_ENGINE_URL));
         setAnalysisUrl(removeHttps(RebuildUtils.REBUILD_ANALYSIS_URL));
         setApiKey(RebuildUtils.REBUILD_API_KEY_VALUE);
@@ -248,21 +264,22 @@ function Settings() {
     }
 
     const onSelectChange=(event: any) =>{
+        event.preventDefault();
         let type = event.target.options[event.target.selectedIndex].text;
         if(event.target.name === "rebuildUrl"){
             localStorage.setItem(RebuildUtils.REBUILD_URL_PROTOCOL_KEY, type);
             let url = type + "://" + rebuildUrl;
             localStorage.setItem(RebuildUtils.REBUILD_URL_KEY, url)
             setRebuildUrlProtocolType(type)
-            setReadyForRender(!readyForRender);
+            //setReadyForRender(!readyForRender);
         }else  if(event.target.name === "AnalysisUrl"){
             setAnalysisUrlProtocolType(type)
             localStorage.setItem(RebuildUtils.ANALYSIS_URL_PROTOCOL_KEY, type);
             let url = type + "://" + analysisUrl;
             localStorage.setItem(RebuildUtils.ANALYSIS_URL_KEY, url)
-            setReadyForRender(!readyForRender)
+            //setReadyForRender(!readyForRender)
         }
-       
+        
     }
 
     return (
@@ -305,7 +322,7 @@ function Settings() {
                             </div>
                             <h4>REBUILD Glasswall CLI Version</h4>
                             <div className={classes.urlBox}>
-                                <input type="text" value={SerialDockerUtils.gwCliVersionSerial()} />
+                                <input type="text" value={cliVersionSerial} />
                             </div>
                             <div className={classes.btnBox}>
                                 <a className={classes.submitBtn} href="https://glasswall-store.com/">Buy Token </a>
