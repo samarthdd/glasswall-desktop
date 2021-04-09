@@ -700,7 +700,7 @@ const downloadResult = async(result: any)=>{
         //console.log(acceptedFiles[0].path)
         files.map(async (file: any) => {
             allPath.push(file.path);
-            await FileUploadUtils.getFile(file).then(async (data: any) => {
+            await Utils.getFile(file).then(async (data: any) => {
                 setFileNames((fileNames: any) =>[...fileNames, file.name]);
                 var url = window.webkitURL.createObjectURL(file);
                 let guid: string;

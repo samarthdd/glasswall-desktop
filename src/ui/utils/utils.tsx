@@ -270,3 +270,29 @@ export const getFormattedThreatValue =(threat: boolean| undefined, threatValue: 
   
   return uiDOM
 }
+
+export const getBase64 = (file: File) => {
+  let res = new Promise(resolve => {
+      var reader = new FileReader();
+      reader.onload = function (event: any) {
+          resolve(event.target.result);
+      };
+      reader.readAsDataURL(file);
+  });
+  return res;
+}
+
+export const getFile = (file: any) => {
+
+  return getBase64(file).then((result: any) => {
+      var encodedImage = result;
+      var data = {type:file.type, filename:file.name, originalFileSize:file.size, content:null, path:file.path};
+      
+      if (file.type === "image/jpeg" || file.type === "image/jpg" || file.type === "image/png")
+          data.content = encodedImage.replace(/^data:image\/\w+;base64,/, "");
+      else
+          data.content = encodedImage.replace(/^data:.*?;base64,/, "")
+      return data;
+  });
+
+}
