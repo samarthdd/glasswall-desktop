@@ -1,13 +1,14 @@
 {
   "name": "glasswall-desktop",
-  "version": "1.0.0",
+  "version": "1.0.5",
   "description": "Glasswall desktop application using Electron and React",
   "main": "./out/electron/index.js",
   "scripts": {
-    "test-ut": "jest --detectOpenHandles --color",
-    "test-ut-watch ": "jest --watch --detectOpenHandles --color ",
-    "test": "node ./node_modules/mocha/bin/_mocha --require esm --timeout 20000 \"./tests/Test*.js\"",
-    "test:coverage": "npm run test-ut -- --coverage",
+    "test": "jest --detectOpenHandles",
+    "test_ut": "jest --coverage  --u",
+    "coveralls": "cat ./coverage/lcov.info | coveralls",
+    "test-ut-watch": "jest --watch --detectOpenHandles --color ",
+    "test:coverage": "npm run test -- --coverage ",
     "build": "webpack --config webpack.ui.config.js --config webpack.electron.config.js",
     "build:watch": "npm run build -- --watch",
     "build-server": "dotnet publish ./src/server/ --output ../../out/server",
@@ -48,6 +49,7 @@
     "@types/react-router-dom": "^5.1.5",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
+    "coveralls": "^3.1.0",
     "css-loader": "^4.3.0",
     "electron": "^10.1.2",
     "electron-builder": "^22.8.0",
@@ -57,7 +59,9 @@
     "file-loader": "^6.1.0",
     "html-webpack-plugin": "^4.4.1",
     "identity-obj-proxy": "^3.0.0",
+    "jest-localstorage-mock": "^2.4.6",
     "mocha": "^8.2.1",
+    "mocha-lcov-reporter": "^1.3.0",
     "protractor": "^7.0.0",
     "react-iframe": "^1.8.0",
     "spectron": "^13.0.0",
@@ -109,11 +113,11 @@
   "jest": {
     "collectCoverage": true,
     "coverageReporters": [
-      "html"
+      "lcov"
     ],
-    "coverageDirectory": "coverage/report"
+    "coverageDirectory": "coverage/"
   },
   "wallaby": {
-    "autoDetect": true
+    "autoDetect": false
   }
 }

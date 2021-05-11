@@ -4,6 +4,35 @@ import { makeStyles }           from '@material-ui/core/styles';
 import * as Utils               from '../utils/utils';
 import Footer from '../components/Footer';
 
+const RELEAE_NOTES                 =[
+    {
+        "date":"April 9th 2020",
+        "desc":"Cloud rebuild file size limit removed"
+    },{
+        "date":"April 5th 2020",
+        "desc":"Linux fixes"
+    },
+    {
+      "date":"March 17th 2020",
+      "desc":"Added support for both Http and Https under setting"
+    }, 
+    {
+      "date":"November 16th 2020",
+      "desc":"Integrated new Docker image Name/TAG with Application."
+    },
+    {
+      "date":"December 10th  2020",
+      "desc":"Analysis of files rebuild has been integrated in cloud and docker."
+    }, 
+    {
+      "date":"December 8th  2020",
+      "desc":"Maintained History for Policy Management changes."
+    },
+    {
+      "date":"December 3rd  2020",
+      "desc":"Policy Management applied to files rebuilt through Cloud Versionn"
+    }
+]
 
 
 const useStyles = makeStyles((theme) => ({
@@ -88,14 +117,14 @@ const useStyles = makeStyles((theme) => ({
 
 
 function ReleaseNote(){
-    const classes = useStyles(); 
+    const classes = useStyles()
     return(  
         <>
         <Grid container>   
             <a className={classes.webAnchor} href={Utils.WEBSITE_URL} title="k8-proxy-desktop">Glasswall Desktop</a>
             <h3 className={classes.releaseHeading}> <a className={classes.webHeading} href={Utils.RELEASE_URL}> Realease Note</a></h3>
             {
-                Utils.RELEAE_NOTES.map((issue, index)=>{
+                RELEAE_NOTES.map((issue, index)=>{
                     return  <Grid key ={index} className={classes.releaseNoteContainer}>                    
                     <div className={classes.releaseGrid}>
                         <div className={classes.releaseList}>                            

@@ -12,23 +12,25 @@ import {Redirect}                 from 'react-router-dom'
 import { CardActions,
         TablePagination,
         Switch,
-        FormControlLabel,
-        Tooltip 
+        FormControlLabel
     }                           from '@material-ui/core';
 import Footer                   from '../components/Footer';
 import Dropzone                 from "react-dropzone";
 import FileCopyIcon             from '@material-ui/icons/FileCopy';
 import DropIcon                 from '../assets/images/dropIcon.png'
 import SideDrawer               from '../components/SideDrawer';
-import * as DockerUtils         from '../components/DockerUtils'
-import * as SerialDocker        from '../components/SerialDocker'
+import * as DockerUtils         from '../services/GWDockerService'
+import * as SerialDocker        from '../services/GWSerialDockerService'
 import Loader                   from '../components/Loader';
 import * as Utils               from '../utils/utils'
+import * as RebuildUtils        from '../utils/RebuildUtils'
+import * as LoggerService       from '../services/LoggerService'
+import * as PolicyService       from '../services/PolicyService'
 import RawXml                   from '../components/RawXml';
 import Logs                     from '../components/Logs';
 import HealthCheckStatus        from '../components/HealthCheckStatus'
-const { dialog }                = require('electron').remote
-import preceiveThreats          from '../components/ThreatIntelligence'
+const { remote }                = require('electron')
+import preceiveThreats          from '../services/ThreatIntelligenceService'
 import ThreatAnalysisDialog     from '../components/ThreatAnalysisDialog'
 
 
@@ -527,7 +529,7 @@ function DockerRebuildFiles(){
         console.log("health_chk" + sessionStorage.getItem(Utils.DOCKER_HEALTH_STATUS_KEY))
 
         setShowLoader(true)
-        setUserTargetDir(Utils.getDockerDefaultOutputFOlder()||"");
+        setUserTargetDir(RebuildUtils.getDockerDefaultOutputFOlder()||"");
         var status = healthCheckStatus;
         if(sessionStorage.getItem(Utils.DOCKER_HEALTH_STATUS_KEY) == null){
             const timer = setTimeout(() => {
@@ -545,14 +547,11 @@ function DockerRebuildFiles(){
             setRebuildVersion(SerialDocker.gwCliVersionSerial())
             setShowLoader(false)
         }
-
-        
-        
     }, []);
 
     React.useEffect(() => {
         if(folderId!=''){
-            var rootFolder = Utils.getProcessedPath() + Utils.getPathSep() +folderId
+            var rootFolder = RebuildUtils.getProcessedPath() + Utils.getPathSep() +folderId
             if (!fs.existsSync(rootFolder)){
                 fs.promises.mkdir(rootFolder, { recursive: true });
             }
@@ -604,29 +603,29 @@ function DockerRebuildFiles(){
                 Utils.saveBase64File(result.cleanFile, filePath , result.filename );
             }
             
-            var cleanFilePath = Utils.getProcessedPath() + Utils.getPathSep()
+            var cleanFilePath = RebuildUtils.getProcessedPath() + Utils.getPathSep()
                                  + result.targetDir + Utils.getPathSep() + fileHash
-                                  + Utils.getPathSep() + Utils._CLEAN_FOLDER;
+                                  + Utils.getPathSep() + RebuildUtils._CLEAN_FOLDER;
             Utils.saveBase64File(result.cleanFile, cleanFilePath, result.filename );
 
-            var OriginalFilePath = Utils.getProcessedPath()  +  Utils.getPathSep()
+            var OriginalFilePath = RebuildUtils.getProcessedPath()  +  Utils.getPathSep()
                                     + result.targetDir +  Utils.getPathSep()
-                                     + fileHash +  Utils.getPathSep() + Utils._ORIGINAL_FOLDER;
+                                     + fileHash +  Utils.getPathSep() + RebuildUtils._ORIGINAL_FOLDER;
             Utils.saveBase64File(result.original, OriginalFilePath, result.filename);  
 
-            var reportFilePath =  Utils.getProcessedPath() +  Utils.getPathSep()
+            var reportFilePath =  RebuildUtils.getProcessedPath() +  Utils.getPathSep()
                                  + result.targetDir +  Utils.getPathSep()
-                                  + fileHash +   Utils.getPathSep() + Utils._REPORT_FOLDER;
+                                  + fileHash +   Utils.getPathSep() + RebuildUtils._REPORT_FOLDER;
             Utils.saveTextFile(result.xmlResult, reportFilePath, Utils.stipFileExt(result.filename)+'.xml');
 
-            var metadataFilePath =  Utils.getProcessedPath() + Utils.getPathSep() + 
+            var metadataFilePath =  RebuildUtils.getProcessedPath() + Utils.getPathSep() + 
                                     result.targetDir + Utils.getPathSep() + fileHash;
 
             let content: Metadata;
             content = {
-                original_file       : Utils._ORIGINAL_FOLDER + Utils.getPathSep() + result.filename,
-                clean_file          : Utils._CLEAN_FOLDER + Utils.getPathSep()+ result.filename,
-                report              : Utils._REPORT_FOLDER + Utils.getPathSep() + Utils.stipFileExt(result.filename)+'.xml',
+                original_file       : RebuildUtils._ORIGINAL_FOLDER + Utils.getPathSep() + result.filename,
+                clean_file          : RebuildUtils._CLEAN_FOLDER + Utils.getPathSep()+ result.filename,
+                report              : RebuildUtils._REPORT_FOLDER + Utils.getPathSep() + Utils.stipFileExt(result.filename)+'.xml',
                 policy_file         : "config.xml",
                 status              : "Success",
                 time                : new Date().getTime(),
@@ -637,16 +636,16 @@ function DockerRebuildFiles(){
             }
             let metaContentCopy = content            
         
-            content.original_file = fileHash + Utils.getPathSep() + Utils._ORIGINAL_FOLDER + Utils.getPathSep() + result.filename
-            content.clean_file = fileHash +Utils.getPathSep() + Utils._CLEAN_FOLDER + Utils.getPathSep() + result.filename
-            content.report = fileHash + Utils.getPathSep() + Utils._REPORT_FOLDER + Utils.getPathSep() + Utils.stipFileExt(result.filename)+'.xml'
+            content.original_file = fileHash + Utils.getPathSep() + RebuildUtils._ORIGINAL_FOLDER + Utils.getPathSep() + result.filename
+            content.clean_file = fileHash +Utils.getPathSep() + RebuildUtils._CLEAN_FOLDER + Utils.getPathSep() + result.filename
+            content.report = fileHash + Utils.getPathSep() + RebuildUtils._REPORT_FOLDER + Utils.getPathSep() + Utils.stipFileExt(result.filename)+'.xml'
             content.userTargetFolder = userTargetDir;
             content.policy_file = fileHash +Utils.getPathSep() + "config.xml";
             
             masterMetaFile.push(content);
             
             // TI Reporting         
-            let basePath = Utils.getProcessedPath() + Utils.getPathSep() + result.targetDir + Utils.getPathSep() + fileHash + Utils.getPathSep()
+            let basePath = RebuildUtils.getProcessedPath() + Utils.getPathSep() + result.targetDir + Utils.getPathSep() + fileHash + Utils.getPathSep()
             let xml = result.xmlResult   
             let reportPath = Utils.stipFileExt(result.filename)+'.xml'
             threat = await preceiveThreats(xml,reportFilePath, reportPath, cleanFilePath, result.filename,basePath)
@@ -664,7 +663,7 @@ function DockerRebuildFiles(){
             metaContentCopy.isThreat    = isThreat
             metaContentCopy.threatLevel = threatLevel
             // Save policy
-            Utils.saveAppliedPolicy(metadataFilePath);
+            PolicyService.saveAppliedPolicy(metadataFilePath);
             Utils.saveTextFile(JSON.stringify(metaContentCopy), metadataFilePath, 'metadata.json');
         } 
         else{
@@ -672,14 +671,14 @@ function DockerRebuildFiles(){
             let payload = SerialDocker.getAnalysisPayload(originalRequest)
             let xml = SerialDocker.docker_exec_analysis(payload,originalRequest.filename)
             console.log('XML Report for file with reuild error - '+xml)
-            var OriginalFilePath =Utils.getProcessedPath() +  Utils.getPathSep()
+            var OriginalFilePath =RebuildUtils.getProcessedPath() +  Utils.getPathSep()
                                 + result.targetDir + Utils.getPathSep() + fileHash +  Utils.getPathSep() + 
-                                    Utils._ORIGINAL_FOLDER;
+                                RebuildUtils._ORIGINAL_FOLDER;
             console.log("Error case:" +OriginalFilePath + ", result.targetDir:" + result.targetDir)
             Utils.saveBase64File(result.original, OriginalFilePath, result.filename);
             let content: Metadata;
             content = {
-                original_file       : fileHash + Utils.getPathSep() + Utils._ORIGINAL_FOLDER + Utils.getPathSep() + result.filename,
+                original_file       : fileHash + Utils.getPathSep() + RebuildUtils._ORIGINAL_FOLDER + Utils.getPathSep() + result.filename,
                 clean_file          : '',
                 report              : '',
                 status              : "Failure",
@@ -732,7 +731,7 @@ function DockerRebuildFiles(){
             allPath.push(file.path);
             if(parallel){
                 DockerUtils.getFile(file).then(async (data: any) => {
-                    Utils.addLogLine(file.name,"Starting rebuild");
+                    LoggerService.addLogLine(file.name,"Starting rebuild");
                     setFileNames((fileNames: any) =>[...fileNames, file.name]);
                     var url = window.webkitURL.createObjectURL(file);
                     let guid: string;
@@ -742,7 +741,7 @@ function DockerRebuildFiles(){
             }
             else{
                 SerialDocker.getFile(file).then(async (data: any) => {
-                    Utils.addLogLine(file.name,"Starting rebuild");
+                    LoggerService.addLogLine(file.name,"Starting rebuild");
                     setFileNames((fileNames: any) =>[...fileNames, file.name]);
                     var url = window.webkitURL.createObjectURL(file);
                     let guid: string;
@@ -756,7 +755,7 @@ function DockerRebuildFiles(){
 
     //Multi file drop callback 
     const handleDrop = async (acceptedFiles:any) =>{
-        Utils.initLogger();
+        LoggerService.initLogger();
         if(userTargetDir ==""){
             setshowAlertBox(true);
         }
@@ -803,7 +802,7 @@ function DockerRebuildFiles(){
         if(result.filePaths != undefined && result.filePaths.length>0){
             console.log(result.filePaths[0])
             setUserTargetDir(result.filePaths[0])
-            localStorage.setItem(Utils.DOCKER_OUPUT_DIR_KEY, result.filePaths[0]);
+            localStorage.setItem(RebuildUtils.DOCKER_OUPUT_DIR_KEY, result.filePaths[0]);
         }
     }
     const failureCallback =(error: any)=>{
@@ -817,7 +816,7 @@ function DockerRebuildFiles(){
             properties:["openDirectory"]
         };
         let promise: any;
-        promise = dialog.showOpenDialog(options)
+        promise = remote.dialog.showOpenDialog(options)
         promise.then(successCallback, failureCallback);
     }
    
@@ -840,28 +839,6 @@ function DockerRebuildFiles(){
         setOpenThreatDialog(!openThreatDialog);
     }
 
-    const getFormattedThreatValue =(threat: boolean| undefined, threatValue: string| undefined)=>{
-        console.log("threat" +threat)
-        console.log("threatValue" +threatValue)
-        var uiDOM=null;
-        if(threat){
-            switch(threatValue){
-                case "HIGH":{
-                    uiDOM =  <span className ={classes.high} >{threatValue}</span>;
-                }break;
-                case "MEDIUM":{
-                    uiDOM =  <span className ={classes.medium}>{threatValue}</span>;
-                }break;
-                case "LOW":{
-                    uiDOM =  <span className ={classes.low}>{threatValue}</span>;
-                }break;
-            }
-        }else{
-            uiDOM =  <span className ={classes.ok_unknown}>{threatValue}</span>;
-        }
-        
-        return uiDOM
-    }
 
     return(
         <div>   
@@ -973,7 +950,7 @@ function DockerRebuildFiles(){
                                                     : <TableCell align="left">{row.msg}</TableCell>
                                             }
                                             
-                                            <TableCell align="left" >{getFormattedThreatValue(row.threat, row.threat_level)}</TableCell>
+                                            <TableCell align="left" >{Utils.getFormattedThreatValue(row.threat, row.threat_level, classes)}</TableCell>
                                             {
                                                 !row.isError ?
                                                 <TableCell align="left"><button  onClick={() => viewXML(row.id)} className={classes.viewBtn}>{!row.isError?'View Report':''}</button></TableCell>

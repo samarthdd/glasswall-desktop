@@ -1,7 +1,8 @@
 import  React                   from 'react';
 import { makeStyles }           from '@material-ui/core/styles';
 import { Link}                  from 'react-router-dom'
-import * as Utils               from '../utils/utils'
+import * as LoggerService       from '../services/LoggerService'
+
 
 const useStyles = makeStyles((theme) => ({
     docerIconGroup:{
@@ -78,16 +79,11 @@ const useStyles = makeStyles((theme) => ({
     handleOpen  :  () => void;    
 }
 
-// export const DOCKER_NOT_INSTALLED       =  1; // Docker not installed;
-// export const DOCKER_NOT_STARTED         =  2; // Docker not started;
-// export const DOCKER_GW_IMAGE_NOT_PRESENT=  3; // Image not present;
-// export const LICENSE_NOT_VALID          =  4; // License not valid
-// export const REBUILD_FAILED             =  5; // File failed rebuild
-// export const MISSING_OUTPUT_PROPERTY    =  6; //Does not have output property
+
 
 function HealthCheckStatus({rebuildVersion, status, handleOpen}:CurrentStatus){
     const classes = useStyles(); 
-    Utils.addRawLogLine(2,"-","heatlh status:" + status)
+    LoggerService.addRawLogLine(2,"-","heatlh status:" + status)
     const getStatusUI =(status: number)=>{
 
         var uiDOM=null;

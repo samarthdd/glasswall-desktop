@@ -29,6 +29,27 @@ jobs:
         with:
           github_token: ${{ secrets.github_token }}
 
+      - name: Unit Test Ubuntu
+        if: startsWith(matrix.os, 'Ubuntu')
+        run: |
+          docker pull "glasswallsolutions/evaluationsdk:rebuild"
+          mkdir ~/.glasswall-desktop/
+          mkdir ~/.glasswall-desktop/processed
+          rm -rf src/__tests__/__snapshots__/*
+          rm -rf src/__tests__/components/__snapshots__/*
+          rm -rf src/__tests__/views/__snapshots__/*
+          npm run test_ut
+          sleep 10
+          npm run coveralls
+        env:
+          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}          
+      
+      - name: Coveralls
+        if: startsWith(matrix.os, 'Ubuntu')
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+                   
       - name: Upload artifact - Mac
         if: startsWith(matrix.os, 'macOS')
         uses: actions/upload-artifact@v2
@@ -67,7 +88,7 @@ jobs:
           # If the commit is tagged with a version (e.g. "v1.0.0"),
           # release the app after building
           release: ${{ startsWith(github.ref, 'refs/tags/v') }}
-       
+             
       - name: Install Snapcraft
         if: startsWith(matrix.os, 'ubuntu')
         uses: samuelmeuli/action-snapcraft@v1

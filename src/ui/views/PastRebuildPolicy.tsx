@@ -1,14 +1,17 @@
-import  React, {useState}       from 'react';
-import { makeStyles,createMuiTheme }           from '@material-ui/core/styles';
-import SideDrawer               from '../components/SideDrawer';
-import Highlight                from 'react-highlight.js';
-import * as Utils               from '../utils/utils'
-import { Button, FormControl, FormHelperText, Grid, Input, InputLabel, MenuItem, MuiThemeProvider, Select, Snackbar } from '@material-ui/core';
-import LibraryBooksIcon         from '@material-ui/icons/LibraryBooks';
-import Loader                   from '../components/Loader'
-import MuiAlert                 from '@material-ui/lab/Alert';
-import Badge from '@material-ui/core/Badge';
-import Footer from '../components/Footer';
+import  React, {useState}             from 'react';
+import { makeStyles,createMuiTheme }  from '@material-ui/core/styles';
+import { FormControl, 
+  FormHelperText, Grid, Input,
+  InputLabel, MenuItem,
+  MuiThemeProvider, Select,
+  Snackbar }                          from '@material-ui/core';
+import LibraryBooksIcon               from '@material-ui/icons/LibraryBooks';
+import MuiAlert                       from '@material-ui/lab/Alert';
+import Badge                          from '@material-ui/core/Badge';
+import Footer                         from '../components/Footer';
+import SideDrawer                     from '../components/SideDrawer';
+import * as Utils                     from '../utils/utils'
+import * as PolicyService             from '../services/PolicyService'
 
 function Alert(props: any) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -424,8 +427,8 @@ function PastRebuildPolicy(){
   },[ policy, readyForRender]);
  
   React.useEffect(()=>{
-    Utils.getPastPolicy().then((policyJson:any) => {
-      console.log('policy - '+JSON.stringify(policyJson))
+    PolicyService.getPastPolicy().then((policyJson:any) => {
+      //console.log('policy - '+JSON.stringify(policyJson))
       let pdfPolicy = {
         watermark : policyJson.config.pdfConfig[0].watermark[0],
         external_hyperlinks: policyJson.config.pdfConfig[0].external_hyperlinks[0],
@@ -478,7 +481,7 @@ function PastRebuildPolicy(){
         policy.xlsConfig = excelPolicy
         policy.tiffConfig = tiffPolicy
       }
-      console.log('policy set-> '+policy)
+      //console.log('policy set-> '+policy)
       setPolicy(policy)
       setPrevPolicy(JSON.parse(JSON.stringify(policy)))
       setReadyForRender(!readyForRender)
@@ -486,9 +489,9 @@ function PastRebuildPolicy(){
     },[]);
 
    const savePolicy =()=>{
-      console.log('Saving policy - '+JSON.stringify(policy))
+      //console.log('Saving policy - '+JSON.stringify(policy))
       setLoader(true)
-      Utils.savePolicy({"config":policy})
+      PolicyService.savePolicy({"config":policy})
       setPrevPolicy(JSON.parse(JSON.stringify(policy)));
       sessionStorage.removeItem("policy_changes")
       //prevPolicy = policy;
@@ -512,8 +515,8 @@ function PastRebuildPolicy(){
       setReadyForRender(!readyForRender)
     }
     
-    console.log("current" + policy.pdfConfig.metadata)
-    console.log("old" + prevPolicy.pdfConfig.metadata)
+    //console.log("current" + policy.pdfConfig.metadata)
+    //console.log("old" + prevPolicy.pdfConfig.metadata)
     return(
       <>
         <div className={classes.root}> 

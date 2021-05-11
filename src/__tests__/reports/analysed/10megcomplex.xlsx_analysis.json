@@ -1,0 +1,13 @@
+{
+  "sanitisations": [
+    "Metadata detected in Created",
+    "Metadata detected in Creator",
+    "Metadata detected in LastModifiedBy",
+    "Metadata detected in Modified"
+  ],
+  "remediations": [],
+  "issue_items": [],
+  "fileType": "xlsx",
+  "fileSize": "10350051",
+  "fileVersion": "Not Applicable"
+}
