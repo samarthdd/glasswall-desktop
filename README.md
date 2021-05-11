@@ -55,7 +55,7 @@ Warning: This software is under active development. Use at your own risk.
 
 ### macOS
 
-Download the latest [glasswall-desktop release](https://github.com/k8-proxy/glasswall-desktop/releases/download/v1.0.5/glasswall-desktop-1.0.5.dmg).
+Download the latest [glasswall-desktop release](https://github.com/k8-proxy/glasswall-desktop/releases/download/v1.0.6/glasswall-desktop-1.0.6.dmg).
 
 Mac users will need to follow the below steps on the app when you first launch it, until we have [code signing](https://www.electron.build/code-signing) set up
 
@@ -77,12 +77,12 @@ TBD: Will automatically update when a new release is available.
 
 ### Windows
 
-Download the latest [glasswall-desktop release](https://github.com/k8-proxy/glasswall-desktop/releases/download/v1.0.5/glasswall-desktop-Setup-1.0.5.exe)
+Download the latest [glasswall-desktop release](https://github.com/k8-proxy/glasswall-desktop/releases/download/v1.0.6/glasswall-desktop-Setup-1.0.6.exe)
 
 Windows users will need to follow the below steps to install and launch the application.
 
 * **Step 1**
-Download the package from the above link, observe that .exe executable would be downloaded, glasswall-desktop-Setup-1.0.5.exe.
+Download the package from the above link, observe that .exe executable would be downloaded, glasswall-desktop-Setup-1.0.6.exe.
 
 
 * **Step 2**
@@ -151,19 +151,19 @@ Once added, further rebuilds will not prompt to allow sharing the directory each
 ### Linux App Image
 
 Glasswall desktop is only available for 64-bit Linux systems.
-Download the latest [glasswall-desktop release](https://github.com/k8-proxy/glasswall-desktop/releases/download/v1.0.5/glasswall-desktop-1.0.5.AppImage)
+Download the latest [glasswall-desktop release](https://github.com/k8-proxy/glasswall-desktop/releases/download/v1.0.6/glasswall-desktop-1.0.6.AppImage)
 
 Linux/Ubuntu users will need to follow the below steps on the app when you first launch it.
 
 * **Step 1**
 Make the downloaded package as an executable by running below command.
 
-**Command :** chmod a+x glasswall-desktop-1.0.5.AppImage
+**Command :** chmod a+x glasswall-desktop-1.0.6.AppImage
 
 * **Step 2**
 Run below command to launch the desktop application
 
-**Command :** ./glasswall-desktop-1.0.5.AppImage
+**Command :** ./glasswall-desktop-1.0.6.AppImage
 
 
 ### Installing from source
