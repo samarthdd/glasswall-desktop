@@ -1,5 +1,18 @@
 # Workarounds for non-persistent Docker image tag
 
+
+## Docker
+
+- Enlist docker images: `docker images`
+
+![image](https://user-images.githubusercontent.com/60857664/118931021-c5a97b00-b946-11eb-938b-3cc4484d666c.png)
+
+- Change your licensed docker tag to `rebuild` using the command:
+
+`docker tag glasswallsolutions/evaluationsdk:<docker-tag> glasswallsolutions/evaluationsdk:rebuild`
+
+changing `docker-tag` with the name of your lisenced docker image name.
+
 ## Codebase 
 
 **Prerequisites** 
@@ -26,9 +39,3 @@
 
 - Change the value for the key `rebuild_image_tag_key_2` > Navigate to a different tab on the Desktop App > Settings > your new value is the image tag
 
-
-## Docker
-
-- Enlist docker images: `docker images`
-- Change your licensed docker tag to `rebuild`
-`docker tag glasswallsolutions/evaluationsdk:<docker-tag> glasswallsolutions/evaluationsdk:rebuild`
