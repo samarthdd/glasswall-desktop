@@ -1,7 +1,8 @@
 # Workarounds for non-persistent Docker image tag
 
+Please note that only one option is sufficient to keep the docker image tag persistent.
 
-## Docker
+## Option 1: Docker
 
 - Enlist docker images: `docker images`
 
@@ -11,9 +12,11 @@
 
 `docker tag glasswallsolutions/evaluationsdk:<docker-tag> glasswallsolutions/evaluationsdk:rebuild`
 
-changing `docker-tag` with the name of your lisenced docker image name.
+changing `docker-tag` with the name of your licensed docker image name.
 
-## Codebase 
+- Restart the app and you should be using the purchased version now
+
+## Option 2: Codebase 
 
 **Prerequisites** 
 
